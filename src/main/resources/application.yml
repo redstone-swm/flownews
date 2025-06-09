@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: flownews
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
