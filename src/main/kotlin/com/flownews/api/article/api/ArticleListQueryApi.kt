@@ -12,7 +12,7 @@ class ArticleListQueryApi(
     private val articleListQueryService: ArticleListQueryService
 ) {
 
-    @GetMapping("/api/articles")
+    @GetMapping("/articles")
     fun getAllArticles(): ApiResponse<List<ArticleListQueryResponse>> {
         return ApiResponse.ok(articleListQueryService.getAllArticles())
     }
