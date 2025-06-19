@@ -1,6 +1,20 @@
 spring:
   application:
     name: flownews
+
   data:
     mongodb:
       uri: ${MONGODB_URI}
+
+  datasource: # RDS로 대체
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+
+  h2: # RDS 돌릴 때 삭제
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
