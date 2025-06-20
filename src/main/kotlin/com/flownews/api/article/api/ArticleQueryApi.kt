@@ -13,7 +13,7 @@ class ArticleQueryApi(
     private val articleQueryService: ArticleQueryService
 ) {
 
-    @GetMapping("/api/articles/{articleId}")
+    @GetMapping("/articles/{articleId}")
     fun getArticleById(@PathVariable articleId: String): ApiResponse<out Any?> {
         return try {
             ApiResponse.ok(articleQueryService.getArticleById(articleId))
