@@ -1,5 +1,6 @@
 package com.flownews.api.user.domain
 
+import BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -19,15 +20,11 @@ class Visitor(
     @Column(name = "user_agent")
     var userAgent: String,
 
-    @Column(name = "ip_address")
-    var ipAddress: String,
-
     @Column(name = "token")
     var token: String? = null
-) {
-    fun update(userAgent: String, ipAddress: String, token: String?) {
+) : BaseEntity() {
+    fun update(userAgent: String, token: String?) {
         this.userAgent = userAgent
-        this.ipAddress = ipAddress
         this.token = token
     }
 }
