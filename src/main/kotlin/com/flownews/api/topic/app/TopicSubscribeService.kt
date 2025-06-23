@@ -4,6 +4,7 @@ import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscription
+import com.flownews.api.topic.domain.TopicSubscriptionId
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.app.VisitorSyncRequest
 import com.flownews.api.user.app.VisitorSyncService
@@ -19,21 +20,26 @@ class TopicSubscribeService(
 ) {
 
     @Transactional
-    fun subscribeTopic(topicId: Long, req: TopicSubscribeRequest): Long? {
+    fun subscribeTopic(topicId: Long, req: TopicSubscribeRequest): Visitor {
         val topic = getTopic(topicId)
-
         val visitor = visitorSyncService.sync(convert(req))
-        val created = saveSubscription(visitor, topic)
+        val subscriptionId = TopicSubscriptionId(visitor.id!!, topic.id!!)
 
-        return created.id
+        if (topicSubscriptionRepository.existsById(subscriptionId)) {
+            throw IllegalStateException("이미 구독한 토픽입니다")
+        }
+
+        saveSubscription(visitor, topic)
+
+        return visitor
     }
 
     private fun convert(req: TopicSubscribeRequest): VisitorSyncRequest {
-        return VisitorSyncRequest(req.visitorId, req.userAgent, req.ipAddress, req.token)
+        return VisitorSyncRequest(req.visitorId, req.userAgent, req.token)
     }
 
-    private fun saveSubscription(visitor: Visitor, topic: Topic): TopicSubscription {
-        return topicSubscriptionRepository.save(TopicSubscription(visitorId = visitor.id!!, topic = topic))
+    private fun saveSubscription(visitor: Visitor, topic: Topic) {
+        topicSubscriptionRepository.save(TopicSubscription(visitorId = visitor.id!!, topic = topic))
     }
 
     private fun getTopic(topicId: Long): Topic {

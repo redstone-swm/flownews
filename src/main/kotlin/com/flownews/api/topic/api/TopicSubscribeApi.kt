@@ -15,9 +15,11 @@ class TopicSubscribeApi(private val topicSubscribeService: TopicSubscribeService
     @PostMapping("/topics/{topicId}/subscribe")
     fun subscribeTopic(@PathVariable topicId: Long, @RequestBody req: TopicSubscribeRequest): ApiResponse<out Any?> {
         return try {
-            topicSubscribeService.subscribeTopic(topicId, req)
-            ApiResponse.ok()
+            val visitor = topicSubscribeService.subscribeTopic(topicId, req)
+            ApiResponse.ok(visitor)
         } catch (e: NoDataException) {
+            ApiResponse.badRequest(e.message)
+        } catch (e: IllegalStateException) {
             ApiResponse.badRequest(e.message)
         }
     }

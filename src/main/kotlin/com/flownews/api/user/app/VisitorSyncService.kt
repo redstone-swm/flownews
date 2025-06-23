@@ -16,15 +16,15 @@ class VisitorSyncService(private val visitorRepository: VisitorRepository) {
     }
 
     private fun createVisitor(req: VisitorSyncRequest): Visitor {
-        return Visitor(UUID.randomUUID(), req.userAgent, req.ipAddress, req.token)
+        return Visitor(UUID.randomUUID(), req.userAgent, req.token)
     }
 
     private fun updateVisitor(req: VisitorSyncRequest): Visitor {
         val visitor = visitorRepository.findById(req.visitorId!!).orElseThrow()
-        visitor.update(req.userAgent, req.ipAddress, req.token)
+        visitor.update(req.userAgent, req.token)
 
         return visitor
     }
 }
 
-data class VisitorSyncRequest(val visitorId: UUID?, val userAgent: String, val ipAddress: String, val token: String?)
+data class VisitorSyncRequest(val visitorId: UUID?, val userAgent: String, val token: String?)
