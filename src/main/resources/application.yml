@@ -20,5 +20,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
 
+  mvc:
+    static-path-pattern: /content/**
+
   cors:
     allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
