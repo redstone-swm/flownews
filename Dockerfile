@@ -14,6 +14,8 @@ ARG EXTRACTED=/workspace/app/build/extracted
 RUN apk update
 RUN apk --no-cache add curl
 
+ENV SERVER_PORT=80
+
 COPY --from=build ${EXTRACTED}/dependencies/ ./
 COPY --from=build ${EXTRACTED}/spring-boot-loader/ ./
 COPY --from=build ${EXTRACTED}/snapshot-dependencies/ ./
