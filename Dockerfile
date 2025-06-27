@@ -3,7 +3,7 @@ WORKDIR /workspace/app
 
 COPY . .
 
-RUN ./gradlew build -x test --parallel
+RUN chmod 777 ./gradlew && ./gradlew build -x test --parallel
 RUN mkdir -p build/extracted && (java -Djarmode=tools -jar build/libs/flownews.jar extract --layers --launcher --destination build/extracted)
 
 FROM eclipse-temurin:17-jdk-alpine
