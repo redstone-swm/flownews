@@ -24,7 +24,7 @@ spring:
     static-path-pattern: /content/**
 
   cors:
-    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000,https://sijeom.kr}
 
 
 springdoc:
