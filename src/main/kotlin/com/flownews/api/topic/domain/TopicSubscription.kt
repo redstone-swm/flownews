@@ -1,6 +1,7 @@
 package com.flownews.api.topic.domain
 
 import BaseEntity
+import com.flownews.api.user.domain.Visitor
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -19,9 +20,9 @@ import java.util.UUID
 @Table(name = "subscriptions")
 class TopicSubscription(
     @Id
-    @Column(name = "visitor_id")
-    @JdbcTypeCode(SqlTypes.CHAR)
-    var visitorId: UUID,
+    @ManyToOne
+    @JoinColumn(name = "visitor_id", referencedColumnName = "id")
+    var visitor: Visitor,
 
     @Id
     @ManyToOne

@@ -39,7 +39,7 @@ class TopicSubscribeService(
     }
 
     private fun saveSubscription(visitor: Visitor, topic: Topic) {
-        topicSubscriptionRepository.save(TopicSubscription(visitorId = visitor.id!!, topic = topic))
+        topicSubscriptionRepository.save(TopicSubscription(visitor = visitor, topic = topic))
     }
 
     private fun getTopic(topicId: Long): Topic {
