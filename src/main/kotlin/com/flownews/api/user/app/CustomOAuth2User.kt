@@ -12,7 +12,7 @@ class CustomOAuth2User(
     override fun getAttributes(): Map<String, Any?> = attributes
 
     override fun getAuthorities(): Collection<GrantedAuthority> =
-        listOf(SimpleGrantedAuthority("ROLE_USER"))
+        listOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
 
     override fun getName(): String = user.id?.toString() ?: "anonymous"
 

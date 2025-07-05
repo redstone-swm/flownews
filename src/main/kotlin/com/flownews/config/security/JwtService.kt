@@ -1,16 +1,14 @@
-package com.flownews.config
+package com.flownews.config.security
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.security.Keys
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 @Component
-class JwtProvider {
+class JwtService {
     private val secretKey: SecretKey
     private val validityInMilliseconds: Long = 3600000 // 1시간
 
