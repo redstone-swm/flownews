@@ -6,6 +6,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Column
+import jakarta.persistence.Enumerated
+import jakarta.persistence.EnumType
 
 @Entity
 @Table(name = "users")
@@ -27,5 +29,9 @@ class User(
     val email: String,
 
     @Column(nullable = true)
-    val pictureUrl: String? = null
+    val pictureUrl: String? = null,
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val role: Role,
 )

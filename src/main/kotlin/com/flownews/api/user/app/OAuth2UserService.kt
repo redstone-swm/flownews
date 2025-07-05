@@ -1,5 +1,6 @@
 package com.flownews.api.user.app
 
+import com.flownews.api.user.domain.Role
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
@@ -66,7 +67,8 @@ class OAuth2UserService(
             email = email,
             name = name,
             pictureUrl = pictureUrl,
-            provider = provider
+            provider = provider,
+            role = Role.USER,
         )
         return userRepository.save(user)
     }
