@@ -25,11 +25,11 @@ class User(
     @Column(nullable = false)
     val name: String,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     val email: String,
 
     @Column(nullable = true)
-    val pictureUrl: String? = null,
+    val profileUrl: String? = null,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

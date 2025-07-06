@@ -30,12 +30,12 @@ class OAuth2UserService(
             ?: throw IllegalArgumentException("Email not found from Google")
         val name = oauth2User.getAttribute<String>("name")
             ?: throw IllegalArgumentException("Name not found from Google")
-        val pictureUrl = oauth2User.getAttribute<String>("picture")
+        val profileUrl = oauth2User.getAttribute<String>("picture")
         val oauthId = oauth2User.getAttribute<String>("sub")
             ?: throw IllegalArgumentException("OAuthId (sub) not found from Google")
 
         val user = userRepository.findByOauthIdAndProvider(oauthId, "google")
-            ?: createNewUser(oauthId, email, name, pictureUrl, "google")
+            ?: createNewUser(oauthId, email, name, profileUrl, "google")
 
         return CustomOAuth2User(oauth2User.attributes, user)
     }
@@ -47,10 +47,10 @@ class OAuth2UserService(
             ?: throw IllegalArgumentException("Email not found from Apple")
         // Apple은 최초 로그인 시에만 이름을 제공할 수 있음
         val name = oauth2User.getAttribute<String>("name") ?: "Apple User"
-        val pictureUrl: String? = null // Apple은 프로필 이미지를 제공하지 않음
+        val profileUrl: String? = null // Apple은 프로필 이미지를 제공하지 않음
 
         val user = userRepository.findByOauthIdAndProvider(oauthId, "apple")
-            ?: createNewUser(oauthId, email, name, pictureUrl, "apple")
+            ?: createNewUser(oauthId, email, name, profileUrl, "apple")
 
         return CustomOAuth2User(oauth2User.attributes, user)
     }
@@ -59,14 +59,14 @@ class OAuth2UserService(
         oauthId: String,
         email: String,
         name: String,
-        pictureUrl: String?,
+        profileUrl: String?,
         provider: String
     ): User {
         val user = User(
             oauthId = oauthId,
             email = email,
             name = name,
-            pictureUrl = pictureUrl,
+            profileUrl = profileUrl,
             provider = provider,
             role = Role.USER,
         )
