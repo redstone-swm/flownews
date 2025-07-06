@@ -29,8 +29,9 @@ class SecurityConfig(private val jwtService: JwtService, private val userReposit
                     val principal = authentication.principal as OAuth2User
                     val id = principal.name
                     val token = jwtService.createToken(id)
-                    val redirectUri = request.getParameter("redirect_uri") ?: "http://localhost:3000/oauth2/redirect"
-                    response.sendRedirect("$redirectUri?token=$token")
+                    val redirectUrl = System.getenv("FRONTEND_URL")
+                        ?: "https://sijeom.kr"
+                    response.sendRedirect("$redirectUrl/oauth/callback?token=$token")
                 }
             }
             .sessionManagement { it.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS) }
