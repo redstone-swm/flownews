@@ -1,15 +1,21 @@
 package com.flownews.config.security
 
+import com.flownews.api.user.app.CustomOAuth2User
+import com.flownews.api.user.domain.UserRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 
-class JwtAuthenticationFilter(private val jwtService: JwtService) : OncePerRequestFilter() {
+class JwtAuthenticationFilter(
+    private val jwtService: JwtService,
+    private val userRepository: UserRepository
+) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -17,10 +23,21 @@ class JwtAuthenticationFilter(private val jwtService: JwtService) : OncePerReque
     ) {
         val token = resolveToken(request)
         if (token != null && jwtService.validateToken(token)) {
-            val oauthId = jwtService.getOauthId(token)
-            val authentication = UsernamePasswordAuthenticationToken(oauthId, null, emptyList())
-            authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
-            SecurityContextHolder.getContext().authentication = authentication
+            val id = jwtService.getId(token)
+            if (id != null) {
+                val user = userRepository.findById(id)
+                if (user.isPresent) {
+                    val userEntity = user.get()
+                    val authorities = listOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}"))
+                    val authentication = UsernamePasswordAuthenticationToken(
+                        CustomOAuth2User(emptyMap(), userEntity),
+                        null,
+                        authorities
+                    )
+                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authentication
+                }
+            }
         }
         filterChain.doFilter(request, response)
     }
@@ -32,4 +49,3 @@ class JwtAuthenticationFilter(private val jwtService: JwtService) : OncePerReque
         } else null
     }
 }
-

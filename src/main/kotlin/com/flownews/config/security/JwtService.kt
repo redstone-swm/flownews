@@ -19,11 +19,11 @@ class JwtService {
         secretKey = SecretKeySpec(decodedKey, 0, decodedKey.size, SignatureAlgorithm.HS256.jcaName)
     }
 
-    fun createTokenWithOauthId(oauthId: String): String {
+    fun createToken(id: String): String {
         val now = Date()
         val validity = Date(now.time + validityInMilliseconds)
         return Jwts.builder()
-            .setSubject(oauthId)
+            .setSubject(id)
             .setIssuedAt(now)
             .setExpiration(validity)
             .signWith(secretKey)
@@ -42,13 +42,13 @@ class JwtService {
         }
     }
 
-    fun getOauthId(token: String): String? {
+    fun getId(token: String): Long? {
         return try {
             val claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
-            claims.body.subject
+            claims.body.subject?.toLongOrNull()
         } catch (e: Exception) {
             null
         }

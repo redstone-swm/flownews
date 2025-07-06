@@ -1,5 +1,7 @@
 package com.flownews.config.security
 
+import com.flownews.api.user.app.CustomOAuth2User
+import com.flownews.api.user.domain.UserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -12,7 +14,7 @@ import org.slf4j.LoggerFactory
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(private val jwtService: JwtService) {
+class SecurityConfig(private val jwtService: JwtService, private val userRepository: UserRepository) {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
@@ -24,27 +26,16 @@ class SecurityConfig(private val jwtService: JwtService) {
             }
             .oauth2Login {
                 it.successHandler { request, response, authentication ->
-                    val principal = authentication.principal
-                    val oauthId = when (principal) {
-                        is OAuth2User -> {
-                            val provider =
-                                (authentication as? OAuth2AuthenticationToken)?.authorizedClientRegistrationId
-                                    ?: "unknown"
-                            val providerId = principal.getAttribute<String>("sub") ?: principal.name
-                            "${provider}_$providerId"
-                        }
-
-                        else -> principal.toString()
-                    }
-                    logger.info("로그인된 oauthId: $oauthId")
-                    val token = jwtService.createTokenWithOauthId(oauthId)
+                    val principal = authentication.principal as OAuth2User
+                    val id = principal.name
+                    val token = jwtService.createToken(id)
                     val redirectUri = request.getParameter("redirect_uri") ?: "http://localhost:3000/oauth2/redirect"
                     response.sendRedirect("$redirectUri?token=$token")
-
                 }
             }
+            .sessionManagement { it.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS) }
         http.addFilterBefore(
-            JwtAuthenticationFilter(jwtService),
+            JwtAuthenticationFilter(jwtService, userRepository),
             UsernamePasswordAuthenticationFilter::class.java
         )
 
