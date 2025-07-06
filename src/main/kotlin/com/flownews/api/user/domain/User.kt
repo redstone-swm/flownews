@@ -16,7 +16,7 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     val oauthId: String,
 
     @Column(nullable = false)
