@@ -1,5 +1,6 @@
 package com.flownews.api.user.domain
 
+import com.flownews.api.user.domain.enums.Role
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import jakarta.persistence.Id
@@ -16,22 +17,22 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false)
+    @Column(name = "oauth_id", nullable = false)
     val oauthId: String,
 
-    @Column(nullable = false)
+    @Column(name = "provider", nullable = false)
     val provider: String,
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     val name: String,
 
-    @Column(nullable = false)
+    @Column(name = "email", nullable = false)
     val email: String,
 
-    @Column(nullable = true)
+    @Column(name = "profile_url", nullable = true)
     val profileUrl: String? = null,
 
-    @Column(nullable = false)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     val role: Role,
 )
