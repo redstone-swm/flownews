@@ -1,6 +1,6 @@
 package com.flownews.api.user.app
 
-import com.flownews.api.user.domain.Role
+import com.flownews.api.user.domain.enums.Role
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
