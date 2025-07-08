@@ -35,4 +35,7 @@ class User(
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     val role: Role,
+
+    @Column(name = "device_token", nullable = true)
+    var deviceToken: String? = null
 )
