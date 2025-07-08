@@ -1,19 +1,8 @@
 package com.flownews.api.topic.domain
 
 import BaseEntity
-import com.flownews.api.user.domain.Visitor
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.IdClass
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
-import org.hibernate.annotations.JdbcTypeCode
-import org.hibernate.type.SqlTypes
-import java.util.UUID
+import com.flownews.api.user.domain.User
+import jakarta.persistence.*
 
 @Entity
 @IdClass(TopicSubscriptionId::class)
@@ -21,8 +10,8 @@ import java.util.UUID
 class TopicSubscription(
     @Id
     @ManyToOne
-    @JoinColumn(name = "visitor_id", referencedColumnName = "id")
-    var visitor: Visitor,
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    var user: User,
 
     @Id
     @ManyToOne

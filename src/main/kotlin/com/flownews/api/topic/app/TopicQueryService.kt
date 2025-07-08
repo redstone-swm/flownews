@@ -6,14 +6,14 @@ import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import org.springframework.stereotype.Service
 
 @Service
-class TopicSubscriberQueryService(
+class TopicQueryService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository
 ) {
     fun getTopicWithSubscribers(id: Long): TopicWithSubscribers {
         val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
         val subscriptions = topicSubscriptionRepository.findByTopicId(id)
-        val subscribers = subscriptions.map { it.visitor }
+        val subscribers = subscriptions.map { it.user }
 
         return TopicWithSubscribers(topic, subscribers)
     }

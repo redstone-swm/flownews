@@ -1,9 +1,9 @@
 package com.flownews.api.topic.app
 
-import java.util.UUID
+import com.flownews.api.user.domain.User
 
 data class TopicSubscribeRequest(
-    val visitorId: UUID?,
-    val userAgent: String,
-    val token: String?
+    val user: User,
+    val topicId: Long,
+    val deviceToken: String? = null
 )
