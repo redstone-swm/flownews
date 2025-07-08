@@ -2,8 +2,6 @@ package com.flownews.api.push.domain
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import com.flownews.api.topic.domain.Topic
-import com.flownews.api.user.domain.Visitor
 
 @Entity
 @Table(name = "push_logs")
