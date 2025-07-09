@@ -30,13 +30,9 @@ class SecurityConfig(private val jwtService: JwtService, private val userReposit
                     val id = principal.name
                     val token = jwtService.createToken(id)
 
-//                    val redirectUrl = if (isApp) {
-//                        "sijeom:/"
-//                    } else {
-//                        System.getenv("FRONTEND_URL") ?: "https://sijeom.kr"
-//                    }
+                    val redirectUrl = System.getenv("FRONTEND_URL") ?: "https://sijeom.kr"
 
-                    response.sendRedirect("sijeom://auth/callback?token=$token")
+                    response.sendRedirect("$redirectUrl/auth/callback?token=$token")
                 }
             }
             .sessionManagement { it.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS) }
