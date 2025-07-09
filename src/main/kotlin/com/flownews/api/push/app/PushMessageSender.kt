@@ -6,6 +6,7 @@ import com.flownews.api.push.domain.PushMessage
 import com.flownews.api.topic.app.TopicQueryService
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.Message
+import com.google.firebase.messaging.Notification
 import org.springframework.stereotype.Service
 
 @Service
@@ -30,9 +31,12 @@ class PushMessageSender(
             .map { it ->
                 Message.builder()
                     .setToken(it.deviceToken)
-                    .putData("title", it.title)
-                    .putData("body", it.content)
-                    .putData("image", it.imageUrl)
+                    .setNotification(
+                        Notification.builder()
+                            .setTitle(it.title)
+                            .setBody(it.content)
+                            .setImage(it.imageUrl)
+                            .build())
                     .putData("topicId", it.topicId.toString())
                     .build()
             }
