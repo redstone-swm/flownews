@@ -30,14 +30,13 @@ class SecurityConfig(private val jwtService: JwtService, private val userReposit
                     val id = principal.name
                     val token = jwtService.createToken(id)
 
-                    val isApp = request.getHeader("User-Agent")?.let { isApp(it) } ?: false
-                    val redirectUrl = if (isApp) {
-                        "sijeom:/"
-                    } else {
-                        System.getenv("FRONTEND_URL") ?: "https://sijeom.kr"
-                    }
+//                    val redirectUrl = if (isApp) {
+//                        "sijeom:/"
+//                    } else {
+//                        System.getenv("FRONTEND_URL") ?: "https://sijeom.kr"
+//                    }
 
-                    response.sendRedirect("$redirectUrl/auth/callback?token=$token")
+                    response.sendRedirect("sijeom://auth/callback?token=$token")
                 }
             }
             .sessionManagement { it.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS) }
@@ -47,12 +46,5 @@ class SecurityConfig(private val jwtService: JwtService, private val userReposit
         )
 
         return http.build()
-    }
-
-    //FIXME: 웹/앱 구분 다른방법 필요
-    fun isApp(userAgent: String?): Boolean {
-        if (userAgent == null) return false
-        val ua = userAgent.lowercase()
-        return ua.contains("wv")
     }
 }
