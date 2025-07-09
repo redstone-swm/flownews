@@ -29,8 +29,14 @@ class SecurityConfig(private val jwtService: JwtService, private val userReposit
                     val principal = authentication.principal as OAuth2User
                     val id = principal.name
                     val token = jwtService.createToken(id)
-                    val redirectUrl = System.getenv("FRONTEND_URL")
-                        ?: "https://sijeom.kr"
+
+                    val isApp = request.getHeader("User-Agent")?.let { isApp(it) } ?: false
+                    val redirectUrl = if (isApp) {
+                        "sijeom:/"
+                    } else {
+                        System.getenv("FRONTEND_URL") ?: "https://sijeom.kr"
+                    }
+
                     response.sendRedirect("$redirectUrl/auth/callback?token=$token")
                 }
             }
@@ -41,5 +47,12 @@ class SecurityConfig(private val jwtService: JwtService, private val userReposit
         )
 
         return http.build()
+    }
+
+    //FIXME: 웹/앱 구분 다른방법 필요
+    fun isApp(userAgent: String?): Boolean {
+        if (userAgent == null) return false
+        val ua = userAgent.lowercase()
+        return ua.contains("wv")
     }
 }
