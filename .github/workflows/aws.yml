@@ -53,9 +53,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Copy serviceAccountKey.json
-      run: |
-        echo "${{ secrets.FCM_SERVICE_ACCOUNT_KEY }}" > src/main/resources/serviceAccountKey.json
+    - name: Create serviceAccountKey.json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "serviceAccountKey.json"
+        json: ${{ secrets.FCM_SERVICE_ACCOUNT_KEY }}
+        dir: "src/main/resources/"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
