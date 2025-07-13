@@ -3,7 +3,6 @@ package com.flownews.api.topic.domain
 import BaseEntity
 import com.flownews.api.event.domain.Event
 import jakarta.persistence.*
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "topics")
@@ -23,5 +22,6 @@ class Topic(
     var imageUrl: String? = null,
 
     @OneToMany(mappedBy = "topic", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("eventTime ASC")
     var events: MutableList<Event> = mutableListOf()
 ) : BaseEntity()

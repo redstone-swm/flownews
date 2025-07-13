@@ -30,7 +30,11 @@ class Event(
     @Column(name = "event_time")
     var eventTime: LocalDateTime,
 
-    @Column(name = "related_link")
-    var relatedLink: String? = null
+    @Column(name = "related_links")
+    var relatedLinks: String? = null
 
-) : BaseEntity()
+) : BaseEntity() {
+    fun getRelatedLinks(): List<String> {
+        return relatedLinks?.split(",")?.map { it.trim() } ?: emptyList()
+    }
+}

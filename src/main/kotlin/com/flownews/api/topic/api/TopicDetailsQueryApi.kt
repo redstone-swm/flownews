@@ -1,6 +1,9 @@
 package com.flownews.api.topic.api
 
+import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.app.TopicDetailsResponse
+import com.flownews.api.topic.app.TopicQueryService
+import com.flownews.api.topic.app.TopicSummaryResponse
 import com.flownews.api.topic.domain.TopicRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,14 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-class TopicDetailsQueryApi(private val topicRepository: TopicRepository) {
+class TopicDetailsQueryApi(private val topicQueryService: TopicQueryService) {
     @GetMapping("/topics/{id}")
-    fun getTopicDetails(@PathVariable id: Long): ResponseEntity<TopicDetailsResponse> {
-        val topic = topicRepository.findById(id)
-            .orElse(null) ?: return ResponseEntity.notFound().build()
-
-        val sortedEvents = topic.events.sortedBy { it.eventTime }
-        val body = TopicDetailsResponse.fromEntity(topic, sortedEvents)
-        return ResponseEntity.ok(body)
+    fun getTopicDetails(@PathVariable id: Long): ResponseEntity<TopicDetailsResponse?> {
+        return try {
+            ResponseEntity.ok(topicQueryService.getTopic(id))
+        } catch (e: NoDataException){
+            ResponseEntity.notFound().build()
+        }
     }
 }

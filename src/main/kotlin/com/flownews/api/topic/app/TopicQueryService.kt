@@ -10,6 +10,12 @@ class TopicQueryService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository
 ) {
+
+    fun getTopic(id: Long): TopicDetailsResponse {
+        val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
+
+        return TopicDetailsResponse.fromEntity(topic)
+    }
     fun getTopicWithSubscribers(id: Long): TopicWithSubscribers {
         val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
         val subscriptions = topicSubscriptionRepository.findByTopicId(id)

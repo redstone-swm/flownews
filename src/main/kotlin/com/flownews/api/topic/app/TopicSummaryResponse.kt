@@ -1,5 +1,7 @@
 package com.flownews.api.topic.app
 
+import com.flownews.api.topic.domain.Topic
+
 data class TopicSummaryResponse(
     val id: Long,
     val title: String,
@@ -7,7 +9,7 @@ data class TopicSummaryResponse(
     val imageUrl: String?
 ) {
     companion object {
-        fun fromEntity(topic: com.flownews.api.topic.domain.Topic): TopicSummaryResponse {
+        fun fromEntity(topic: Topic): TopicSummaryResponse {
             return TopicSummaryResponse(
                 id = topic.id!!,
                 title = topic.title,
