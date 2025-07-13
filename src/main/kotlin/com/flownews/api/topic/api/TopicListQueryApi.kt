@@ -1,7 +1,5 @@
 package com.flownews.api.topic.api
 
-import com.flownews.api.article.app.ArticleListQueryResponse
-import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.topic.app.TopicSummaryResponse
 import com.flownews.api.topic.domain.TopicRepository
 import org.springframework.http.ResponseEntity
