@@ -10,22 +10,27 @@ import java.time.LocalDateTime
 class Event(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     var id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id", nullable = false)
+    @JoinColumn(name = "topic_id")
     var topic: Topic,
 
-    @Column(nullable = false)
+    @Column(name = "title")
     var title: String,
 
     @Lob
-    @Column(nullable = true)
+    @Column(name = "description")
     var description: String? = null,
 
-    @Column(nullable = true)
+    @Column(name = "image_url")
     var imageUrl: String? = null,
 
-    @Column(nullable = false)
-    var eventTime: LocalDateTime
+    @Column(name = "event_time")
+    var eventTime: LocalDateTime,
+
+    @Column(name = "related_link")
+    var relatedLink: String? = null
+
 ) : BaseEntity()

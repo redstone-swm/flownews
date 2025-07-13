@@ -9,6 +9,7 @@ data class EventDto(
     var description: String?,
     var imageUrl: String?,
     var eventTime: LocalDateTime,
+    var relatedLink: String?
 ) {
     companion object {
         fun fromEntity(e: Event) = EventDto(
@@ -16,7 +17,8 @@ data class EventDto(
             title = e.title,
             description = e.description,
             imageUrl = e.imageUrl,
-            eventTime = e.eventTime
+            eventTime = e.eventTime,
+            relatedLink = e.relatedLink
         )
     }
 }
