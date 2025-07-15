@@ -2,7 +2,7 @@ package com.flownews.api.topic.app
 
 data class TopicHistoryRecordRequest(
     val topicId: Long,
-    val eventId: Long,
+    val eventId: Long?,
     val ipAddress: String,
     val elapsedTime: Int,
     val direction: String

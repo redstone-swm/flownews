@@ -2,6 +2,7 @@ package com.flownews.api.logs.domain
 
 import com.flownews.api.logs.domain.enums.UserEventType
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -27,14 +28,13 @@ class UserEventLog(
 ) {
     constructor(
         eventType: UserEventType,
-        eventTime: LocalDateTime,
         ipAddress: String,
         param: Map<String, Any?>
     ) : this(
         eventType = eventType,
         eventTime = LocalDateTime.now(),
         ipAddress = ipAddress,
-        param = Gson().toJson(param)
+        param = GsonBuilder().serializeNulls().create().toJson(param)
     )
 
 }

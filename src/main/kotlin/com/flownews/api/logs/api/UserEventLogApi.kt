@@ -5,35 +5,39 @@ import com.flownews.api.logs.domain.UserEventLogger
 import com.flownews.api.logs.domain.enums.UserEventType
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseEntity
-import java.time.LocalDateTime
-
-data class FeedbackLogRequest(
-    val ipAddress: String,
-    val topicId: Long,
-    val time: LocalDateTime,
-    val content: String?,
-    val score: Int?
-)
 
 @RestController
 @RequestMapping
 class UserEventLogApi(private val userEventLogger: UserEventLogger) {
 
-    @PostMapping("/logs/feedback")
-    fun appendFeedback(@RequestBody req: FeedbackLogRequest): ResponseEntity<Void> {
+    @PostMapping("/logs/{eventType}")
+    fun appendEventLog(
+        @PathVariable eventType: String,
+        @RequestBody req: Map<String, Any>
+    ): ResponseEntity<Void> {
+        val type = UserEventType.fromCode(eventType)
+
         val log = UserEventLog(
-            eventType = UserEventType.FEEDBACK,
-            eventTime = req.time,
-            ipAddress = req.ipAddress,
-            param = mapOf(
-                "topicId" to req.topicId,
-                "score" to req.score,
-                "content" to req.content
-            )
+            eventType = type,
+            ipAddress = req["ipAddress"] as? String ?: "unknown",
+            param = extractLog(type, req)
         )
 
         userEventLogger.save(log)
 
         return ResponseEntity.ok().build()
+    }
+
+    private fun extractLog(eventType: UserEventType, req: Map<String, Any?>): Map<String, Any?> {
+        return when(eventType) {
+            UserEventType.FEEDBACK -> mapOf(
+                "topicId" to req["topicId"],
+                "score" to req["score"]
+            )
+            UserEventType.TOPIC_SUGGESTION -> mapOf(
+                "content" to req["content"]
+            )
+            else -> mapOf("message" to "Unsupported event type: $eventType")
+        }
     }
 }

@@ -44,7 +44,6 @@ class TopicHistoryRecordService(
     private fun logUserEvent(req: TopicHistoryRecordRequest): UserEventLog {
         val userEventLog = UserEventLog(
             eventType = UserEventType.SWIPE,
-            eventTime = LocalDateTime.now(),
             ipAddress = req.ipAddress,
             param = mapOf(
                 "topicId" to req.topicId,

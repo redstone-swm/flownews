@@ -13,13 +13,14 @@ class TopicHistory(
     val topicId: Long,
 
     @Column(name = "event_id")
-    var eventId: Long,
+    var eventId: Long?,
 
     @Column(name= "user_id")
     val userId: Long
 ) : BaseEntity() {
 
-    fun updateLastReadEvent(eventId: Long) {
-        this.eventId = eventId.coerceAtLeast(this.eventId)
+    fun updateLastReadEvent(newEventId: Long?) {
+        if (newEventId == null) return
+        eventId = eventId?.let { maxOf(it, newEventId) } ?: newEventId
     }
 }
