@@ -1,29 +1,26 @@
 package com.flownews.api.topic.app
 
 import com.flownews.api.common.app.NoDataException
+import com.flownews.api.topic.domain.Topic
+import com.flownews.api.topic.domain.TopicHistoryRepository
 import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
+import com.flownews.api.user.app.CustomOAuth2User
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 @Service
 class TopicQueryService(
     private val topicRepository: TopicRepository,
-    private val topicSubscriptionRepository: TopicSubscriptionRepository
+    private val topicSubscriptionRepository: TopicSubscriptionRepository,
+    private val topicHistoryRepository: TopicHistoryRepository
 ) {
 
-    fun getTopic(id: Long): TopicDetailsResponse {
+    fun getTopic(id: Long, user: CustomOAuth2User?): TopicDetailsResponse {
         val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
+        val randomTopics = getRandomTopics(id)
 
-        return TopicDetailsResponse.fromEntity(topic)
-    }
-
-    fun getRandomTopic(): TopicDetailsResponse {
-        val topics = topicRepository.findAllByRandom(PageRequest.of(0, 1))
-        if (topics.isEmpty()) {
-            throw NoDataException("No topic found")
-        }
-        return TopicDetailsResponse.fromEntity(topics[0])
+        return TopicDetailsResponse.fromEntity(topic, randomTopics)
     }
 
     fun getTopicWithSubscribers(id: Long): TopicWithSubscribers {
@@ -32,5 +29,13 @@ class TopicQueryService(
         val subscribers = subscriptions.map { it.user }
 
         return TopicWithSubscribers(topic, subscribers)
+    }
+
+    private fun getRandomTopics(excludeTopicId: Long, limit: Int = 3): List<Topic> {
+        val topics = topicRepository.findAllExceptOneRandom(excludeTopicId, PageRequest.of(0, limit))
+        if (topics.isEmpty()) {
+            throw NoDataException("No topics found")
+        }
+        return topics
     }
 }

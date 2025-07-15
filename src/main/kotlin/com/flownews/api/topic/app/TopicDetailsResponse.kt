@@ -8,15 +8,17 @@ data class TopicDetailsResponse(
     val title: String,
     val description: String?,
     val imageUrl: String?,
-    val events: List<EventDto>
+    val events: List<EventDto>,
+    val recommendTopics: List<TopicSummaryResponse>
 ) {
     companion object {
-        fun fromEntity(topic: Topic) = TopicDetailsResponse(
+        fun fromEntity(topic: Topic, randomTopics: List<Topic>) = TopicDetailsResponse(
             id = topic.id!!,
             title = topic.title,
             description = topic.description,
             imageUrl = topic.imageUrl,
-            events = topic.events.map(EventDto::fromEntity)
+            events = topic.events.map(EventDto::fromEntity),
+            recommendTopics = randomTopics.map(TopicSummaryResponse::fromEntity)
         )
     }
 }

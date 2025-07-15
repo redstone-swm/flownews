@@ -24,13 +24,4 @@ class TopicDetailsQueryApi(private val topicQueryService: TopicQueryService) {
             ResponseEntity.notFound().build()
         }
     }
-
-    @GetMapping("/topics/random")
-    fun getRandomTopic(@AuthenticationPrincipal user: CustomOAuth2User?): ResponseEntity<TopicDetailsResponse?> {
-        return try {
-            ResponseEntity.ok(topicQueryService.getRandomTopic())
-        } catch (e: NoDataException){
-            ResponseEntity.notFound().build()
-        }
-    }
 }
