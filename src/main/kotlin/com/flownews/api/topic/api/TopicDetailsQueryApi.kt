@@ -19,7 +19,7 @@ class TopicDetailsQueryApi(private val topicQueryService: TopicQueryService) {
     @GetMapping("/topics/{id}")
     fun getTopicDetails(@PathVariable id: Long, @AuthenticationPrincipal user: CustomOAuth2User?): ResponseEntity<TopicDetailsResponse?> {
         return try {
-            ResponseEntity.ok(topicQueryService.getTopic(id))
+            ResponseEntity.ok(topicQueryService.getTopic(id, user))
         } catch (e: NoDataException){
             ResponseEntity.notFound().build()
         }

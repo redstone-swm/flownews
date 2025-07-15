@@ -20,7 +20,13 @@ class TopicQueryService(
         val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
         val randomTopics = getRandomTopics(id)
 
-        return TopicDetailsResponse.fromEntity(topic, randomTopics)
+        if(user == null) {
+            return TopicDetailsResponse.fromEntity(topic, randomTopics)
+        }
+
+        val topicHistory = topicHistoryRepository.findByTopicIdAndUserId(id, user.getUser().id!!)
+
+        return TopicDetailsResponse.fromEntity(topic, randomTopics, topicHistory)
     }
 
     fun getTopicWithSubscribers(id: Long): TopicWithSubscribers {
