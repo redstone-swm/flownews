@@ -36,3 +36,13 @@ spring:
 springdoc:
   swagger-ui:
     enabled: false
+
+server:
+  forward-headers-strategy: framework
+  tomcat:
+    use-relative-redirects: true
+    remoteip:
+      host-header: X-Forwarded-Host
+      port-header: X-Forwarded-Port
+      protocol-header: X-Forwarded-Proto
+      remote-ip-header: X-Forwarded-For
