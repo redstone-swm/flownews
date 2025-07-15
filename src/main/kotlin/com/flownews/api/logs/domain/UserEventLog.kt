@@ -32,7 +32,7 @@ class UserEventLog(
         param: Map<String, Any?>
     ) : this(
         eventType = eventType,
-        eventTime = eventTime,
+        eventTime = LocalDateTime.now(),
         ipAddress = ipAddress,
         param = Gson().toJson(param)
     )
