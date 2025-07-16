@@ -58,6 +58,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_KEY }}
           script: |
+            pwd
             cd /api
             docker compose pull           
             docker compose down           
