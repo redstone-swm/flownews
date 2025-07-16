@@ -8,7 +8,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Service
-class TopicListQueryService(private val topicRepository: TopicRepository, private val topicSectionRepository: TopicSectionRepository) {
+class TopicListQueryService(
+    private val topicRepository: TopicRepository,
+    private val topicSectionRepository: TopicSectionRepository
+) {
 
     fun getTopics(): List<TopicSummaryResponse> = topicRepository.findAll().map(TopicSummaryResponse::fromEntity)
 
@@ -23,7 +26,11 @@ class TopicListQueryService(private val topicRepository: TopicRepository, privat
             })
     }
 
-    private fun getTopicByIds(ids: List<Long>): List<Topic> = topicRepository.findAllById(ids).toList()
+    private fun getTopicByIds(ids: List<Long>): List<Topic> {
+        val unordered = topicRepository.findAllById(ids).toList()
+        val topicMap = unordered.associateBy { it.id }
+        return ids.mapNotNull { topicMap[it] }
+    }
 
 }
 
