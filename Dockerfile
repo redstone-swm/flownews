@@ -13,6 +13,11 @@ ARG EXTRACTED=/workspace/app/build/extracted
 
 RUN apk update
 RUN apk --no-cache add curl
+RUN apk --no-cache add tzdata
+
+ENV TZ=Asia/Seoul
+RUN cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
+    echo "Asia/Seoul" > /etc/timezone
 
 ENV SERVER_PORT=80
 
