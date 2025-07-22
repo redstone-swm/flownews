@@ -7,5 +7,5 @@ data class TopicHistoryRecordRequest(
     val elapsedTime: Int,
     val direction: String
 ) {
-    fun withTopic(topicId: Long): TopicHistoryRecordRequest = this.copy(topicId = topicId)
+    fun with(topicId: Long, ipAddress: String): TopicHistoryRecordRequest = this.copy(topicId = topicId, ipAddress = ipAddress)
 }
