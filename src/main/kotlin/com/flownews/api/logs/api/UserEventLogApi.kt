@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseEntity
 
 @RestController
-@RequestMapping
 class UserEventLogApi(private val userEventLogger: UserEventLogger) {
 
     @PostMapping("/logs/{eventType}")
@@ -38,6 +37,13 @@ class UserEventLogApi(private val userEventLogger: UserEventLogger) {
             )
             UserEventType.TOPIC_SUGGESTION -> mapOf(
                 "content" to req["content"]
+            )
+            UserEventType.ROUTE -> mapOf(
+                "userId" to req["userId"],
+                "action" to req["action"],
+                "userAgent" to req["userAgent"],
+                "referer" to req["referer"],
+                "page" to req["page"]
             )
             else -> mapOf("message" to "Unsupported event type: $eventType")
         }
