@@ -9,7 +9,7 @@ data class PushMessage(
     val deviceToken: String,
     val title: String,
     val content: String,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
 ) {
     constructor(topic: Topic, subscriber: User) : this(
         deviceToken = subscriber.deviceToken!!,
@@ -17,6 +17,6 @@ data class PushMessage(
         content = "${topic.title}의 후속기사를 보려면 클릭",
         imageUrl = topic.imageUrl,
         topicId = topic.id!!,
-        userId = subscriber.id!!
+        userId = subscriber.id!!,
     )
 }

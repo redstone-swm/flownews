@@ -9,16 +9,17 @@ data class EventDto(
     var description: String?,
     var imageUrl: String?,
     var eventTime: LocalDateTime,
-    var relatedLinks: List<String>
+    var relatedLinks: List<String>,
 ) {
     companion object {
-        fun fromEntity(e: Event) = EventDto(
-            id = e.id!!,
-            title = e.title,
-            description = e.description,
-            imageUrl = e.imageUrl,
-            eventTime = e.eventTime,
-            relatedLinks = e.getRelatedLinks()
-        )
+        fun fromEntity(e: Event) =
+            EventDto(
+                id = e.id!!,
+                title = e.title,
+                description = e.description,
+                imageUrl = e.imageUrl,
+                eventTime = e.eventTime,
+                relatedLinks = e.getRelatedLinks(),
+            )
     }
 }

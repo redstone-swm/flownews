@@ -5,5 +5,5 @@ import com.flownews.api.user.domain.User
 
 data class TopicWithSubscribers(
     val topic: Topic,
-    val subscribers: List<User>
+    val subscribers: List<User>,
 )

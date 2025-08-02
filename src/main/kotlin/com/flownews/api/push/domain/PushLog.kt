@@ -1,6 +1,11 @@
 package com.flownews.api.push.domain
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 @Entity
@@ -9,30 +14,24 @@ data class PushLog(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     @Column(name = "user_id")
     val userId: Long,
-
     @Column(name = "device_token")
     val token: String,
-
     @Column(name = "message_title")
     val messageTitle: String,
-
     @Column(name = "message_body")
     val messageBody: String,
-
     @Column(name = "message_image_url")
     val messageImageUrl: String? = null,
-
     @Column(name = "sent_at")
-    val sentAt: LocalDateTime = LocalDateTime.now()
+    val sentAt: LocalDateTime = LocalDateTime.now(),
 ) {
     constructor(message: PushMessage) : this(
         userId = message.userId,
         token = message.deviceToken,
         messageTitle = message.title,
         messageBody = message.content,
-        messageImageUrl = message.imageUrl
+        messageImageUrl = message.imageUrl,
     )
 }

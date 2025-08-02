@@ -13,14 +13,16 @@ import org.springframework.stereotype.Service
 class TopicQueryService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
-    private val topicHistoryRepository: TopicHistoryRepository
+    private val topicHistoryRepository: TopicHistoryRepository,
 ) {
-
-    fun getTopic(id: Long, user: CustomOAuth2User?): TopicDetailsResponse {
+    fun getTopic(
+        id: Long,
+        user: CustomOAuth2User?,
+    ): TopicDetailsResponse {
         val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
         val randomTopics = getRandomTopics(id)
 
-        if(user == null) {
+        if (user == null) {
             return TopicDetailsResponse.fromEntity(topic, randomTopics)
         }
 
@@ -37,7 +39,10 @@ class TopicQueryService(
         return TopicWithSubscribers(topic, subscribers)
     }
 
-    private fun getRandomTopics(excludeTopicId: Long, limit: Int = 3): List<Topic> {
+    private fun getRandomTopics(
+        excludeTopicId: Long,
+        limit: Int = 3,
+    ): List<Topic> {
         val topics = topicRepository.findAllExceptOneRandom(excludeTopicId, PageRequest.of(0, limit))
         if (topics.isEmpty()) {
             throw NoDataException("No topics found")

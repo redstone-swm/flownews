@@ -1,7 +1,11 @@
 package com.flownews.api.topic.app
 
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.topic.domain.*
+import com.flownews.api.topic.domain.Topic
+import com.flownews.api.topic.domain.TopicRepository
+import com.flownews.api.topic.domain.TopicSubscription
+import com.flownews.api.topic.domain.TopicSubscriptionId
+import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.app.UserUpdateService
 import com.flownews.api.user.domain.User
 import jakarta.transaction.Transactional
@@ -11,9 +15,8 @@ import org.springframework.stereotype.Service
 class TopicSubscribeService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
-    private val userUpdateService: UserUpdateService
+    private val userUpdateService: UserUpdateService,
 ) {
-
     @Transactional
     fun subscribeTopic(req: TopicSubscribeRequest) {
         val topic = getTopic(req.topicId)
@@ -29,12 +32,15 @@ class TopicSubscribeService(
         saveSubscription(user, topic)
     }
 
-    private fun saveSubscription(user: User, topic: Topic) {
+    private fun saveSubscription(
+        user: User,
+        topic: Topic,
+    ) {
         topicSubscriptionRepository.save(TopicSubscription(user = user, topic = topic))
     }
 
-    private fun getTopic(topicId: Long): Topic {
-        return topicRepository.findById(topicId)
+    private fun getTopic(topicId: Long): Topic =
+        topicRepository
+            .findById(topicId)
             .orElseThrow { NoDataException("Topic not found : $topicId") }
-    }
 }

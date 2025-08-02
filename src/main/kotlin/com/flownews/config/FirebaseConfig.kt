@@ -19,9 +19,11 @@ class FirebaseConfig {
             logger.warn("Firebase service account file not found in classpath")
             return
         }
-        val options = FirebaseOptions.builder()
-            .setCredentials(GoogleCredentials.fromStream(resource.inputStream))
-            .build()
+        val options =
+            FirebaseOptions
+                .builder()
+                .setCredentials(GoogleCredentials.fromStream(resource.inputStream))
+                .build()
         FirebaseApp.initializeApp(options)
         logger.info("FirebaseApp initialized successfully.")
     }

@@ -5,5 +5,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRepository : CrudRepository<User, Long> {
-    fun findByOauthIdAndProvider(oAuthId: String, provider: String): User?
+    fun findByOauthIdAndProvider(
+        oAuthId: String,
+        provider: String,
+    ): User?
 }

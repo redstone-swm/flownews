@@ -13,7 +13,6 @@ class TopicSection(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     @Column(name = "config")
-    val config: String
+    val config: String,
 )

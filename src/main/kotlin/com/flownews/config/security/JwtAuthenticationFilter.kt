@@ -6,20 +6,20 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 
 class JwtAuthenticationFilter(
     private val jwtService: JwtService,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val token = resolveToken(request)
         if (token != null && jwtService.validateToken(token)) {
@@ -29,11 +29,12 @@ class JwtAuthenticationFilter(
                 if (user.isPresent) {
                     val userEntity = user.get()
                     val authorities = listOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}"))
-                    val authentication = UsernamePasswordAuthenticationToken(
-                        CustomOAuth2User(emptyMap(), userEntity),
-                        null,
-                        authorities
-                    )
+                    val authentication =
+                        UsernamePasswordAuthenticationToken(
+                            CustomOAuth2User(emptyMap(), userEntity),
+                            null,
+                            authorities,
+                        )
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = authentication
                 }
@@ -46,6 +47,8 @@ class JwtAuthenticationFilter(
         val bearerToken = request.getHeader("Authorization")
         return if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             bearerToken.substring(7)
-        } else null
+        } else {
+            null
+        }
     }
 }

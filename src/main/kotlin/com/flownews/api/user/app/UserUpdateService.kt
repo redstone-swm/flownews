@@ -6,12 +6,18 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
-class UserUpdateService(private val userRepository: UserRepository) {
-
+class UserUpdateService(
+    private val userRepository: UserRepository,
+) {
     @Transactional
-    fun updateDeviceToken(userId: Long, deviceToken: String?) {
-        val user = userRepository.findById(userId)
-            .orElseThrow { NoDataException("user not found: ${userId}") }
+    fun updateDeviceToken(
+        userId: Long,
+        deviceToken: String?,
+    ) {
+        val user =
+            userRepository
+                .findById(userId)
+                .orElseThrow { NoDataException("user not found: $userId") }
 
         user.deviceToken = deviceToken
     }

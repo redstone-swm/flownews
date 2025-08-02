@@ -8,16 +8,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class PushMessageSendApi(private val pushMessageSender: PushMessageSender) {
-
+class PushMessageSendApi(
+    private val pushMessageSender: PushMessageSender,
+) {
     @PostMapping("/notifications/push", params = ["by=topic"])
-    fun sendPushMessageByTopic(@RequestBody req: PushMessageSendRequest): ApiResponse<out Any?> {
-        return try {
+    fun sendPushMessageByTopic(
+        @RequestBody req: PushMessageSendRequest,
+    ): ApiResponse<out Any?> =
+        try {
             ApiResponse.ok(pushMessageSender.sendPushMessages(req.topicId))
         } catch (e: NoDataException) {
             ApiResponse.badRequest(e.message)
         }
-    }
 }
 
-data class PushMessageSendRequest(val topicId: Long)
+data class PushMessageSendRequest(
+    val topicId: Long,
+)

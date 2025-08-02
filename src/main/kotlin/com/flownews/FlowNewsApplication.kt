@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 class FlowNewsApplication
 
 fun main(args: Array<String>) {
-	runApplication<FlowNewsApplication>(*args)
+    runApplication<FlowNewsApplication>(*args)
 }

@@ -6,5 +6,5 @@ import java.io.Serializable
 @Embeddable
 data class TopicSubscriptionId(
     val user: Long,
-    val topic: Long
+    val topic: Long,
 ) : Serializable

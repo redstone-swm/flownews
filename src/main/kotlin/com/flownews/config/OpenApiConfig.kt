@@ -10,23 +10,21 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class OpenApiConfig {
     @Bean
-    fun openAPI(): OpenAPI {
-        return OpenAPI()
+    fun openAPI(): OpenAPI =
+        OpenAPI()
             .info(
                 Info()
                     .title("FlowNews API")
-                    .version("v1")
-            )
-            .components(
-                io.swagger.v3.oas.models.Components()
+                    .version("v1"),
+            ).components(
+                io.swagger.v3.oas.models
+                    .Components()
                     .addSecuritySchemes(
                         "bearerAuth",
                         SecurityScheme()
                             .type(SecurityScheme.Type.HTTP)
                             .scheme("bearer")
-                            .bearerFormat("JWT")
-                    )
-            )
-            .addSecurityItem(SecurityRequirement().addList("bearerAuth"))
-    }
+                            .bearerFormat("JWT"),
+                    ),
+            ).addSecurityItem(SecurityRequirement().addList("bearerAuth"))
 }

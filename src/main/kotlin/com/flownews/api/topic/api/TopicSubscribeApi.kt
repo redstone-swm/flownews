@@ -12,21 +12,22 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TopicSubscribeApi(private val topicSubscribeService: TopicSubscribeService) {
-
+class TopicSubscribeApi(
+    private val topicSubscribeService: TopicSubscribeService,
+) {
     @PostMapping("/topics/{topicId}/subscribe")
     fun subscribeTopic(
         @PathVariable topicId: Long,
         @RequestBody req: UserDeviceTokenUpdateRequest,
-        @AuthenticationPrincipal principal: CustomOAuth2User
-    ): ApiResponse<out Any?> {
-        return try {
+        @AuthenticationPrincipal principal: CustomOAuth2User,
+    ): ApiResponse<out Any?> =
+        try {
             topicSubscribeService.subscribeTopic(
                 TopicSubscribeRequest(
                     user = principal.getUser(),
                     deviceToken = req.deviceToken,
-                    topicId = topicId
-                )
+                    topicId = topicId,
+                ),
             )
             ApiResponse.ok()
         } catch (e: NoDataException) {
@@ -34,7 +35,9 @@ class TopicSubscribeApi(private val topicSubscribeService: TopicSubscribeService
         } catch (e: IllegalStateException) {
             ApiResponse.badRequest(e.message)
         }
-    }
 }
 
-data class UserDeviceTokenUpdateRequest(val userId: Long, val deviceToken: String)
+data class UserDeviceTokenUpdateRequest(
+    val userId: Long,
+    val deviceToken: String,
+)

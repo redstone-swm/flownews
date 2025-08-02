@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TopicListQueryApi(private val topicListQueryService: TopicListQueryService) {
+class TopicListQueryApi(
+    private val topicListQueryService: TopicListQueryService,
+) {
     @GetMapping("/topics", params = ["for=main"])
-    fun getTopics(): ResponseEntity<TopicSectionListQueryResponse> {
-        return ResponseEntity.ok(topicListQueryService.getTopicSections())
-    }
+    fun getTopics(): ResponseEntity<TopicSectionListQueryResponse> =
+        ResponseEntity.ok(topicListQueryService.getTopicSections())
 
     @GetMapping("/topics")
-    fun getAllTopics(): ResponseEntity<List<TopicSummaryResponse>> {
-        return ResponseEntity.ok(topicListQueryService.getTopics())
-    }
+    fun getAllTopics(): ResponseEntity<List<TopicSummaryResponse>> =
+        ResponseEntity.ok(topicListQueryService.getTopics())
 }

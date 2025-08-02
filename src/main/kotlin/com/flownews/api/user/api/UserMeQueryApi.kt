@@ -11,15 +11,18 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class UserMeQueryApi {
     @GetMapping("/users/me")
-    fun getCurrentUser(@AuthenticationPrincipal principal: CustomOAuth2User): ResponseEntity<Any> {
+    fun getCurrentUser(
+        @AuthenticationPrincipal principal: CustomOAuth2User,
+    ): ResponseEntity<Any> {
         val user = principal.getUser()
-        val response = mapOf(
-            "id" to user.id,
-            "name" to user.name,
-            "email" to user.email,
-            "profileUrl" to user.profileUrl,
-            "role" to user.role
-        )
+        val response =
+            mapOf(
+                "id" to user.id,
+                "name" to user.name,
+                "email" to user.email,
+                "profileUrl" to user.profileUrl,
+                "role" to user.role,
+            )
         return ResponseEntity.ok(response)
     }
 }

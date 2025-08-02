@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface TopicSubscriptionRepository : CrudRepository<TopicSubscription, TopicSubscriptionId> {
     @EntityGraph(attributePaths = ["user"])
-    fun findByTopicId(@Param("topicId") topicId: Long): List<TopicSubscription>
-
+    fun findByTopicId(
+        @Param("topicId") topicId: Long,
+    ): List<TopicSubscription>
 }

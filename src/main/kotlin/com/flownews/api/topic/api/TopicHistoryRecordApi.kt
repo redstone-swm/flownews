@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TopicHistoryRecordApi(private val topicHistoryRecordService: TopicHistoryRecordService) {
-
+class TopicHistoryRecordApi(
+    private val topicHistoryRecordService: TopicHistoryRecordService,
+) {
     @PostMapping("topics/{topicId}/read")
     fun recordTopicHistory(
         @PathVariable topicId: Long,
         @AuthenticationPrincipal user: CustomOAuth2User?,
         @RequestBody req: TopicHistoryRecordRequest,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
-
         topicHistoryRecordService.recordHistory(req.with(topicId, request.remoteAddr), user)
 
         return ResponseEntity.ok().build()
