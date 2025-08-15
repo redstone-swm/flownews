@@ -1,10 +1,10 @@
 package com.flownews.api.topic.api
 
-import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.app.TopicSubscribeRequest
 import com.flownews.api.topic.app.TopicSubscribeService
 import com.flownews.api.user.app.CustomOAuth2User
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,7 +20,7 @@ class TopicSubscribeApi(
         @PathVariable topicId: Long,
         @RequestBody req: UserDeviceTokenUpdateRequest,
         @AuthenticationPrincipal principal: CustomOAuth2User,
-    ): ApiResponse<out Any?> =
+    ): ResponseEntity<out Any?> =
         try {
             topicSubscribeService.subscribeTopic(
                 TopicSubscribeRequest(
@@ -29,11 +29,11 @@ class TopicSubscribeApi(
                     topicId = topicId,
                 ),
             )
-            ApiResponse.ok()
+            ResponseEntity.ok().build()
         } catch (e: NoDataException) {
-            ApiResponse.badRequest(e.message)
+            ResponseEntity.badRequest().body(e.message)
         } catch (e: IllegalStateException) {
-            ApiResponse.badRequest(e.message)
+            ResponseEntity.badRequest().body(e.message)
         }
 }
 
