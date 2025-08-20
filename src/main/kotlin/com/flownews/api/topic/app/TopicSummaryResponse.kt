@@ -11,7 +11,7 @@ data class TopicSummaryResponse(
     companion object {
         fun fromEntity(topic: Topic): TopicSummaryResponse =
             TopicSummaryResponse(
-                id = topic.id!!,
+                id = topic.requireId(),
                 title = topic.title,
                 description = topic.description,
                 imageUrl = topic.imageUrl,

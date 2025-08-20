@@ -19,14 +19,16 @@ class Topic(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    @Column(nullable = false)
+    @Column(name = "title")
     var title: String,
     @Lob
-    @Column(nullable = true)
+    @Column(name = "description")
     var description: String? = null,
-    @Column(nullable = true)
+    @Column(name = "image_url")
     var imageUrl: String? = null,
     @OneToMany(mappedBy = "topic", cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderBy("eventTime ASC")
     var events: MutableList<Event> = mutableListOf(),
-) : BaseEntity()
+) : BaseEntity() {
+    fun requireId(): Long = id ?: throw IllegalStateException("Topic ID cannot be null")
+}

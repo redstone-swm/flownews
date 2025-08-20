@@ -21,14 +21,17 @@ class TopicSubscribeService(
     fun subscribeTopic(req: TopicSubscribeRequest) {
         val topic = getTopic(req.topicId)
         val user = req.user
-        val subscriptionId = TopicSubscriptionId(user.id!!, topic.id!!)
+
+        val userId = user.requireId()
+        val topicId = topic.requireId()
+        val deviceToken = req.deviceToken ?: throw IllegalStateException("User device token cannot be null")
+        val subscriptionId = TopicSubscriptionId(userId, topicId)
 
         if (topicSubscriptionRepository.existsById(subscriptionId)) {
             throw IllegalStateException("이미 구독한 토픽입니다")
         }
 
-        userUpdateService.updateDeviceToken(user.id!!, req.deviceToken!!)
-
+        userUpdateService.updateDeviceToken(userId, deviceToken)
         saveSubscription(user, topic)
     }
 

@@ -20,7 +20,7 @@ class TopicHistoryRecordService(
         user: CustomOAuth2User?,
     ) {
         if (user != null) {
-            recordHistoryInternal(req, user.getUser().id!!)
+            recordHistoryInternal(req, user.getUser().requireId())
         }
 
         logUserEvent(req)

@@ -26,7 +26,8 @@ class TopicQueryService(
             return TopicDetailsResponse.fromEntity(topic, randomTopics)
         }
 
-        val topicHistory = topicHistoryRepository.findByTopicIdAndUserId(id, user.getUser().id!!)
+        val userId = user.getUser().requireId()
+        val topicHistory = topicHistoryRepository.findByTopicIdAndUserId(id, userId)
 
         return TopicDetailsResponse.fromEntity(topic, randomTopics, topicHistory)
     }

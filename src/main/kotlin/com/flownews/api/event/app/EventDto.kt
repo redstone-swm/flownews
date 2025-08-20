@@ -14,7 +14,7 @@ data class EventDto(
     companion object {
         fun fromEntity(e: Event) =
             EventDto(
-                id = e.id!!,
+                id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
                 title = e.title,
                 description = e.description,
                 imageUrl = e.imageUrl,

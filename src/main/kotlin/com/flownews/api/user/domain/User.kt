@@ -16,19 +16,21 @@ class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    @Column(name = "oauth_id", nullable = false)
+    @Column(name = "oauth_id")
     val oauthId: String,
-    @Column(name = "provider", nullable = false)
+    @Column(name = "provider")
     val provider: String,
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     val name: String,
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     val email: String,
-    @Column(name = "profile_url", nullable = true)
+    @Column(name = "profile_url")
     val profileUrl: String? = null,
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     val role: Role,
-    @Column(name = "device_token", nullable = true)
+    @Column(name = "device_token")
     var deviceToken: String? = null,
-)
+) {
+    fun requireId(): Long = id ?: throw IllegalStateException("User ID cannot be null")
+}

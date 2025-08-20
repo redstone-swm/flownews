@@ -10,10 +10,10 @@ import java.time.LocalDateTime
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseEntity {
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at")
     lateinit var createdAt: LocalDateTime
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(name = "modified_at")
     lateinit var modifiedAt: LocalDateTime
 }

@@ -24,7 +24,7 @@ data class TopicDetailsResponse(
             randomTopics: List<Topic>,
             topicHistory: TopicHistory?,
         ) = TopicDetailsResponse(
-            id = topic.id!!,
+            id = topic.requireId(),
             title = topic.title,
             description = topic.description,
             imageUrl = topic.imageUrl,
