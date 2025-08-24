@@ -1,8 +1,8 @@
 package com.flownews.api.topic.api
 
+import com.flownews.api.auth.app.CustomOAuth2User
 import com.flownews.api.topic.app.TopicHistoryRecordRequest
 import com.flownews.api.topic.app.TopicHistoryRecordService
-import com.flownews.api.user.app.CustomOAuth2User
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal

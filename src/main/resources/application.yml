@@ -29,6 +29,11 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        base-uri: ${FRONTEND_URL:https://sijeom.kr}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 3600000 # 1 hour in milliseconds
 
 
 springdoc:

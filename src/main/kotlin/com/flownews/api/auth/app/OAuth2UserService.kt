@@ -1,4 +1,4 @@
-package com.flownews.api.user.app
+package com.flownews.api.auth.app
 
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository

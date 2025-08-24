@@ -1,6 +1,6 @@
 package com.flownews.api.user.api
 
-import com.flownews.api.user.app.CustomOAuth2User
+import com.flownews.api.auth.app.CustomOAuth2User
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-class UserMeQueryApi {
+class UserQueryApi {
     @GetMapping("/users/me")
     fun getCurrentUser(
         @AuthenticationPrincipal principal: CustomOAuth2User,
