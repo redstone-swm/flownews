@@ -1,6 +1,6 @@
 package com.flownews.api.user.api
 
-import com.flownews.api.auth.app.CustomOAuth2User
+import com.flownews.api.user.infra.CustomOAuth2User
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal

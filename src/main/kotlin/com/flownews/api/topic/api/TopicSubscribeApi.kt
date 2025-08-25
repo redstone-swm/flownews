@@ -1,9 +1,9 @@
 package com.flownews.api.topic.api
 
-import com.flownews.api.auth.app.CustomOAuth2User
 import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.app.TopicSubscribeRequest
 import com.flownews.api.topic.app.TopicSubscribeService
+import com.flownews.api.user.infra.CustomOAuth2User
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable

@@ -1,8 +1,8 @@
 package com.flownews.config.security
 
-import com.flownews.api.auth.app.CustomOAuth2User
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository
+import com.flownews.api.user.infra.CustomOAuth2User
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

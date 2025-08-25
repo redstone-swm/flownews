@@ -1,11 +1,11 @@
 package com.flownews.api.topic.app
 
-import com.flownews.api.auth.app.CustomOAuth2User
 import com.flownews.api.logs.domain.UserEventLog
 import com.flownews.api.logs.domain.UserEventLogger
 import com.flownews.api.logs.domain.enums.UserEventType
 import com.flownews.api.topic.domain.TopicHistory
 import com.flownews.api.topic.domain.TopicHistoryRepository
+import com.flownews.api.user.infra.CustomOAuth2User
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 

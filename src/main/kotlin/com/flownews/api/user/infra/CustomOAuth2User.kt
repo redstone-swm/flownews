@@ -1,4 +1,4 @@
-package com.flownews.api.auth.app
+package com.flownews.api.user.infra
 
 import com.flownews.api.user.domain.User
 import org.springframework.security.core.GrantedAuthority

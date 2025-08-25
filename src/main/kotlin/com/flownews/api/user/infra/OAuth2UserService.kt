@@ -1,10 +1,10 @@
-package com.flownews.api.auth.app
+package com.flownews.api.user.infra
 
-import com.flownews.api.auth.app.enums.OAuthProvider
 import com.flownews.api.user.app.UserCreateRequest
 import com.flownews.api.user.app.UserCreateService
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository
+import com.flownews.api.user.infra.enums.OAuthProvider
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -18,7 +18,7 @@ class OAuth2UserService(
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
         val oauth2User = super.loadUser(userRequest)
         val provider = OAuthProvider.from(userRequest.clientRegistration.registrationId)
-        val info = OAuthUserProfile.from(oauth2User, provider)
+        val info = OAuthUserProfile.of(oauth2User, provider)
 
         val user =
             getOrCreateUser(
@@ -61,7 +61,7 @@ private data class OAuthUserProfile(
     val provider: OAuthProvider,
 ) {
     companion object {
-        fun from(
+        fun of(
             user: OAuth2User,
             provider: OAuthProvider,
         ): OAuthUserProfile =

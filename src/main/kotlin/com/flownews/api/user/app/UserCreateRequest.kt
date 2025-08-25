@@ -1,6 +1,6 @@
 package com.flownews.api.user.app
 
-import com.flownews.api.auth.app.enums.OAuthProvider
+import com.flownews.api.user.infra.enums.OAuthProvider
 
 data class UserCreateRequest(
     val oauthId: String,

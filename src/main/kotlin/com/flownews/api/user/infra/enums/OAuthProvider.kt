@@ -1,4 +1,4 @@
-package com.flownews.api.auth.app.enums
+package com.flownews.api.user.infra.enums
 
 enum class OAuthProvider {
     GOOGLE,
