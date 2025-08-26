@@ -1,4 +1,4 @@
-package com.flownews.api.event.domain
+package com.flownews.api.topic.domain.event
 
 import BaseEntity
 import com.flownews.api.topic.domain.Topic
