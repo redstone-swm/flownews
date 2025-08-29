@@ -8,8 +8,8 @@ import java.time.LocalDateTime
 data class TopicDetailsResponse(
     val id: Long,
     val title: String,
-    val description: String?,
-    val imageUrl: String?,
+    val description: String,
+    val imageUrl: String,
     val lastReadEvent: Long? = null,
     val events: List<EventSummaryResponse>,
     val recommendTopics: List<TopicSummaryResponse>,
@@ -39,8 +39,8 @@ data class TopicDetailsResponse(
 data class EventSummaryResponse(
     var id: Long,
     var title: String,
-    var description: String?,
-    var imageUrl: String?,
+    var description: String,
+    var imageUrl: String,
     var eventTime: LocalDateTime,
     var relatedLinks: List<String>,
 ) {

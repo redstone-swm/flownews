@@ -8,7 +8,6 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.Lob
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
@@ -21,11 +20,10 @@ class Topic(
     var id: Long? = null,
     @Column(name = "title")
     var title: String,
-    @Lob
-    @Column(name = "description")
-    var description: String? = null,
+    @Column(name = "description", columnDefinition = "text")
+    var description: String,
     @Column(name = "image_url")
-    var imageUrl: String? = null,
+    var imageUrl: String,
     @OneToMany(mappedBy = "topic", cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderBy("eventTime ASC")
     var events: MutableList<Event> = mutableListOf(),

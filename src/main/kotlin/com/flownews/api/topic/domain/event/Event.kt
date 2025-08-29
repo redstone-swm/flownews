@@ -28,13 +28,13 @@ class Event(
     var title: String,
     @Lob
     @Column(name = "description")
-    var description: String? = null,
+    var description: String,
     @Column(name = "image_url")
-    var imageUrl: String? = null,
+    var imageUrl: String,
     @Column(name = "event_time")
     var eventTime: LocalDateTime,
     @Column(name = "related_links")
-    var relatedLinks: String? = null,
+    var relatedLinks: String,
 ) : BaseEntity() {
-    fun getRelatedLinks(): List<String> = relatedLinks?.split(",")?.map { it.trim() } ?: emptyList()
+    fun getRelatedLinks(): List<String> = relatedLinks.split(",").map { it.trim() }
 }
