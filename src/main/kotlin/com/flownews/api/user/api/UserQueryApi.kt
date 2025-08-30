@@ -1,5 +1,6 @@
 package com.flownews.api.user.api
 
+import com.flownews.api.user.app.UserQueryResponse
 import com.flownews.api.user.infra.CustomOAuth2User
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.ResponseEntity
@@ -13,16 +14,8 @@ class UserQueryApi {
     @GetMapping("/users/me")
     fun getCurrentUser(
         @AuthenticationPrincipal principal: CustomOAuth2User,
-    ): ResponseEntity<Any> {
-        val user = principal.getUser()
-        val response =
-            mapOf(
-                "id" to user.id,
-                "name" to user.name,
-                "email" to user.email,
-                "profileUrl" to user.profileUrl,
-                "role" to user.role,
-            )
+    ): ResponseEntity<UserQueryResponse> {
+        val response = UserQueryResponse.from(principal.getUser())
         return ResponseEntity.ok(response)
     }
 }
