@@ -1,4 +1,4 @@
-package com.flownews.api.topic.domain.event
+package com.flownews.api.event.domain
 
 import BaseEntity
 import com.flownews.api.topic.domain.Topic
@@ -11,6 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.Lob
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 
@@ -35,6 +36,9 @@ class Event(
     var eventTime: LocalDateTime,
     @Column(name = "related_links")
     var relatedLinks: String,
+    @Column(name = "view_count")
+    var viewCount: Long = 0,
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    var articles: MutableList<com.flownews.api.article.domain.Article> = mutableListOf()
 ) : BaseEntity() {
-    fun getRelatedLinks(): List<String> = relatedLinks.split(",").map { it.trim() }
 }

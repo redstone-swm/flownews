@@ -1,9 +1,8 @@
 package com.flownews.api.topic.app
 
+import com.flownews.api.event.app.EventSummaryResponse
 import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicHistory
-import com.flownews.api.topic.domain.event.Event
-import java.time.LocalDateTime
 
 data class TopicDetailsResponse(
     val id: Long,
@@ -36,23 +35,3 @@ data class TopicDetailsResponse(
     }
 }
 
-data class EventSummaryResponse(
-    var id: Long,
-    var title: String,
-    var description: String,
-    var imageUrl: String,
-    var eventTime: LocalDateTime,
-    var relatedLinks: List<String>,
-) {
-    companion object {
-        fun fromEntity(e: Event) =
-            EventSummaryResponse(
-                id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
-                title = e.title,
-                description = e.description,
-                imageUrl = e.imageUrl,
-                eventTime = e.eventTime,
-                relatedLinks = e.getRelatedLinks(),
-            )
-    }
-}

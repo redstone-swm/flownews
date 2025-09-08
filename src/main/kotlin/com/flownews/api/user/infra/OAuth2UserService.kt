@@ -4,11 +4,13 @@ import com.flownews.api.user.app.UserCreateRequest
 import com.flownews.api.user.app.UserCreateService
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository
+import com.flownews.api.user.domain.enums.Gender
 import com.flownews.api.user.infra.enums.OAuthProvider
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class OAuth2UserService(
@@ -48,7 +50,9 @@ class OAuth2UserService(
                     name = name,
                     profileUrl = profileUrl,
                     provider = provider,
-                ),
+                    birthDate = null, // OAuth에서는 제공되지 않으므로 null로 설정
+                    gender = null // OAuth에서는 제공되지 않으므로 null로 설정
+                )
             )
     }
 }
