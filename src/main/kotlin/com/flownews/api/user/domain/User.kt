@@ -1,5 +1,7 @@
 package com.flownews.api.user.domain
 
+import BaseEntity
+import com.flownews.api.user.domain.enums.Gender
 import com.flownews.api.user.domain.enums.Role
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -31,6 +33,11 @@ class User(
     val role: Role,
     @Column(name = "device_token")
     var deviceToken: String? = null,
-) {
+    @Column(name = "birth_date")
+    val birthDate: String,
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    val gender: Gender,
+) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("User ID cannot be null")
 }

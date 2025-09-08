@@ -18,7 +18,7 @@ spring:
     static-path-pattern: /content/**
 
   cors:
-    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000,https://sijeom.kr}
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000,https://sijeom.kr,http://121.189.148.34:5173}
 
   security:
     oauth2:
@@ -38,7 +38,7 @@ jwt:
 
 springdoc:
   swagger-ui:
-    enabled: false
+    enabled: true
 
 server:
   forward-headers-strategy: framework
