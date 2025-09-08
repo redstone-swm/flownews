@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.time.LocalDate
 
 @Entity
 @Table(name = "users")
@@ -34,10 +35,10 @@ class User(
     @Column(name = "device_token")
     var deviceToken: String? = null,
     @Column(name = "birth_date")
-    val birthDate: String,
+    val birthDate: LocalDate? = null,
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
-    val gender: Gender,
+    val gender: Gender? = null,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("User ID cannot be null")
 }
