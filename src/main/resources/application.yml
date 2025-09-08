@@ -3,15 +3,18 @@ spring:
     name: flownews
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URI}
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRESQL_URI}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
     show-sql: true
 
   mvc:

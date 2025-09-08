@@ -23,6 +23,7 @@ repositories {
 }
 
 extra["snippetsDir"] = file("build/generated-snippets")
+val springAiVersion by extra("1.0.1")
 
 dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
@@ -41,6 +42,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -49,6 +51,11 @@ dependencies {
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
     }
 }
 
