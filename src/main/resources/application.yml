@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URI}
+    url: ${POSTGRESQL_URI}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
@@ -12,6 +12,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: ${DB_SCHEMA:public}
     show-sql: true
 
   mvc:
