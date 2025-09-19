@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TopicRepository : CrudRepository<Topic, Long> {
-    @Query("SELECT t FROM Topic t WHERE t.id <> :excludeId ORDER BY function('RAND')")
+    @Query("SELECT t FROM Topic t WHERE t.id <> :excludeId ORDER BY function('random')")
     fun findAllExceptOneRandom(
         @Param("excludeId") excludeId: Long,
         pageable: Pageable,

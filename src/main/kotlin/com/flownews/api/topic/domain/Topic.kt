@@ -11,6 +11,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "topics")
@@ -21,6 +23,7 @@ class Topic(
     @Column(name = "title")
     var title: String,
     @Column(name = "description", columnDefinition = "text")
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     var description: String,
     @Column(name = "image_url")
     var imageUrl: String,
