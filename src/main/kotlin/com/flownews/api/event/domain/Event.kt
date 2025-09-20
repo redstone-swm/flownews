@@ -1,16 +1,15 @@
 package com.flownews.api.event.domain
 
 import BaseEntity
-import com.flownews.api.topic.domain.Topic
+import com.flownews.api.topic.domain.TopicEvent
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
 import jakarta.persistence.Lob
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -22,9 +21,6 @@ class Event(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id")
-    var topic: Topic,
     @Column(name = "title")
     var title: String,
     @Lob
@@ -34,11 +30,15 @@ class Event(
     var imageUrl: String,
     @Column(name = "event_time")
     var eventTime: LocalDateTime,
-    @Column(name = "related_links")
-    var relatedLinks: String,
     @Column(name = "view_count")
     var viewCount: Long = 0,
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    var articles: MutableList<com.flownews.api.article.domain.Article> = mutableListOf()
+    var articles: MutableList<com.flownews.api.article.domain.Article> = mutableListOf(),
+    @OneToMany(mappedBy = "event")
+    var topicEvents: MutableList<TopicEvent> = mutableListOf(),
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var reactions: MutableList<com.flownews.api.reaction.domain.Reaction> = mutableListOf(),
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var bookmarks: MutableList<com.flownews.api.bookmark.domain.Bookmark> = mutableListOf()
 ) : BaseEntity() {
 }

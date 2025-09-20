@@ -1,6 +1,7 @@
 package com.flownews.api.topic.app
 
 import com.flownews.api.common.app.NoDataException
+import com.flownews.api.reaction.domain.ReactionRepository
 import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicHistoryRepository
 import com.flownews.api.topic.domain.TopicRepository
@@ -14,6 +15,7 @@ class TopicQueryService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
     private val topicHistoryRepository: TopicHistoryRepository,
+    private val reactionRepository: ReactionRepository,
 ) {
     fun getTopic(
         id: Long,
@@ -23,13 +25,13 @@ class TopicQueryService(
         val randomTopics = getRandomTopics(id)
 
         if (user == null) {
-            return TopicDetailsResponse.fromEntity(topic, randomTopics)
+            return TopicDetailsResponse.fromEntity(topic, randomTopics, reactionRepository)
         }
 
         val userId = user.getUser().requireId()
         val topicHistory = topicHistoryRepository.findByTopicIdAndUserId(id, userId)
 
-        return TopicDetailsResponse.fromEntity(topic, randomTopics, topicHistory)
+        return TopicDetailsResponse.fromEntity(topic, randomTopics, topicHistory, reactionRepository)
     }
 
     fun getTopicWithSubscribers(id: Long): TopicWithSubscribers {
