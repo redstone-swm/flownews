@@ -32,7 +32,7 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-        base-uri: ${FRONTEND_URL:https://sijeom.kr}
+        base-uri: http://localhost:3000
 
 jwt:
   secret: ${JWT_SECRET}

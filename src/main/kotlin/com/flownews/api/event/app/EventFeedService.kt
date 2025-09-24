@@ -17,6 +17,9 @@ class EventFeedService(
 
         return allEvents
             .sortedByDescending { it.eventTime }
-            .map { event -> EventSummaryResponse.fromEntity(event, reactionRepository) }
+            .map { event -> 
+                val topicTitle = event.topicEvents.firstOrNull()?.topic?.title
+                EventSummaryResponse.fromEntity(event, reactionRepository, topicTitle)
+            }
     }
 }

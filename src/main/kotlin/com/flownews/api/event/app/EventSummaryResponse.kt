@@ -19,19 +19,22 @@ data class EventSummaryResponse(
     var imageUrl: String,
     @Schema(description = "이벤트 발생 일시", example = "2025-09-09T10:30:00")
     var eventTime: LocalDateTime,
+    @Schema(description = "토픽 제목", example = "손흥민 월드컵 활약")
+    var topicTitle: String?,
     @Schema(description = "관련 기사 목록")
     var articles: List<ArticleResponse>,
     @Schema(description = "반응 통계")
     var reactions: List<ReactionSummaryResponse>,
 ) {
     companion object {
-        fun fromEntity(e: Event, reactionRepository: ReactionRepository) =
+        fun fromEntity(e: Event, reactionRepository: ReactionRepository, topicTitle: String? = null) =
             EventSummaryResponse(
                 id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
                 title = e.title,
                 description = e.description,
                 imageUrl = e.imageUrl,
                 eventTime = e.eventTime,
+                topicTitle = topicTitle,
                 articles = e.articles.map { ArticleResponse.fromEntity(it) },
                 reactions = reactionRepository.findReactionCountsByEventId(e.id!!)
                     .map { ReactionSummaryResponse(it.reactionTypeName, it.count) }

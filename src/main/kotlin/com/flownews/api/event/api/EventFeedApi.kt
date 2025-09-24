@@ -25,16 +25,6 @@ class EventFeedApi(
     @Operation(
         summary = "사용자별 이벤트 피드 조회",
         description = "인증된 사용자의 개인화된 이벤트 피드를 반환합니다. 현재는 모든 이벤트를 반환하며, 향후 추천 알고리즘이 적용될 예정입니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "성공",
-                content = [Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = EventSummaryResponse::class)
-                )]
-            )
-        ]
     )
     @GetMapping("/feed")
     fun getUserEventFeed(

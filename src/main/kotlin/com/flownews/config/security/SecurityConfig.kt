@@ -30,7 +30,6 @@ class SecurityConfig(
                 it.successHandler { _, response, authentication ->
                     val principal = authentication.principal as OAuth2User
                     val token = jwtService.createToken(principal.name)
-
                     response.sendRedirect("$redirectUrl/auth/callback?token=$token")
                 }
             }.sessionManagement {
