@@ -1,4 +1,4 @@
-package com.flownews.config
+package com.flownews.config.security
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration

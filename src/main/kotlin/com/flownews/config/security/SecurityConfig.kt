@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.http.HttpStatus
 
 @Configuration
 @EnableWebSecurity
@@ -21,16 +22,22 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .cors { }
             .csrf { it.disable() }
-            .authorizeHttpRequests { auth ->
-                auth
-                    .anyRequest()
-                    .permitAll()
+            .authorizeHttpRequests {
+                it.requestMatchers("/events/**").authenticated()
+                it.anyRequest().permitAll()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
                     val principal = authentication.principal as OAuth2User
                     val token = jwtService.createToken(principal.name)
                     response.sendRedirect("$redirectUrl/auth/callback?token=$token")
+                }
+            }.exceptionHandling {
+                it.authenticationEntryPoint { _, response, _ ->
+                    response.status = HttpStatus.UNAUTHORIZED.value()
+                    response.contentType = "application/json"
+                    response.writer.write("""{"error":"Authentication required"}""")
                 }
             }.sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
