@@ -23,8 +23,7 @@ class Event(
     var id: Long? = null,
     @Column(name = "title")
     var title: String,
-    @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
     var description: String,
     @Column(name = "image_url")
     var imageUrl: String,
