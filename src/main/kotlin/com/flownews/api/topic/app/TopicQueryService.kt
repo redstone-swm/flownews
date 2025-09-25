@@ -17,22 +17,29 @@ class TopicQueryService(
     private val topicHistoryRepository: TopicHistoryRepository,
     private val reactionRepository: ReactionRepository,
 ) {
-    fun getTopic(
-        id: Long,
-        user: CustomOAuth2User?,
-    ): TopicDetailsResponse {
-        val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
-        val randomTopics = getRandomTopics(id)
-
-        if (user == null) {
-            return TopicDetailsResponse.fromEntity(topic, randomTopics, reactionRepository)
-        }
-
-        val userId = user.getUser().requireId()
-        val topicHistory = topicHistoryRepository.findByTopicIdAndUserId(id, userId)
-
-        return TopicDetailsResponse.fromEntity(topic, randomTopics, topicHistory, reactionRepository)
-    }
+//    fun getTopic(
+//        id: Long,
+//        user: CustomOAuth2User?,
+//    ): TopicDetailsResponse {
+//        val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }
+//        val randomTopics = getRandomTopics(id)
+//
+//        if (user == null) {
+//            val recommendTopics = randomTopics.map(TopicSummaryResponse::fromEntity)
+//            return TopicDetailsResponse.fromEntity(topic, recommendTopics, reactionRepository)
+//        }
+//
+//        val userId = user.getUser().requireId()
+//        val topicHistory = topicHistoryRepository.findByTopicIdAndUserId(id, userId)
+//        val isFollowing = topicSubscriptionRepository.existsByTopicIdAndUserId(id, userId)
+//
+//        val recommendTopics = randomTopics.map { recommendTopic ->
+//            val isRecommendFollowing = topicSubscriptionRepository.existsByTopicIdAndUserId(recommendTopic.requireId(), userId)
+//            TopicSummaryResponse.fromEntity(recommendTopic, isRecommendFollowing)
+//        }
+//
+//        return TopicDetailsResponse.fromEntity(topic, recommendTopics, topicHistory, reactionRepository, isFollowing)
+//    }
 
     fun getTopicWithSubscribers(id: Long): TopicWithSubscribers {
         val topic = topicRepository.findById(id).orElseThrow { NoDataException("topic not found : $id") }

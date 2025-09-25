@@ -19,9 +19,10 @@ class TopicDetailsQueryApi(
         @PathVariable id: Long,
         @AuthenticationPrincipal user: CustomOAuth2User?,
     ): ResponseEntity<TopicDetailsResponse?> =
-        try {
-            ResponseEntity.ok(topicQueryService.getTopic(id, user))
-        } catch (e: NoDataException) {
-            ResponseEntity.notFound().build()
-        }
+//        try {
+//            ResponseEntity.ok(topicQueryService.getTopic(id, user))
+//        } catch (e: NoDataException) {
+//            ResponseEntity.notFound().build()
+//        }
+        ResponseEntity.notFound().build()
 }

@@ -11,4 +11,14 @@ interface TopicSubscriptionRepository : CrudRepository<TopicSubscription, TopicS
     fun findByTopicId(
         @Param("topicId") topicId: Long,
     ): List<TopicSubscription>
+
+    fun existsByTopicIdAndUserId(
+        @Param("topicId") topicId: Long,
+        @Param("userId") userId: Long,
+    ): Boolean
+
+    fun findByTopicIdAndUserId(
+        @Param("topicId") topicId: Long,
+        @Param("userId") userId: Long,
+    ): TopicSubscription?
 }
