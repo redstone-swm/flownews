@@ -1,0 +1,62 @@
+package com.flownews.api.interaction.app
+
+import com.flownews.api.event.domain.Event
+import com.flownews.api.event.domain.EventRepository
+import com.flownews.api.interaction.domain.InteractionType
+import com.flownews.api.interaction.domain.UserEventInteraction
+import com.flownews.api.interaction.domain.UserEventInteractionRepository
+import com.flownews.api.user.domain.User
+import com.flownews.api.user.domain.UserRepository
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+@Transactional
+class UserEventInteractionService(
+    private val userEventInteractionRepository: UserEventInteractionRepository,
+    private val userRepository: UserRepository,
+    private val eventRepository: EventRepository
+) {
+    
+    fun recordInteraction(
+        userId: Long,
+        eventId: Long,
+        interactionType: InteractionType,
+        additionalData: String? = null
+    ): UserEventInteraction {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found with id: $userId") }
+        
+        val event = eventRepository.findById(eventId)
+            .orElseThrow { IllegalArgumentException("Event not found with id: $eventId") }
+        
+        val interaction = UserEventInteraction(
+            user = user,
+            event = event,
+            interactionType = interactionType,
+            additionalData = additionalData
+        )
+        
+        return userEventInteractionRepository.save(interaction)
+    }
+    
+    @Transactional(readOnly = true)
+    fun getUserInteractionsForEvent(userId: Long, eventId: Long): List<UserEventInteraction> {
+        return userEventInteractionRepository.findByUserIdAndEventId(userId, eventId)
+    }
+    
+    @Transactional(readOnly = true)
+    fun getUserInteractionsByType(userId: Long, interactionType: InteractionType): List<UserEventInteraction> {
+        return userEventInteractionRepository.findByUserIdAndInteractionType(userId, interactionType)
+    }
+    
+    @Transactional(readOnly = true)
+    fun getUserInteractionsForEvents(userId: Long, eventIds: List<Long>): List<UserEventInteraction> {
+        return userEventInteractionRepository.findByUserIdAndEventIds(userId, eventIds)
+    }
+    
+    @Transactional(readOnly = true)
+    fun getInteractionCountForEvent(eventId: Long, interactionType: InteractionType): Long {
+        return userEventInteractionRepository.countByEventIdAndInteractionType(eventId, interactionType)
+    }
+}

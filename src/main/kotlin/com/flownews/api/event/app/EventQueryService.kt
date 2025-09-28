@@ -14,10 +14,15 @@ class EventQueryService(
     private val topicSubscriptionRepository: TopicSubscriptionRepository
 ) {
     fun getEvent(id: Long, user: User?): EventSummaryResponse {
-        val event = eventRepository.findById(id).orElseThrow { 
-            NoDataException("Event not found: $id") 
+        val event = eventRepository.findById(id).orElseThrow {
+            NoDataException("Event not found: $id")
         }
-        
-        return EventSummaryResponse.fromEntity(event, reactionRepository, user, topicSubscriptionRepository)
+
+        return EventSummaryResponse.fromEntity(
+            event,
+            reactionRepository,
+            user,
+            topicSubscriptionRepository,
+        )
     }
 }

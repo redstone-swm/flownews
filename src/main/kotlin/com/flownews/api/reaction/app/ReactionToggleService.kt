@@ -18,19 +18,20 @@ class ReactionToggleService(
     private val eventRepository: EventRepository
 ) {
     fun toggleReaction(eventId: Long, reactionTypeId: Long, user: User): ReactionToggleResponse {
-        val event = eventRepository.findById(eventId).orElseThrow { 
-            NoDataException("Event not found: $eventId") 
+        val event = eventRepository.findById(eventId).orElseThrow {
+            NoDataException("Event not found: $eventId")
         }
-        
+
         val reactionType = reactionTypeRepository.findById(reactionTypeId).orElseThrow {
             NoDataException("ReactionType not found: $reactionTypeId")
         }
 
         // 기존 반응 찾기 (삭제되지 않은 것만)
-        val existingActiveReaction = reactionRepository.findByUserIdAndEventIdAndIsDeletedIsNull(user.requireId(), eventId)
+        val existingActiveReaction =
+            reactionRepository.findByUserIdAndEventIdAndIsDeletedIsNull(user.requireId(), eventId)
 
         return when {
-            // 기존 반응이 없는 경우 -> 새로 생성
+            // 기존 반응이 없는 경우 새로 생성
             existingActiveReaction == null -> {
                 val newReaction = Reaction(
                     user = user,
@@ -44,10 +45,9 @@ class ReactionToggleService(
                     message = "${reactionType.name} 반응이 추가되었습니다."
                 )
             }
-            
-            // 같은 반응 타입인 경우 -> 토글 (해제)
+
+            // 같은 반응 타입인 경우 해제
             existingActiveReaction.reactionType.id == reactionTypeId -> {
-                // 활성 상태 -> 삭제
                 existingActiveReaction.isDeleted = LocalDateTime.now()
                 reactionRepository.save(existingActiveReaction)
                 ReactionToggleResponse(
@@ -55,12 +55,12 @@ class ReactionToggleService(
                     message = "${reactionType.name} 반응이 해제되었습니다."
                 )
             }
-            
-            // 다른 반응 타입인 경우 -> 기존 반응 삭제하고 새로 생성
+
+            // 다른 반응 타입인 경우 기존 반응 삭제하고 새로 생성
             else -> {
                 existingActiveReaction.isDeleted = LocalDateTime.now()
                 reactionRepository.save(existingActiveReaction)
-                
+
                 val newReaction = Reaction(
                     user = user,
                     event = event,
