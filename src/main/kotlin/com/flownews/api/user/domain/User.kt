@@ -37,13 +37,15 @@ class User(
     @Column(name = "device_token")
     var deviceToken: String? = null,
     @Column(name = "birth_date")
-    val birthDate: LocalDate? = null,
+    var birthDate: LocalDate? = null,
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
-    val gender: Gender? = null,
+    var gender: Gender? = null,
+    @Column(name = "is_profile_complete")
+    var isProfileComplete: Boolean = false,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("User ID cannot be null")
-    
+
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var bookmarks: MutableList<com.flownews.api.bookmark.domain.Bookmark> = mutableListOf()
 }

@@ -1,6 +1,7 @@
 package com.flownews.config.security
 
 import com.flownews.api.user.domain.UserRepository
+import com.flownews.api.user.infra.CustomOAuth2User
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -29,8 +30,9 @@ class SecurityConfig(
                 it.anyRequest().permitAll()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
-                    val principal = authentication.principal as OAuth2User
-                    val token = jwtService.createToken(principal.name)
+                    val customUser = authentication.principal as CustomOAuth2User
+                    val user = customUser.getUser()
+                    val token = jwtService.createToken(user.id.toString())
                     response.sendRedirect("$redirectUrl/auth/callback?token=$token")
                 }
             }.exceptionHandling {
