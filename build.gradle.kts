@@ -42,7 +42,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.security:spring-security-test")
     runtimeOnly("com.h2database:h2")
-    implementation("org.postgresql:postgresql")
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("org.postgresql:postgresql")
     implementation("com.pgvector:pgvector:0.1.4")

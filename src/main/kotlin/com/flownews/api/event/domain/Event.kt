@@ -36,7 +36,7 @@ class Event(
     var viewCount: Long = 0,
     @Column(name = "embedding", columnDefinition = "public.vector(1536)")
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 1536)  // 차원 수
+//    @Array(length = 1536)  // 차원 수
     var embedding: FloatArray? = null,
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     var articles: MutableList<com.flownews.api.article.domain.Article> = mutableListOf(),
