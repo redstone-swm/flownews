@@ -22,6 +22,7 @@ class UserEventLogApi(
     ): ResponseEntity<Void> {
         val type = UserEventType.fromCode(eventType)
 
+        println("Received event log: $type with params $req from IP ${request.remoteAddr}")
         val log =
             UserEventLog(
                 eventType = type,
@@ -44,10 +45,12 @@ class UserEventLogApi(
                     "topicId" to req["topicId"],
                     "score" to req["score"],
                 )
+
             UserEventType.TOPIC_SUGGESTION ->
                 mapOf(
                     "content" to req["content"],
                 )
+
             UserEventType.ROUTE ->
                 mapOf(
                     "userId" to req["userId"],
@@ -56,6 +59,7 @@ class UserEventLogApi(
                     "referer" to req["referer"],
                     "page" to req["page"],
                 )
+
             else -> mapOf("message" to "Unsupported event type: $eventType")
         }
 }

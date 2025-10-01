@@ -8,6 +8,7 @@ data class UserQueryResponse(
     val email: String,
     val profileUrl: String?,
     val role: String,
+    val isProfileComplete: Boolean,
 ) {
     companion object {
         fun from(user: User): UserQueryResponse =
@@ -17,6 +18,7 @@ data class UserQueryResponse(
                 email = user.email,
                 profileUrl = user.profileUrl,
                 role = user.role.name,
+                isProfileComplete = user.isProfileComplete,
             )
     }
 }

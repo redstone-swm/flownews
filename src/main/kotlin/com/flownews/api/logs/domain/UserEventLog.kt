@@ -25,7 +25,7 @@ class UserEventLog(
     val eventTime: LocalDateTime,
     @Column(name = "ip_address")
     val ipAddress: String,
-    @Column(name = "param")
+    @Column(name = "param", columnDefinition = "text")
     val param: String,
 ) {
     constructor(

@@ -35,9 +35,27 @@ class TopicSubscribeApi(
         } catch (e: IllegalStateException) {
             ResponseEntity.badRequest().body(e.message)
         }
+
+    @PostMapping("/topics/{topicId}/unsubscribe")
+    fun unsubscribeTopic(
+        @PathVariable topicId: Long,
+        @AuthenticationPrincipal principal: CustomOAuth2User,
+    ): ResponseEntity<out Any?> =
+        try {
+            topicSubscribeService.unsubscribeTopic(
+                TopicSubscribeRequest(
+                    user = principal.getUser(),
+                    topicId = topicId,
+                ),
+            )
+            ResponseEntity.ok().build()
+        } catch (e: NoDataException) {
+            ResponseEntity.badRequest().body(e.message)
+        } catch (e: IllegalStateException) {
+            ResponseEntity.badRequest().body(e.message)
+        }
 }
 
 data class UserDeviceTokenUpdateRequest(
-    val userId: Long,
     val deviceToken: String,
 )

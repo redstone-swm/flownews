@@ -1,0 +1,33 @@
+package com.flownews.api.event.api
+
+import com.flownews.api.event.app.EventFeedService
+import com.flownews.api.event.app.EventFeedResponse
+import com.flownews.api.user.infra.CustomOAuth2User
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@Tag(name = "Event Feed", description = "사용자별 이벤트 피드 API")
+@SecurityRequirement(name = "bearerAuth")
+@RestController
+@RequestMapping("/events")
+class EventFeedApi(
+    private val eventFeedService: EventFeedService
+) {
+    @Operation(
+        summary = "사용자별 이벤트 피드 조회",
+        description = "인증된 사용자의 개인화된 이벤트 피드의 이벤트 ID 목록을 반환합니다. 각 이벤트의 상세 정보는 /events/{id} 엔드포인트로 별도 요청해야 합니다.",
+    )
+    @GetMapping("/feed")
+    fun getUserEventFeed(
+        @AuthenticationPrincipal principal: CustomOAuth2User
+    ): ResponseEntity<EventFeedResponse> {
+        val eventFeed = eventFeedService.getUserEventFeedIds(principal.getUser())
+        return ResponseEntity.ok(eventFeed)
+    }
+}

@@ -35,6 +35,20 @@ class TopicSubscribeService(
         saveSubscription(user, topic)
     }
 
+    @Transactional
+    fun unsubscribeTopic(req: TopicSubscribeRequest) {
+        val topic = getTopic(req.topicId)
+        val user = req.user
+
+        val userId = user.requireId()
+        val topicId = topic.requireId()
+
+        val subscription = topicSubscriptionRepository.findByTopicIdAndUserId(topicId, userId)
+            ?: throw NoDataException("No subscription found for user $userId and topic $topicId")
+
+        topicSubscriptionRepository.delete(subscription)
+    }
+
     private fun saveSubscription(
         user: User,
         topic: Topic,
