@@ -12,14 +12,15 @@ data class ArticleResponse(
     @Schema(description = "기사 출처(언론사)", example = "연합뉴스")
     val source: String,
     @Schema(description = "기사 링크", example = "https://example.com/news/1")
-    val url: String
+    val url: String,
 ) {
     companion object {
-        fun fromEntity(article: Article) = ArticleResponse(
-            id = article.id ?: throw IllegalStateException("Article ID cannot be null"),
-            title = article.title,
-            source = article.source,
-            url = article.url
-        )
+        fun fromEntity(article: Article) =
+            ArticleResponse(
+                id = article.id ?: throw IllegalStateException("Article ID cannot be null"),
+                title = article.title,
+                source = article.source,
+                url = article.url,
+            )
     }
 }

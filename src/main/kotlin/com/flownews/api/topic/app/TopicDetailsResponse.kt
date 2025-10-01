@@ -24,19 +24,19 @@ data class TopicDetailsResponse(
             reactionRepository: ReactionRepository,
             isFollowing: Boolean,
             user: User?,
-            topicSubscriptionRepository: com.flownews.api.topic.domain.TopicSubscriptionRepository
+            topicSubscriptionRepository: com.flownews.api.topic.domain.TopicSubscriptionRepository,
         ) = TopicDetailsResponse(
             id = topic.requireId(),
             title = topic.title,
             description = topic.description,
             imageUrl = topic.imageUrl,
             isFollowing = isFollowing,
-            events = topic.topicEvents.map { it.event }.map {
-                EventSummaryResponse.fromEntity(it, reactionRepository, user, topicSubscriptionRepository)
-            },
+            events =
+                topic.topicEvents.map { it.event }.map {
+                    EventSummaryResponse.fromEntity(it, reactionRepository, user, topicSubscriptionRepository)
+                },
             recommendTopics = recommendTopics,
             lastReadEvent = topicHistory?.eventId,
         )
     }
 }
-

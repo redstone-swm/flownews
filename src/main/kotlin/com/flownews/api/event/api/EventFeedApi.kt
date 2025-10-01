@@ -1,7 +1,7 @@
 package com.flownews.api.event.api
 
-import com.flownews.api.event.app.EventFeedService
 import com.flownews.api.event.app.EventFeedResponse
+import com.flownews.api.event.app.EventFeedService
 import com.flownews.api.user.infra.CustomOAuth2User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/events")
 class EventFeedApi(
-    private val eventFeedService: EventFeedService
+    private val eventFeedService: EventFeedService,
 ) {
     @Operation(
         summary = "사용자별 이벤트 피드 조회",
@@ -25,7 +25,7 @@ class EventFeedApi(
     )
     @GetMapping("/feed")
     fun getUserEventFeed(
-        @AuthenticationPrincipal principal: CustomOAuth2User
+        @AuthenticationPrincipal principal: CustomOAuth2User,
     ): ResponseEntity<EventFeedResponse> {
         val eventFeed = eventFeedService.getUserEventFeedIds(principal.getUser())
         return ResponseEntity.ok(eventFeed)

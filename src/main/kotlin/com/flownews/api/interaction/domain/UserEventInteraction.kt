@@ -21,19 +21,15 @@ class UserEventInteraction(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     val event: Event,
-
     @Column(name = "interaction_type", nullable = false)
     @Enumerated(EnumType.STRING)
     val interactionType: InteractionType,
-
     @Column(name = "additional_data")
-    val additionalData: String? = null
+    val additionalData: String? = null,
 ) : BaseEntity()

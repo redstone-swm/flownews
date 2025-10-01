@@ -53,7 +53,6 @@ class JwtService(
         } catch (e: Exception) {
             null
         }
-
 }
 
 @ConfigurationProperties(prefix = "jwt")

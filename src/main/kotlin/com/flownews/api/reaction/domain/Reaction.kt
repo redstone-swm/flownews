@@ -30,5 +30,5 @@ class Reaction(
     @JoinColumn(name = "reaction_type_id")
     val reactionType: ReactionType,
     @Column(name = "is_deleted")
-    var isDeleted: LocalDateTime? = null
+    var isDeleted: LocalDateTime? = null,
 ) : BaseEntity()

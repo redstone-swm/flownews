@@ -15,16 +15,22 @@ import java.time.LocalDateTime
 class ReactionToggleService(
     private val reactionRepository: ReactionRepository,
     private val reactionTypeRepository: ReactionTypeRepository,
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
 ) {
-    fun toggleReaction(eventId: Long, reactionTypeId: Long, user: User): ReactionToggleResponse {
-        val event = eventRepository.findById(eventId).orElseThrow {
-            NoDataException("Event not found: $eventId")
-        }
+    fun toggleReaction(
+        eventId: Long,
+        reactionTypeId: Long,
+        user: User,
+    ): ReactionToggleResponse {
+        val event =
+            eventRepository.findById(eventId).orElseThrow {
+                NoDataException("Event not found: $eventId")
+            }
 
-        val reactionType = reactionTypeRepository.findById(reactionTypeId).orElseThrow {
-            NoDataException("ReactionType not found: $reactionTypeId")
-        }
+        val reactionType =
+            reactionTypeRepository.findById(reactionTypeId).orElseThrow {
+                NoDataException("ReactionType not found: $reactionTypeId")
+            }
 
         // 기존 반응 찾기 (삭제되지 않은 것만)
         val existingActiveReaction =
@@ -33,16 +39,17 @@ class ReactionToggleService(
         return when {
             // 기존 반응이 없는 경우 새로 생성
             existingActiveReaction == null -> {
-                val newReaction = Reaction(
-                    user = user,
-                    event = event,
-                    reactionType = reactionType,
-                    isDeleted = null
-                )
+                val newReaction =
+                    Reaction(
+                        user = user,
+                        event = event,
+                        reactionType = reactionType,
+                        isDeleted = null,
+                    )
                 reactionRepository.save(newReaction)
                 ReactionToggleResponse(
                     isActive = true,
-                    message = "${reactionType.name} 반응이 추가되었습니다."
+                    message = "${reactionType.name} 반응이 추가되었습니다.",
                 )
             }
 
@@ -52,7 +59,7 @@ class ReactionToggleService(
                 reactionRepository.save(existingActiveReaction)
                 ReactionToggleResponse(
                     isActive = false,
-                    message = "${reactionType.name} 반응이 해제되었습니다."
+                    message = "${reactionType.name} 반응이 해제되었습니다.",
                 )
             }
 
@@ -61,16 +68,17 @@ class ReactionToggleService(
                 existingActiveReaction.isDeleted = LocalDateTime.now()
                 reactionRepository.save(existingActiveReaction)
 
-                val newReaction = Reaction(
-                    user = user,
-                    event = event,
-                    reactionType = reactionType,
-                    isDeleted = null
-                )
+                val newReaction =
+                    Reaction(
+                        user = user,
+                        event = event,
+                        reactionType = reactionType,
+                        isDeleted = null,
+                    )
                 reactionRepository.save(newReaction)
                 ReactionToggleResponse(
                     isActive = true,
-                    message = "${reactionType.name} 반응이 추가되었습니다."
+                    message = "${reactionType.name} 반응이 추가되었습니다.",
                 )
             }
         }

@@ -23,7 +23,7 @@ data class UserCreateRequest(
         description = "성별 (MALE: 남성, FEMALE: 여성, NON_BINARY: 논바이너리, PREFER_NOT_TO_SAY: 답변 거부)",
         example = "MALE",
         allowableValues = ["MALE", "FEMALE", "NON_BINARY", "PREFER_NOT_TO_SAY"],
-        nullable = true
+        nullable = true,
     )
     val gender: Gender?,
 )

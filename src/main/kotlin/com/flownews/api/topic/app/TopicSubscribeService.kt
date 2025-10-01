@@ -43,8 +43,9 @@ class TopicSubscribeService(
         val userId = user.requireId()
         val topicId = topic.requireId()
 
-        val subscription = topicSubscriptionRepository.findByTopicIdAndUserId(topicId, userId)
-            ?: throw NoDataException("No subscription found for user $userId and topic $topicId")
+        val subscription =
+            topicSubscriptionRepository.findByTopicIdAndUserId(topicId, userId)
+                ?: throw NoDataException("No subscription found for user $userId and topic $topicId")
 
         topicSubscriptionRepository.delete(subscription)
     }

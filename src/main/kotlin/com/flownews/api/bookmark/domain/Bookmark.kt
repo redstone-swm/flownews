@@ -26,5 +26,5 @@ class Bookmark(
     @JoinColumn(name = "event_id")
     val event: Event,
     @Column(name = "is_deleted")
-    var isDeleted: Boolean = false
+    var isDeleted: Boolean = false,
 ) : BaseEntity()

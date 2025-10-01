@@ -15,7 +15,7 @@ class ReactionType(
     @Column(name = "reaction_type_id")
     val id: Long? = null,
     @Column(name = "reaction_type_name")
-    val name: String
+    val name: String,
 ) {
     fun requireId(): Long = id ?: throw IllegalStateException("ReactionType ID cannot be null")
 }

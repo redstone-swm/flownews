@@ -22,5 +22,5 @@ class TopicEvent(
     val topic: Topic,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    val event: Event
+    val event: Event,
 ) : BaseEntity()

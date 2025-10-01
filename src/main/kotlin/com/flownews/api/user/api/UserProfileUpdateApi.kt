@@ -25,10 +25,11 @@ class UserProfileUpdateApi(
         @AuthenticationPrincipal principal: CustomOAuth2User,
         @RequestBody request: UserProfileUpdateRequest,
     ) {
-        val updatedUser = userUpdateService.updateProfile(
-            userId = principal.getUser().id!!,
-            birthDate = request.birthDate,
-            gender = request.gender,
-        )
+        val updatedUser =
+            userUpdateService.updateProfile(
+                userId = principal.getUser().id!!,
+                birthDate = request.birthDate,
+                gender = request.gender,
+            )
     }
 }

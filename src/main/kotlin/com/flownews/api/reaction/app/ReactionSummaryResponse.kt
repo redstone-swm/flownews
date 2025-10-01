@@ -11,10 +11,10 @@ data class ReactionSummaryResponse(
     @Schema(description = "반응 개수", example = "10")
     val count: Long,
     @Schema(description = "사용자가 이 반응을 눌렀는지 여부", example = "true")
-    val isActive: Boolean = false
+    val isActive: Boolean = false,
 )
 
-//data class EventWithReactionsResponse(
+// data class EventWithReactionsResponse(
 //    val id: Long,
 //    val title: String,
 //    val description: String,
@@ -22,4 +22,4 @@ data class ReactionSummaryResponse(
 //    val eventTime: String,
 //    val viewCount: Long,
 //    val reactions: List<ReactionSummaryResponse>
-//)
+// )

@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service
 class EventQueryService(
     private val eventRepository: EventRepository,
     private val reactionRepository: ReactionRepository,
-    private val topicSubscriptionRepository: TopicSubscriptionRepository
+    private val topicSubscriptionRepository: TopicSubscriptionRepository,
 ) {
-    fun getEvent(id: Long, user: User?): EventSummaryResponse {
-        val event = eventRepository.findById(id).orElseThrow {
-            NoDataException("Event not found: $id")
-        }
+    fun getEvent(
+        id: Long,
+        user: User?,
+    ): EventSummaryResponse {
+        val event =
+            eventRepository.findById(id).orElseThrow {
+                NoDataException("Event not found: $id")
+            }
 
         return EventSummaryResponse.fromEntity(
             event,

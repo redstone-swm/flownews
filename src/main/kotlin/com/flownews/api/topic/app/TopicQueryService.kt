@@ -6,7 +6,6 @@ import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicHistoryRepository
 import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
-import com.flownews.api.user.infra.CustomOAuth2User
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 

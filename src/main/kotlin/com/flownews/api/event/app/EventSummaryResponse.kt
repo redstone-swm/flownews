@@ -1,7 +1,7 @@
 package com.flownews.api.event.app
 
-import com.flownews.api.event.domain.Event
 import com.flownews.api.article.app.ArticleResponse
+import com.flownews.api.event.domain.Event
 import com.flownews.api.reaction.app.ReactionSummaryResponse
 import com.flownews.api.reaction.domain.ReactionRepository
 import com.flownews.api.topic.app.TopicSummaryResponse
@@ -30,49 +30,57 @@ data class EventSummaryResponse(
     var reactions: List<ReactionSummaryResponse>,
 ) {
     companion object {
-        fun fromEntity(e: Event, reactionRepository: ReactionRepository) =
-            EventSummaryResponse(
-                id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
-                title = e.title,
-                description = e.description,
-                imageUrl = e.imageUrl,
-                eventTime = e.eventTime,
-                topics = e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) },
-                articles = e.articles.map { ArticleResponse.fromEntity(it) },
-                reactions = reactionRepository.findReactionCountsByEventId(e.id!!)
-                    .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, false) }
-            )
-
         fun fromEntity(
             e: Event,
             reactionRepository: ReactionRepository,
-            user: User?,
-            topicSubscriptionRepository: TopicSubscriptionRepository
         ) = EventSummaryResponse(
             id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
             title = e.title,
             description = e.description,
             imageUrl = e.imageUrl,
             eventTime = e.eventTime,
-            topics = if (user != null) {
-                val userId = user.requireId()
-                e.topicEvents.map { topicEvent ->
-                    val isFollowing =
-                        topicSubscriptionRepository.existsByTopicIdAndUserId(topicEvent.topic.requireId(), userId)
-                    TopicSummaryResponse.fromEntity(topicEvent.topic, isFollowing)
-                }
-            } else {
-                e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) }
-            },
+            topics = e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) },
             articles = e.articles.map { ArticleResponse.fromEntity(it) },
-            reactions = if (user != null) {
-                val userId = user.requireId()
-                reactionRepository.findReactionCountsByEventIdAndUserId(e.id!!, userId)
-                    .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, it.active) }
-            } else {
-                reactionRepository.findReactionCountsByEventId(e.id!!)
-                    .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, false) }
-            }
+            reactions =
+                reactionRepository
+                    .findReactionCountsByEventId(e.id!!)
+                    .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, false) },
+        )
+
+        fun fromEntity(
+            e: Event,
+            reactionRepository: ReactionRepository,
+            user: User?,
+            topicSubscriptionRepository: TopicSubscriptionRepository,
+        ) = EventSummaryResponse(
+            id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
+            title = e.title,
+            description = e.description,
+            imageUrl = e.imageUrl,
+            eventTime = e.eventTime,
+            topics =
+                if (user != null) {
+                    val userId = user.requireId()
+                    e.topicEvents.map { topicEvent ->
+                        val isFollowing =
+                            topicSubscriptionRepository.existsByTopicIdAndUserId(topicEvent.topic.requireId(), userId)
+                        TopicSummaryResponse.fromEntity(topicEvent.topic, isFollowing)
+                    }
+                } else {
+                    e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) }
+                },
+            articles = e.articles.map { ArticleResponse.fromEntity(it) },
+            reactions =
+                if (user != null) {
+                    val userId = user.requireId()
+                    reactionRepository
+                        .findReactionCountsByEventIdAndUserId(e.id!!, userId)
+                        .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, it.active) }
+                } else {
+                    reactionRepository
+                        .findReactionCountsByEventId(e.id!!)
+                        .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, false) }
+                },
         )
     }
 }

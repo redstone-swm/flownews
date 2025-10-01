@@ -17,12 +17,15 @@ data class TopicSummaryResponse(
     val isFollowing: Boolean = false,
 ) {
     companion object {
-        fun fromEntity(topic: Topic, isFollowing: Boolean = false) = TopicSummaryResponse(
+        fun fromEntity(
+            topic: Topic,
+            isFollowing: Boolean = false,
+        ) = TopicSummaryResponse(
             id = topic.id ?: throw IllegalStateException("Topic ID cannot be null"),
             title = topic.title,
             description = topic.description,
             imageUrl = topic.imageUrl,
-            isFollowing = isFollowing
+            isFollowing = isFollowing,
         )
     }
 }

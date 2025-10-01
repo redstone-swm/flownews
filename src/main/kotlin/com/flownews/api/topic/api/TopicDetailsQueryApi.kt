@@ -1,6 +1,5 @@
 package com.flownews.api.topic.api
 
-import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.app.TopicDetailsResponse
 import com.flownews.api.topic.app.TopicQueryService
 import com.flownews.api.user.infra.CustomOAuth2User

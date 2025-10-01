@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface ReactionRepository : JpaRepository<Reaction, Long> {
-
     @Query(
         """
         SELECT rt.id as reactionTypeId, rt.name as reactionTypeName, COALESCE(COUNT(r), 0) as count 
@@ -12,7 +11,7 @@ interface ReactionRepository : JpaRepository<Reaction, Long> {
         LEFT JOIN Reaction r ON r.reactionType.id = rt.id AND r.event.id = :eventId AND r.isDeleted IS NULL 
         GROUP BY rt.id, rt.name
         ORDER BY rt.id
-    """
+    """,
     )
     fun findReactionCountsByEventId(eventId: Long): List<ReactionCount>
 
@@ -34,11 +33,17 @@ interface ReactionRepository : JpaRepository<Reaction, Long> {
           AND ur.isDeleted IS NULL
     GROUP BY rt.id, rt.name
     ORDER BY rt.id
-    """
+    """,
     )
-    fun findReactionCountsByEventIdAndUserId(eventId: Long, userId: Long): List<ReactionCountWithActive>
+    fun findReactionCountsByEventIdAndUserId(
+        eventId: Long,
+        userId: Long,
+    ): List<ReactionCountWithActive>
 
-    fun findByUserIdAndEventIdAndIsDeletedIsNull(userId: Long, eventId: Long): Reaction?
+    fun findByUserIdAndEventIdAndIsDeletedIsNull(
+        userId: Long,
+        eventId: Long,
+    ): Reaction?
 }
 
 interface ReactionCount {

@@ -13,8 +13,8 @@ data class UserProfileUpdateResponse(
     val isProfileComplete: Boolean,
 ) {
     companion object {
-        fun from(user: User): UserProfileUpdateResponse {
-            return UserProfileUpdateResponse(
+        fun from(user: User): UserProfileUpdateResponse =
+            UserProfileUpdateResponse(
                 id = user.id!!,
                 email = user.email,
                 name = user.name,
@@ -22,6 +22,5 @@ data class UserProfileUpdateResponse(
                 gender = user.gender,
                 isProfileComplete = user.isProfileComplete,
             )
-        }
     }
 }

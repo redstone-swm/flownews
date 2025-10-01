@@ -23,10 +23,8 @@ class TopicSubscription(
     @ManyToOne
     @JoinColumn(name = "topic_id", referencedColumnName = "id")
     var topic: Topic,
-
     @Column(name = "subscription_date")
     var subscriptionDate: LocalDateTime? = null,
-
     @Column(name = "push_enabled")
-    var pushEnabled: Boolean? = null
+    var pushEnabled: Boolean? = null,
 ) : BaseEntity()

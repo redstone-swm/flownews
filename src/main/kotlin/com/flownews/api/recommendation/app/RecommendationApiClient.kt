@@ -15,28 +15,28 @@ import java.time.LocalDateTime
 class RecommendationApiClient(
     @Value("\${recommendation.api.url}")
     private val recommendationApiUrl: String,
-    private val restTemplate: RestTemplate = RestTemplate()
+    private val restTemplate: RestTemplate = RestTemplate(),
 ) {
-
-    fun getRecommendedEvents(request: RecommendationRequest): RecommendationResponse? {
-        return try {
-            val headers = HttpHeaders().apply {
-                contentType = MediaType.APPLICATION_JSON
-            }
+    fun getRecommendedEvents(request: RecommendationRequest): RecommendationResponse? =
+        try {
+            val headers =
+                HttpHeaders().apply {
+                    contentType = MediaType.APPLICATION_JSON
+                }
 
             val entity = HttpEntity(request, headers)
 
-            restTemplate.exchange(
-                "$recommendationApiUrl/recommend",
-                HttpMethod.POST,
-                entity,
-                RecommendationResponse::class.java
-            ).body
+            restTemplate
+                .exchange(
+                    "$recommendationApiUrl/recommend",
+                    HttpMethod.POST,
+                    entity,
+                    RecommendationResponse::class.java,
+                ).body
         } catch (e: Exception) {
             println("Error calling recommendation API: ${e.message}")
             null
         }
-    }
 }
 
 data class UserEventInteractionIn(
@@ -46,7 +46,7 @@ data class UserEventInteractionIn(
     val interactionType: String,
     @JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    val createdAt: LocalDateTime? = null
+    val createdAt: LocalDateTime? = null,
 )
 
 data class RecommendationRequest(
@@ -55,10 +55,10 @@ data class RecommendationRequest(
     @JsonProperty("interactions")
     val interactions: List<UserEventInteractionIn>,
     @JsonProperty("num_recommended_events")
-    val numRecommendedEvents: Int
+    val numRecommendedEvents: Int,
 )
 
 data class RecommendationResponse(
     @JsonProperty("recommended_event_ids")
-    val recommendedEventIds: List<Long>
+    val recommendedEventIds: List<Long>,
 )

@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/events")
 class EventQueryApi(
-    private val eventQueryService: EventQueryService
+    private val eventQueryService: EventQueryService,
 ) {
     @Operation(
         summary = "이벤트 상세 조회",
-        description = "이벤트 ID로 특정 이벤트의 상세 정보를 조회합니다. 사용자가 인증된 경우 토픽 팔로우 상태가 포함됩니다."
+        description = "이벤트 ID로 특정 이벤트의 상세 정보를 조회합니다. 사용자가 인증된 경우 토픽 팔로우 상태가 포함됩니다.",
     )
     @GetMapping("/{id}")
     fun getEvent(
         @PathVariable id: Long,
-        @AuthenticationPrincipal user: CustomOAuth2User?
-    ): ResponseEntity<EventSummaryResponse> = 
+        @AuthenticationPrincipal user: CustomOAuth2User?,
+    ): ResponseEntity<EventSummaryResponse> =
         try {
             val eventDetails = eventQueryService.getEvent(id, user?.getUser())
             ResponseEntity.ok(eventDetails)

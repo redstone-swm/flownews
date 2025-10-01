@@ -26,5 +26,5 @@ class Article(
     @Column(name = "source")
     var source: String,
     @Column(name = "url")
-    var url: String
+    var url: String,
 )

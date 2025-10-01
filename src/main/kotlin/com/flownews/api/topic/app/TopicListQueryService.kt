@@ -4,8 +4,6 @@ import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.infra.CustomOAuth2User
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,11 +13,11 @@ class TopicListQueryService(
 ) {
     fun getTopics(user: CustomOAuth2User?): List<TopicSummaryResponse> {
         val topics = topicRepository.findAll()
-        
+
         if (user == null) {
             return topics.map(TopicSummaryResponse::fromEntity)
         }
-        
+
         val userId = user.getUser().requireId()
         return topics.map { topic ->
             val isFollowing = topicSubscriptionRepository.existsByTopicIdAndUserId(topic.requireId(), userId)
