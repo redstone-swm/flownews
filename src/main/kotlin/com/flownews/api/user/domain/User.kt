@@ -48,4 +48,19 @@ class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var bookmarks: MutableList<com.flownews.api.bookmark.domain.Bookmark> = mutableListOf()
+
+    fun updateDeviceToken(newDeviceToken: String?) {
+        if (newDeviceToken == null) return
+
+        this.deviceToken = newDeviceToken
+    }
+
+    fun updateProfile(
+        birthDate: LocalDate,
+        gender: Gender,
+    ) {
+        this.birthDate = birthDate
+        this.gender = gender
+        this.isProfileComplete = true
+    }
 }
