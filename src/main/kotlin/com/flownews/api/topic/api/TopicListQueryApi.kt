@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RestController
 class TopicListQueryApi(
     private val topicListQueryService: TopicListQueryService,
 ) {
-//    @GetMapping("/topics", params = ["for=main"])
-//    fun getTopics(): ResponseEntity<TopicSectionListQueryResponse> =
-//        null
-
     @GetMapping("/topics")
     fun getAllTopics(
         @AuthenticationPrincipal user: CustomOAuth2User?,
