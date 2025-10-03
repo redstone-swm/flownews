@@ -1,6 +1,8 @@
 package com.flownews.api.user.app
 
 import com.flownews.api.common.app.NoDataException
+import com.flownews.api.topic.app.TopicMultipleSubscribeRequest
+import com.flownews.api.topic.app.TopicSubscribeService
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.UserRepository
 import com.flownews.api.user.infra.UserProfileApiClient
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service
 class UserUpdateService(
     private val userRepository: UserRepository,
     private val userProfileClient: UserProfileApiClient,
+    private val topicSubscribeService: TopicSubscribeService,
 ) {
     @Transactional
     fun updateDeviceToken(
@@ -28,7 +31,9 @@ class UserUpdateService(
     fun updateProfile(request: UserProfileUpdateRequest): User {
         val (birthDate, gender, userId, topicIds) = request
         val user = getUser(userId)
+
         user.updateProfile(birthDate, gender)
+        topicSubscribeService.subscribeTopics(TopicMultipleSubscribeRequest(user, topicIds))
 
         userProfileClient.updateUserProfileVector(
             UserProfileVectorUpdateRequest(

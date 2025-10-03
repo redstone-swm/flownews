@@ -25,7 +25,7 @@ class UserProfileApiClient(
             val response =
                 restTemplate
                     .exchange(
-                        "$recommendationApiUrl/v1/users/{userId}/profile",
+                        "$recommendationApiUrl/v1/users/${request.userId}/profile",
                         HttpMethod.POST,
                         HttpEntity<UserProfileVectorUpdateRequest>(request, headers),
                         UpdateUserProfileResponse::class.java,
@@ -47,8 +47,6 @@ data class UpdateUserProfileResponse(
     val status: String,
     @JsonProperty("user_id")
     val userId: Int,
-    @JsonProperty("user_profile_vector")
-    val updatedProfileVector: List<Float>,
     @JsonProperty("processed_topics")
     val processedTopics: Int,
 )

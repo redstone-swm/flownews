@@ -6,7 +6,6 @@ import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscription
 import com.flownews.api.topic.domain.TopicSubscriptionId
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
-import com.flownews.api.user.app.UserUpdateService
 import com.flownews.api.user.domain.User
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -15,25 +14,25 @@ import org.springframework.stereotype.Service
 class TopicSubscribeService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
-    private val userUpdateService: UserUpdateService,
 ) {
     @Transactional
     fun subscribeTopic(req: TopicSubscribeRequest) {
-        val topic = getTopic(req.topicId)
-        val user = req.user
+        val (user, topicId) = req
+        val topic = getTopic(topicId)
 
         val userId = user.requireId()
-        val topicId = topic.requireId()
-        val deviceToken = req.deviceToken ?: throw IllegalStateException("User device token cannot be null")
         val subscriptionId = TopicSubscriptionId(userId, topicId)
 
         if (topicSubscriptionRepository.existsById(subscriptionId)) {
             throw IllegalStateException("이미 구독한 토픽입니다")
         }
 
-        userUpdateService.updateDeviceToken(userId, deviceToken)
         saveSubscription(user, topic)
     }
+
+    @Transactional
+    fun subscribeTopics(req: TopicMultipleSubscribeRequest) =
+        req.topicId.forEach { topicId -> subscribeTopic(TopicSubscribeRequest(req.user, topicId)) }
 
     @Transactional
     fun unsubscribeTopic(req: TopicSubscribeRequest) {

@@ -5,5 +5,9 @@ import com.flownews.api.user.domain.User
 data class TopicSubscribeRequest(
     val user: User,
     val topicId: Long,
-    val deviceToken: String? = null,
+)
+
+data class TopicMultipleSubscribeRequest(
+    val user: User,
+    val topicId: List<Long>,
 )
