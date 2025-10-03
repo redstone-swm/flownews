@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "topic_events")
+@Table(name = "topic_event_map")
 class TopicEvent(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

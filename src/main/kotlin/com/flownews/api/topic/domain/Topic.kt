@@ -20,7 +20,7 @@ class Topic(
     var id: Long? = null,
     @Column(name = "title")
     var title: String,
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "samples", columnDefinition = "text")
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     var description: String,
     @Column(name = "image_url")
@@ -29,4 +29,6 @@ class Topic(
     var topicEvents: MutableList<TopicEvent> = mutableListOf(),
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Topic ID cannot be null")
+
+    fun getLastEvent() = topicEvents.maxByOrNull { it.event.eventTime }?.event
 }

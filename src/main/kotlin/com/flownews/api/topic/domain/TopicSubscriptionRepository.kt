@@ -12,6 +12,11 @@ interface TopicSubscriptionRepository : CrudRepository<TopicSubscription, TopicS
         @Param("topicId") topicId: Long,
     ): List<TopicSubscription>
 
+    @EntityGraph(attributePaths = ["topic"])
+    fun findByUserId(
+        @Param("userId") userId: Long,
+    ): List<TopicSubscription>
+
     fun existsByTopicIdAndUserId(
         @Param("topicId") topicId: Long,
         @Param("userId") userId: Long,

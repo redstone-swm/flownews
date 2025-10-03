@@ -1,6 +1,9 @@
 package com.flownews.api.event.domain
 
 import BaseEntity
+import com.flownews.api.article.domain.Article
+import com.flownews.api.bookmark.domain.Bookmark
+import com.flownews.api.reaction.domain.Reaction
 import com.flownews.api.topic.domain.TopicEvent
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -37,11 +40,13 @@ class Event(
     @JdbcTypeCode(SqlTypes.VECTOR)
     var embedding: FloatArray? = null,
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    var articles: MutableList<com.flownews.api.article.domain.Article> = mutableListOf(),
+    var articles: MutableList<Article> = mutableListOf(),
     @OneToMany(mappedBy = "event")
     var topicEvents: MutableList<TopicEvent> = mutableListOf(),
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var reactions: MutableList<com.flownews.api.reaction.domain.Reaction> = mutableListOf(),
+    var reactions: MutableList<Reaction> = mutableListOf(),
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var bookmarks: MutableList<com.flownews.api.bookmark.domain.Bookmark> = mutableListOf(),
-) : BaseEntity()
+    var bookmarks: MutableList<Bookmark> = mutableListOf(),
+) : BaseEntity() {
+    fun requireId(): Long = id ?: throw IllegalStateException("Event ID cannot be null")
+}

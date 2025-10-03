@@ -1,6 +1,5 @@
-package com.flownews.api.recommendation.app
+package com.flownews.api.event.infra
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -9,7 +8,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import java.time.LocalDateTime
 
 @Service
 class RecommendationApiClient(
@@ -17,48 +15,38 @@ class RecommendationApiClient(
     private val recommendationApiUrl: String,
     private val restTemplate: RestTemplate = RestTemplate(),
 ) {
-    fun getRecommendedEvents(request: RecommendationRequest): RecommendationResponse? =
+    fun getRecommendedEvents(userId: Long): List<Long> =
         try {
             val headers =
                 HttpHeaders().apply {
                     contentType = MediaType.APPLICATION_JSON
                 }
 
-            val entity = HttpEntity(request, headers)
-
-            restTemplate
-                .exchange(
-                    "$recommendationApiUrl/recommend",
-                    HttpMethod.POST,
-                    entity,
-                    RecommendationResponse::class.java,
-                ).body
+            val response =
+                restTemplate
+                    .exchange(
+                        "$recommendationApiUrl/v1/recommendations?user_id=$userId",
+                        HttpMethod.GET,
+                        HttpEntity<String>(null, headers),
+                        EventRecommendationQueryResponse::class.java,
+                    ).body
+            response?.events?.map { it.eventId } ?: emptyList()
         } catch (e: Exception) {
             println("Error calling recommendation API: ${e.message}")
-            null
+            emptyList()
         }
 }
 
-data class UserEventInteractionIn(
-    @JsonProperty("event_id")
-    val eventId: Long,
-    @JsonProperty("interaction_type")
-    val interactionType: String,
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    val createdAt: LocalDateTime? = null,
-)
-
-data class RecommendationRequest(
+data class EventRecommendationQueryResponse(
     @JsonProperty("user_id")
     val userId: Long,
-    @JsonProperty("interactions")
-    val interactions: List<UserEventInteractionIn>,
-    @JsonProperty("num_recommended_events")
-    val numRecommendedEvents: Int,
+    @JsonProperty("events")
+    val events: List<EventRecommendationQueryItemResponse>,
 )
 
-data class RecommendationResponse(
-    @JsonProperty("recommended_event_ids")
-    val recommendedEventIds: List<Long>,
+data class EventRecommendationQueryItemResponse(
+    @JsonProperty("item_id")
+    val eventId: Long,
+    @JsonProperty("score")
+    val score: Double,
 )
