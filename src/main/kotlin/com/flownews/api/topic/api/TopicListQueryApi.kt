@@ -2,10 +2,12 @@ package com.flownews.api.topic.api
 
 import com.flownews.api.topic.app.TopicListQueryService
 import com.flownews.api.topic.app.TopicSummaryResponse
+import com.flownews.api.topic.app.TopicTopKQueryResponse
 import com.flownews.api.user.infra.CustomOAuth2User
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -16,4 +18,10 @@ class TopicListQueryApi(
     fun getAllTopics(
         @AuthenticationPrincipal user: CustomOAuth2User?,
     ): ResponseEntity<List<TopicSummaryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(user))
+
+    @GetMapping("/topics/topk")
+    fun getTopKTopics(
+        @RequestParam(required = false) limit: Int = 5,
+    ): ResponseEntity<List<TopicTopKQueryResponse>> =
+        ResponseEntity.ok(topicListQueryService.getTopKTopicsInLast24Hours(limit))
 }
