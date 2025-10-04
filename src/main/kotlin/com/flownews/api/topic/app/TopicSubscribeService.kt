@@ -28,6 +28,8 @@ class TopicSubscribeService(
         }
 
         saveSubscription(user, topic)
+
+        // TODO 토픽 구독시 인터렉션 로직 추가
     }
 
     @Transactional
