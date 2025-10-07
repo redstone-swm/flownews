@@ -1,5 +1,6 @@
 package com.flownews.api.topic.domain
 
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -8,6 +9,8 @@ import java.time.LocalDateTime
 
 @Repository
 interface TopicRepository : CrudRepository<Topic, Long> {
+    fun findAll(pageable: Pageable): List<Topic>
+
     @Query(
         """
         SELECT t FROM Topic t 

@@ -2,6 +2,7 @@ package com.flownews.api.reaction.domain
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 interface ReactionRepository : JpaRepository<Reaction, Long> {
     @Query(
@@ -44,6 +45,19 @@ interface ReactionRepository : JpaRepository<Reaction, Long> {
         userId: Long,
         eventId: Long,
     ): Reaction?
+
+    @Query(
+        """
+        SELECT r FROM Reaction r 
+        WHERE r.user.id = :userId 
+        AND r.event.id IN :eventIds 
+        AND r.isDeleted IS NULL
+        """,
+    )
+    fun findByUserIdAndEventIdsAndIsDeletedIsNull(
+        @Param("userId") userId: Long,
+        @Param("eventIds") eventIds: List<Long>,
+    ): List<Reaction>
 }
 
 interface ReactionCount {

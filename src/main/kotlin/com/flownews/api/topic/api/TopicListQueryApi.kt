@@ -17,7 +17,8 @@ class TopicListQueryApi(
     @GetMapping("/topics")
     fun getAllTopics(
         @AuthenticationPrincipal user: CustomOAuth2User?,
-    ): ResponseEntity<List<TopicSummaryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(user))
+        @RequestParam(required = false) limit: Int = 10,
+    ): ResponseEntity<List<TopicSummaryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(user, limit))
 
     @GetMapping("/topics/topk")
     fun getTopKTopics(
