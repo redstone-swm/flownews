@@ -11,8 +11,6 @@ data class TopicSummaryResponse(
     val title: String,
     @Schema(description = "토픽 설명", example = "토트넘 홋스퍼 FC의 대한민국 축구 선수")
     val description: String,
-    @Schema(description = "토픽 이미지 URL", example = "https://example.com/topic-image.jpg")
-    val imageUrl: String,
     @Schema(description = "사용자가 이 토픽을 팔로우하는지 여부", example = "false")
     val isFollowing: Boolean = false,
 ) {
@@ -24,7 +22,6 @@ data class TopicSummaryResponse(
             id = topic.id ?: throw IllegalStateException("Topic ID cannot be null"),
             title = topic.title,
             description = topic.description,
-            imageUrl = topic.imageUrl,
             isFollowing = isFollowing,
         )
     }

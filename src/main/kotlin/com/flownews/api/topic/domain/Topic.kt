@@ -1,6 +1,7 @@
 package com.flownews.api.topic.domain
 
 import BaseEntity
+import com.flownews.api.event.domain.Event
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -20,15 +21,15 @@ class Topic(
     var id: Long? = null,
     @Column(name = "title")
     var title: String,
-    @Column(name = "samples", columnDefinition = "text")
+    @Column(name = "description", columnDefinition = "text")
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     var description: String,
-    @Column(name = "image_url")
-    var imageUrl: String,
     @OneToMany(mappedBy = "topic", cascade = [CascadeType.ALL], orphanRemoval = true)
     var topicEvents: MutableList<TopicEvent> = mutableListOf(),
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Topic ID cannot be null")
 
-    fun getLastEvent() = topicEvents.maxByOrNull { it.event.eventTime }?.event
+    fun getLastEvent(): Event? = topicEvents.maxByOrNull { it.event.eventTime }?.event
+
+    fun getEvents(): List<Event> = topicEvents.map { it.event }
 }

@@ -23,6 +23,10 @@ class Article(
     var event: Event,
     @Column(name = "title")
     var title: String,
+    @Column(name = "category")
+    var category: String? = null,
+    @Column(name = "summary")
+    var summary: String? = null,
     @Column(name = "source")
     var source: String,
     @Column(name = "url")
