@@ -26,6 +26,8 @@ class PushMessageSender(
 
     // FIXME Firebase 코드 이동 필요
     private fun sendPushMessagesInternal(messages: List<PushMessage>) {
+        if (messages.isEmpty()) return
+
         val firebaseMessages =
             messages
                 .map { it ->
@@ -37,7 +39,6 @@ class PushMessageSender(
                                 .builder()
                                 .setTitle(it.title)
                                 .setBody(it.content)
-                                .setImage(it.imageUrl)
                                 .build(),
                         ).putData("topicId", it.topicId.toString())
                         .build()
