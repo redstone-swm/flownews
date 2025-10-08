@@ -22,9 +22,14 @@ class TopicQueryService(
         val userId = user.requireId()
 
         val isFollowing = topicSubscriptionRepository.existsByTopicIdAndUserId(topicId, userId)
-        val reactedEventIds = findReactedEventIds(topic, userId)
 
-        return TopicQueryResponse.of(topic, isFollowing, reactedEventIds)
+        return TopicQueryResponse.of(
+            topic = topic,
+            isFollowing = isFollowing,
+            reactionRepository = reactionRepository,
+            topicSubscriptionRepository = topicSubscriptionRepository,
+            user = user,
+        )
     }
 
     fun getTopicWithSubscribers(topicId: Long): TopicWithSubscribers {
@@ -33,20 +38,6 @@ class TopicQueryService(
         val subscribers = subscriptions.map { it.user }
 
         return TopicWithSubscribers(topic, subscribers)
-    }
-
-    private fun findReactedEventIds(
-        topic: Topic,
-        userId: Long,
-    ): Set<Long> {
-        val eventIds = topic.getEvents().map { it.requireId() }
-        if (eventIds.isEmpty()) return emptySet()
-
-        return reactionRepository
-            .findByUserIdAndEventIdsAndIsDeletedIsNull(userId, eventIds)
-            .asSequence()
-            .map { it.event.requireId() }
-            .toSet()
     }
 
     private fun getTopic(topicId: Long): Topic =

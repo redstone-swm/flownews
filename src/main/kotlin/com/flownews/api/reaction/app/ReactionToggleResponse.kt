@@ -8,4 +8,6 @@ data class ReactionToggleResponse(
     val isActive: Boolean,
     @Schema(description = "응답 메시지", example = "좋아요 반응이 추가되었습니다.")
     val message: String,
+    @Schema(description = "해당 반응의 총 개수", example = "5")
+    val count: Long,
 )

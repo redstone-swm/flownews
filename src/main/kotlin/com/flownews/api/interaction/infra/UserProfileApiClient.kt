@@ -16,41 +16,35 @@ class UserProfileApiClient(
     private val recommendationApiUrl: String,
     private val restTemplate: RestTemplate = RestTemplate(),
 ) {
-    fun updateProfileByTopic(request: TopicBasedProfileUpdateRequest) =
-        try {
-            val headers =
-                HttpHeaders().apply {
-                    contentType = MediaType.APPLICATION_JSON
-                }
+    fun updateProfileByTopic(request: TopicBasedProfileUpdateRequest) {
+        val headers =
+            HttpHeaders().apply {
+                contentType = MediaType.APPLICATION_JSON
+            }
 
-            restTemplate
-                .exchange(
-                    "$recommendationApiUrl/v1/users/${request.userId}/profile/topics",
-                    HttpMethod.POST,
-                    HttpEntity<TopicBasedProfileUpdateRequest>(request, headers),
-                    UserProfileUpdateResponse::class.java,
-                ).body
-        } catch (e: Exception) {
-            println("Error calling recommendation API: ${e.message}")
-        }
+        restTemplate
+            .exchange(
+                "$recommendationApiUrl/v1/users/${request.userId}/profile/topics",
+                HttpMethod.POST,
+                HttpEntity<TopicBasedProfileUpdateRequest>(request, headers),
+                UserProfileUpdateResponse::class.java,
+            ).body
+    }
 
-    fun updateProfileByEvent(request: EventBasedProfileUpdateRequest) =
-        try {
-            val headers =
-                HttpHeaders().apply {
-                    contentType = MediaType.APPLICATION_JSON
-                }
+    fun updateProfileByEvent(request: EventBasedProfileUpdateRequest) {
+        val headers =
+            HttpHeaders().apply {
+                contentType = MediaType.APPLICATION_JSON
+            }
 
-            restTemplate
-                .exchange(
-                    "$recommendationApiUrl/v1/users/${request.userId}/profile/events",
-                    HttpMethod.POST,
-                    HttpEntity<EventBasedProfileUpdateRequest>(request, headers),
-                    UserProfileUpdateResponse::class.java,
-                ).body
-        } catch (e: Exception) {
-            println("Error calling recommendation API: ${e.message}")
-        }
+        restTemplate
+            .exchange(
+                "$recommendationApiUrl/v1/users/${request.userId}/profile/events",
+                HttpMethod.POST,
+                HttpEntity<EventBasedProfileUpdateRequest>(request, headers),
+                UserProfileUpdateResponse::class.java,
+            ).body
+    }
 }
 
 data class TopicBasedProfileUpdateRequest(
@@ -58,17 +52,23 @@ data class TopicBasedProfileUpdateRequest(
     val userId: Long,
     @JsonProperty("topic_ids")
     val topicIds: List<Long>,
-    @JsonProperty("interaction_type")
-    val interactionType: InteractionType,
-)
+    @JsonProperty("action")
+    val action: InteractionType,
+) {
+    constructor(
+        userId: Long,
+        topicId: Long,
+        interactionType: InteractionType,
+    ) : this(userId, listOf(topicId), interactionType)
+}
 
 data class EventBasedProfileUpdateRequest(
     @JsonProperty("user_id")
     val userId: Long,
     @JsonProperty("event_ids")
     val eventIds: List<Long>,
-    @JsonProperty("interaction_type")
-    val interactionType: InteractionType,
+    @JsonProperty("action")
+    val action: InteractionType,
 ) {
     constructor(
         userId: Long,
