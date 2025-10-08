@@ -1,5 +1,6 @@
 package com.flownews.api.user.api
 
+import com.flownews.api.user.app.UserDeviceTokenUpdateRequest
 import com.flownews.api.user.app.UserProfileUpdateRequest
 import com.flownews.api.user.app.UserUpdateService
 import com.flownews.api.user.infra.CustomOAuth2User
@@ -25,5 +26,15 @@ class UserProfileUpdateApi(
     ) {
         val withUserId = request.withUserId(principal.getUser().requireId())
         userUpdateService.updateProfile(withUserId)
+    }
+
+    @Operation(summary = "사용자 FCM 토큰 업데이트", description = "사용자의 FCM 토큰을 업데이트합니다.")
+    @PostMapping("/device-token")
+    fun updateDeviceToken(
+        @AuthenticationPrincipal principal: CustomOAuth2User,
+        @RequestBody request: UserDeviceTokenUpdateRequest,
+    ) {
+        val withUserId = request.withUserId(principal.getUser().requireId())
+        userUpdateService.updateDeviceToken(withUserId)
     }
 }

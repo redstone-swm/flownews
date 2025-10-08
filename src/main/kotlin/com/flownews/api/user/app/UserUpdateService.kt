@@ -11,10 +11,8 @@ class UserUpdateService(
     private val userRepository: UserRepository,
 ) {
     @Transactional
-    fun updateDeviceToken(
-        userId: Long,
-        deviceToken: String?,
-    ): User {
+    fun updateDeviceToken(request: UserDeviceTokenUpdateRequest): User {
+        val (userId, deviceToken) = request
         val user = getUser(userId)
         user.updateDeviceToken(deviceToken)
 
