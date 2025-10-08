@@ -12,7 +12,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: ${DB_SCHEMA:public}
+        default_schema: ${DB_SCHEMA:news}
     show-sql: false
 
   mvc:

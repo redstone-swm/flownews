@@ -51,6 +51,33 @@ class TopicSubscribeService(
         topicSubscriptionRepository.delete(subscription)
     }
 
+    @Transactional
+    fun toggleSubscription(req: TopicSubscribeRequest): TopicSubscriptionToggleResponse {
+        val topic = getTopic(req.topicId)
+        val user = req.user
+
+        val userId = user.requireId()
+        val topicId = topic.requireId()
+
+        val existingSubscription = topicSubscriptionRepository.findByTopicIdAndUserId(topicId, userId)
+
+        return if (existingSubscription != null) {
+            // 구독이 있으면 해제
+            topicSubscriptionRepository.delete(existingSubscription)
+            TopicSubscriptionToggleResponse(
+                isSubscribed = false,
+                message = "토픽 구독을 해제했습니다."
+            )
+        } else {
+            // 구독이 없으면 구독
+            saveSubscription(user, topic)
+            TopicSubscriptionToggleResponse(
+                isSubscribed = true,
+                message = "토픽을 구독했습니다."
+            )
+        }
+    }
+
     private fun saveSubscription(
         user: User,
         topic: Topic,

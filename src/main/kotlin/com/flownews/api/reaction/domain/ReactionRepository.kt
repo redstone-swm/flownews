@@ -58,6 +58,20 @@ interface ReactionRepository : JpaRepository<Reaction, Long> {
         @Param("userId") userId: Long,
         @Param("eventIds") eventIds: List<Long>,
     ): List<Reaction>
+
+    @Query(
+        """
+        SELECT COUNT(r) 
+        FROM Reaction r 
+        WHERE r.event.id = :eventId 
+        AND r.reactionType.id = :reactionTypeId 
+        AND r.isDeleted IS NULL
+        """,
+    )
+    fun countByEventIdAndReactionTypeIdAndIsDeletedIsNull(
+        eventId: Long,
+        reactionTypeId: Long,
+    ): Long
 }
 
 interface ReactionCount {

@@ -33,23 +33,6 @@ data class EventSummaryResponse(
         fun fromEntity(
             e: Event,
             reactionRepository: ReactionRepository,
-        ) = EventSummaryResponse(
-            id = e.id ?: throw IllegalStateException("Event ID cannot be null"),
-            title = e.title,
-            description = e.description,
-            imageUrl = e.imageUrl,
-            eventTime = e.eventTime,
-            topics = e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) },
-            articles = e.articles.map { ArticleResponse.fromEntity(it) },
-            reactions =
-                reactionRepository
-                    .findReactionCountsByEventId(e.id!!)
-                    .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, false) },
-        )
-
-        fun fromEntity(
-            e: Event,
-            reactionRepository: ReactionRepository,
             user: User?,
             topicSubscriptionRepository: TopicSubscriptionRepository,
         ) = EventSummaryResponse(
@@ -70,17 +53,28 @@ data class EventSummaryResponse(
                     e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) }
                 },
             articles = e.articles.map { ArticleResponse.fromEntity(it) },
-            reactions =
-                if (user != null) {
-                    val userId = user.requireId()
-                    reactionRepository
-                        .findReactionCountsByEventIdAndUserId(e.id!!, userId)
-                        .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, it.active) }
-                } else {
-                    reactionRepository
-                        .findReactionCountsByEventId(e.id!!)
-                        .map { ReactionSummaryResponse(it.reactionTypeId, it.reactionTypeName, it.count, false) }
-                },
+            reactions = if (user != null) {
+                reactionRepository.findReactionCountsByEventIdAndUserId(
+                    e.requireId(),
+                    user.requireId()
+                ).map { reaction ->
+                    ReactionSummaryResponse(
+                        reactionTypeId = reaction.reactionTypeId,
+                        reactionTypeName = reaction.reactionTypeName,
+                        count = reaction.count,
+                        isActive = reaction.active
+                    )
+                }
+            } else {
+                reactionRepository.findReactionCountsByEventId(e.requireId()).map { reaction ->
+                    ReactionSummaryResponse(
+                        reactionTypeId = reaction.reactionTypeId,
+                        reactionTypeName = reaction.reactionTypeName,
+                        count = reaction.count,
+                        isActive = false
+                    )
+                }
+            }
         )
     }
 }
