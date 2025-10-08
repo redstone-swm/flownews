@@ -21,44 +21,6 @@ import org.springframework.web.bind.annotation.RestController
 class TopicSubscribeApi(
     private val topicSubscribeService: TopicSubscribeService,
 ) {
-    @PostMapping("/topics/{topicId}/subscribe")
-    fun subscribeTopic(
-        @PathVariable topicId: Long,
-        @AuthenticationPrincipal principal: CustomOAuth2User,
-    ): ResponseEntity<out Any?> =
-        try {
-            topicSubscribeService.subscribeTopic(
-                TopicSubscribeRequest(
-                    user = principal.getUser(),
-                    topicId = topicId,
-                ),
-            )
-            ResponseEntity.ok().build()
-        } catch (e: NoDataException) {
-            ResponseEntity.badRequest().body(e.message)
-        } catch (e: IllegalStateException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
-
-    @PostMapping("/topics/{topicId}/unsubscribe")
-    fun unsubscribeTopic(
-        @PathVariable topicId: Long,
-        @AuthenticationPrincipal principal: CustomOAuth2User,
-    ): ResponseEntity<out Any?> =
-        try {
-            topicSubscribeService.unsubscribeTopic(
-                TopicSubscribeRequest(
-                    user = principal.getUser(),
-                    topicId = topicId,
-                ),
-            )
-            ResponseEntity.ok().build()
-        } catch (e: NoDataException) {
-            ResponseEntity.badRequest().body(e.message)
-        } catch (e: IllegalStateException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
-
     @Operation(
         summary = "토픽 구독 토글",
         description = "토픽 구독 상태를 토글합니다. 구독 중이면 해제하고, 구독하지 않았으면 구독합니다.",
@@ -70,13 +32,14 @@ class TopicSubscribeApi(
         @AuthenticationPrincipal principal: CustomOAuth2User,
     ): ResponseEntity<TopicSubscriptionToggleResponse> =
         try {
-            val response = topicSubscribeService.toggleSubscription(
-                TopicSubscribeRequest(
-                    user = principal.getUser(),
-                    topicId = topicId,
-                ),
-            )
-            ResponseEntity.ok(response)
+            val isSubscribe =
+                topicSubscribeService.toggleSubscription(
+                    TopicSubscribeRequest(
+                        user = principal.getUser(),
+                        topicId = topicId,
+                    ),
+                )
+            ResponseEntity.ok(TopicSubscriptionToggleResponse(isSubscribed = isSubscribe))
         } catch (e: NoDataException) {
             ResponseEntity.notFound().build()
         }

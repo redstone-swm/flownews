@@ -5,4 +5,5 @@ enum class InteractionType {
     ARTICLE_CLICKED, // 기사 읽기를 클릭
     TOPIC_VIEWED, // 토픽 상세를 확인
     TOPIC_FOLLOWED, // 토픽 팔로우를 클릭
+    TOPIC_UNFOLLOWED, // 토픽 언팔로우를 클릭
 }

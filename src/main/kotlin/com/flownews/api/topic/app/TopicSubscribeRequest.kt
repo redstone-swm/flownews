@@ -6,8 +6,3 @@ data class TopicSubscribeRequest(
     val user: User,
     val topicId: Long,
 )
-
-data class TopicMultipleSubscribeRequest(
-    val user: User,
-    val topicId: List<Long>,
-)
