@@ -47,7 +47,11 @@ class ReactionToggleService(
                         isDeleted = null,
                     )
                 reactionRepository.save(newReaction)
-                val count = reactionRepository.countByEventIdAndReactionTypeIdAndIsDeletedIsNull(eventId, reactionTypeId)
+                val count =
+                    reactionRepository.countByEventIdAndReactionTypeIdAndIsDeletedIsNull(
+                        eventId,
+                        reactionTypeId,
+                    )
                 ReactionToggleResponse(
                     isActive = true,
                     message = "${reactionType.name} 반응이 추가되었습니다.",
@@ -59,7 +63,11 @@ class ReactionToggleService(
             existingActiveReaction.reactionType.id == reactionTypeId -> {
                 existingActiveReaction.isDeleted = LocalDateTime.now()
                 reactionRepository.save(existingActiveReaction)
-                val count = reactionRepository.countByEventIdAndReactionTypeIdAndIsDeletedIsNull(eventId, reactionTypeId)
+                val count =
+                    reactionRepository.countByEventIdAndReactionTypeIdAndIsDeletedIsNull(
+                        eventId,
+                        reactionTypeId,
+                    )
                 ReactionToggleResponse(
                     isActive = false,
                     message = "${reactionType.name} 반응이 해제되었습니다.",
@@ -80,7 +88,11 @@ class ReactionToggleService(
                         isDeleted = null,
                     )
                 reactionRepository.save(newReaction)
-                val count = reactionRepository.countByEventIdAndReactionTypeIdAndIsDeletedIsNull(eventId, reactionTypeId)
+                val count =
+                    reactionRepository.countByEventIdAndReactionTypeIdAndIsDeletedIsNull(
+                        eventId,
+                        reactionTypeId,
+                    )
                 ReactionToggleResponse(
                     isActive = true,
                     message = "${reactionType.name} 반응이 추가되었습니다.",

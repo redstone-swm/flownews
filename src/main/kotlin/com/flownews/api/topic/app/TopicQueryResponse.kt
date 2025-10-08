@@ -31,14 +31,15 @@ data class TopicQueryResponse(
             id = topic.requireId(),
             title = topic.title,
             description = topic.description,
-            events = topic.getEvents().map { event ->
-                EventSummaryResponse.fromEntity(
-                    e = event,
-                    reactionRepository = reactionRepository,
-                    user = user,
-                    topicSubscriptionRepository = topicSubscriptionRepository,
-                )
-            },
+            events =
+                topic.getEvents().map { event ->
+                    EventSummaryResponse.fromEntity(
+                        e = event,
+                        reactionRepository = reactionRepository,
+                        user = user,
+                        topicSubscriptionRepository = topicSubscriptionRepository,
+                    )
+                },
             isFollowing = isFollowing,
         )
     }

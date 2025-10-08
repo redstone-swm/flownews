@@ -28,7 +28,7 @@ class TopicQueryService(
             isFollowing = isFollowing,
             reactionRepository = reactionRepository,
             topicSubscriptionRepository = topicSubscriptionRepository,
-            user = user
+            user = user,
         )
     }
 

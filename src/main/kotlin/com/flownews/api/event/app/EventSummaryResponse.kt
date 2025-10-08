@@ -53,28 +53,30 @@ data class EventSummaryResponse(
                     e.topicEvents.map { TopicSummaryResponse.fromEntity(it.topic) }
                 },
             articles = e.articles.map { ArticleResponse.fromEntity(it) },
-            reactions = if (user != null) {
-                reactionRepository.findReactionCountsByEventIdAndUserId(
-                    e.requireId(),
-                    user.requireId()
-                ).map { reaction ->
-                    ReactionSummaryResponse(
-                        reactionTypeId = reaction.reactionTypeId,
-                        reactionTypeName = reaction.reactionTypeName,
-                        count = reaction.count,
-                        isActive = reaction.active
-                    )
-                }
-            } else {
-                reactionRepository.findReactionCountsByEventId(e.requireId()).map { reaction ->
-                    ReactionSummaryResponse(
-                        reactionTypeId = reaction.reactionTypeId,
-                        reactionTypeName = reaction.reactionTypeName,
-                        count = reaction.count,
-                        isActive = false
-                    )
-                }
-            }
+            reactions =
+                if (user != null) {
+                    reactionRepository
+                        .findReactionCountsByEventIdAndUserId(
+                            e.requireId(),
+                            user.requireId(),
+                        ).map { reaction ->
+                            ReactionSummaryResponse(
+                                reactionTypeId = reaction.reactionTypeId,
+                                reactionTypeName = reaction.reactionTypeName,
+                                count = reaction.count,
+                                isActive = reaction.active,
+                            )
+                        }
+                } else {
+                    reactionRepository.findReactionCountsByEventId(e.requireId()).map { reaction ->
+                        ReactionSummaryResponse(
+                            reactionTypeId = reaction.reactionTypeId,
+                            reactionTypeName = reaction.reactionTypeName,
+                            count = reaction.count,
+                            isActive = false,
+                        )
+                    }
+                },
         )
     }
 }
