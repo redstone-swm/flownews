@@ -17,7 +17,7 @@ class PushMessageSender(
     fun sendPushMessages(topicId: Long) {
         val topicWithSubscribers = topicQueryService.getTopicWithSubscribers(topicId)
         val topic = topicWithSubscribers.topic
-        val subscribers = topicWithSubscribers.subscribers
+        val subscribers = topicWithSubscribers.getActiveSubscribers()
         val messages = subscribers.map { PushMessage(topic, it) }
 
         sendPushMessagesInternal(messages)
