@@ -15,17 +15,26 @@ class RecommendationApiClient(
     private val recommendationApiUrl: String,
     private val restTemplate: RestTemplate = RestTemplate(),
 ) {
-    fun getRecommendedEvents(userId: Long): List<Long> =
+    fun getRecommendedEvents(
+        userId: Long,
+        category: String? = null,
+    ): List<Long> =
         try {
             val headers =
                 HttpHeaders().apply {
                     contentType = MediaType.APPLICATION_JSON
                 }
 
+            val url =
+                buildString {
+                    append("$recommendationApiUrl/v1/recommendations?user_id=$userId")
+                    category?.let { append("&category=$it") }
+                }
+
             val response =
                 restTemplate
                     .exchange(
-                        "$recommendationApiUrl/v1/recommendations?user_id=$userId",
+                        url,
                         HttpMethod.GET,
                         HttpEntity<String>(null, headers),
                         EventRecommendationQueryResponse::class.java,

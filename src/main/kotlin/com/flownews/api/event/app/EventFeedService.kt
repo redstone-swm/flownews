@@ -15,19 +15,25 @@ class EventFeedService(
     private val userEventInteractionRepository: UserEventInteractionRepository,
     private val recommendationApiClient: RecommendationApiClient,
 ) {
-    fun getUserEventFeedIds(user: User): EventFeedResponse {
+    fun getUserEventFeedIds(
+        user: User,
+        category: String?,
+    ): EventFeedResponse {
         val userId = user.requireId()
 
         val eventIds =
             getSubscribedLastEvent(userId)
-                .union(getRecommendedEvent(userId))
+                .union(getRecommendedEvent(userId, category))
                 .map { it.requireId() }
 
         return EventFeedResponse(eventIds)
     }
 
-    private fun getRecommendedEvent(userId: Long): List<Event> {
-        val eventIds = recommendationApiClient.getRecommendedEvents(userId)
+    private fun getRecommendedEvent(
+        userId: Long,
+        category: String?,
+    ): List<Event> {
+        val eventIds = recommendationApiClient.getRecommendedEvents(userId, category)
         return eventRepository.findAllById(eventIds).toList()
     }
 
