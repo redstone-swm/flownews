@@ -22,8 +22,8 @@ data class PushLog(
     val messageTitle: String,
     @Column(name = "message_body")
     val messageBody: String,
-    @Column(name = "message_image_url")
-    val messageImageUrl: String? = null,
+//    @Column(name = "message_image_url")
+//    val messageImageUrl: String? = null,
     @Column(name = "sent_at")
     val sentAt: LocalDateTime = LocalDateTime.now(),
 ) {
@@ -32,6 +32,6 @@ data class PushLog(
         token = message.deviceToken,
         messageTitle = message.title,
         messageBody = message.content,
-        messageImageUrl = message.imageUrl,
+//        messageImageUrl = message.imageUrl,
     )
 }
