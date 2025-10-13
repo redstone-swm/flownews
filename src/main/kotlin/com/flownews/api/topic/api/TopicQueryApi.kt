@@ -1,14 +1,14 @@
 package com.flownews.api.topic.api
 
+import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.app.TopicQueryResponse
 import com.flownews.api.topic.app.TopicQueryService
-import com.flownews.api.user.infra.CustomOAuth2User
+import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
@@ -25,10 +25,10 @@ class TopicQueryApi(
     @GetMapping("/topics/{topicId}")
     fun getTopic(
         @PathVariable topicId: Long,
-        @AuthenticationPrincipal principal: CustomOAuth2User,
+        @CurrentUser user: User,
     ): ResponseEntity<TopicQueryResponse> =
         try {
-            ResponseEntity.ok(topicQueryService.getTopic(principal.getUser(), topicId))
+            ResponseEntity.ok(topicQueryService.getTopic(user, topicId))
         } catch (e: NoDataException) {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }

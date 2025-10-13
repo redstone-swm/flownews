@@ -1,15 +1,15 @@
 package com.flownews.api.reaction.api
 
+import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
 import com.flownews.api.reaction.app.ReactionToggleResponse
 import com.flownews.api.reaction.app.ReactionToggleService
-import com.flownews.api.user.infra.CustomOAuth2User
+import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,10 +32,10 @@ class ReactionToggleApi(
         @PathVariable eventId: Long,
         @Parameter(description = "반응 타입 ID", example = "1")
         @PathVariable reactionTypeId: Long,
-        @AuthenticationPrincipal user: CustomOAuth2User,
+        @CurrentUser user: User,
     ): ResponseEntity<ReactionToggleResponse> =
         try {
-            val response = reactionToggleService.toggleReaction(eventId, reactionTypeId, user.getUser())
+            val response = reactionToggleService.toggleReaction(eventId, reactionTypeId, user)
             ResponseEntity.ok(response)
         } catch (e: NoDataException) {
             ResponseEntity.notFound().build()
