@@ -15,14 +15,22 @@ class TopicQueryService(
     private val reactionRepository: ReactionRepository,
 ) {
     fun getTopic(
-        user: User,
+        user: User?,
         topicId: Long,
     ): TopicQueryResponse {
         val topic = getTopic(topicId)
+        if (user == null) {
+            return TopicQueryResponse.of(
+                topic = topic,
+                isFollowing = false,
+                reactionRepository = reactionRepository,
+                topicSubscriptionRepository = topicSubscriptionRepository,
+                user = null,
+            )
+        }
+
         val userId = user.requireId()
-
         val isFollowing = topicSubscriptionRepository.existsByTopicIdAndUserId(topicId, userId)
-
         return TopicQueryResponse.of(
             topic = topic,
             isFollowing = isFollowing,

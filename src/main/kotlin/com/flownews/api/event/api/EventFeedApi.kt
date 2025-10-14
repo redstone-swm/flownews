@@ -5,7 +5,6 @@ import com.flownews.api.event.app.EventFeedResponse
 import com.flownews.api.event.app.EventFeedService
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Event Feed", description = "사용자별 이벤트 피드 API")
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/events")
 class EventFeedApi(

@@ -7,7 +7,7 @@ enum class OAuthProvider {
 
     companion object {
         fun from(registrationId: String): OAuthProvider =
-            when (registrationId.lowercase()) {
+            when (registrationId.substringBefore('-')) {
                 "google" -> GOOGLE
                 "apple" -> APPLE
                 else -> throw IllegalArgumentException("Unknown provider: $registrationId")

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
@@ -25,14 +26,26 @@ class SecurityConfig(
             .cors { }
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/events/**").authenticated()
-                it.anyRequest().permitAll()
+                it.requestMatchers("/login/**").permitAll()
+                it.requestMatchers("/topics").permitAll()
+                it.requestMatchers("/topics/topk").permitAll()
+                it.requestMatchers("/topics/*").permitAll()
+                it.requestMatchers("/events/*").permitAll()
+                it.requestMatchers("/events/feed").permitAll()
+                it.requestMatchers("/notifications/push").permitAll()
+                it.anyRequest().authenticated()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
                     val customUser = authentication.principal as CustomOAuth2User
                     val user = customUser.getUser()
                     val token = jwtService.createToken(user.id.toString())
-                    response.sendRedirect("$redirectUrl/auth/callback?token=$token")
+
+                    val authToken = authentication as OAuth2AuthenticationToken
+                    if (authToken.authorizedClientRegistrationId == "google-mobile") {
+                        response.sendRedirect("sijeom://auth/callback?token=$token")
+                    } else {
+                        response.sendRedirect("$redirectUrl/auth/callback?token=$token")
+                    }
                 }
             }.exceptionHandling {
                 it.authenticationEntryPoint { _, response, _ ->
