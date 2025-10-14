@@ -1,14 +1,14 @@
 package com.flownews.api.interaction.api
 
+import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.interaction.app.UserEventInteractionService
 import com.flownews.api.interaction.domain.InteractionType
 import com.flownews.api.interaction.domain.UserEventInteraction
-import com.flownews.api.user.infra.CustomOAuth2User
+import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,11 +28,11 @@ class UserEventInteractionApi(
     @Operation(summary = "사용자 이벤트 상호작용 기록", description = "유저가 피드에서 이벤트와 상호작용한 내역을 기록합니다")
     fun recordInteraction(
         @RequestBody request: InteractionRecordRequest,
-        @AuthenticationPrincipal user: CustomOAuth2User,
+        @CurrentUser user: User,
     ): ResponseEntity<InteractionRecordResponse> {
         val interaction =
             userEventInteractionService.recordInteraction(
-                userId = user.getUser().requireId(),
+                userId = user.requireId(),
                 eventId = request.eventId,
                 interactionType = request.interactionType,
                 additionalData = request.additionalData,

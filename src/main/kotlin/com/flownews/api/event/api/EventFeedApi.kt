@@ -1,12 +1,12 @@
 package com.flownews.api.event.api
 
+import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.event.app.EventFeedResponse
 import com.flownews.api.event.app.EventFeedService
-import com.flownews.api.user.infra.CustomOAuth2User
+import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -24,10 +24,10 @@ class EventFeedApi(
     )
     @GetMapping("/feed")
     fun getUserEventFeed(
-        @AuthenticationPrincipal principal: CustomOAuth2User?,
+        @CurrentUser user: User,
         @RequestParam(required = false) category: String?,
     ): ResponseEntity<EventFeedResponse> {
-        val eventFeed = eventFeedService.getUserEventFeedIds(principal?.getUser(), category)
+        val eventFeed = eventFeedService.getUserEventFeedIds(user, category)
         return ResponseEntity.ok(eventFeed)
     }
 }
