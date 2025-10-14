@@ -25,10 +25,10 @@ class TopicQueryApi(
     @GetMapping("/topics/{topicId}")
     fun getTopic(
         @PathVariable topicId: Long,
-        @AuthenticationPrincipal principal: CustomOAuth2User,
+        @AuthenticationPrincipal principal: CustomOAuth2User?,
     ): ResponseEntity<TopicQueryResponse> =
         try {
-            ResponseEntity.ok(topicQueryService.getTopic(principal.getUser(), topicId))
+            ResponseEntity.ok(topicQueryService.getTopic(principal?.getUser(), topicId))
         } catch (e: NoDataException) {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
