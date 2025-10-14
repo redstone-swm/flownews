@@ -32,6 +32,7 @@ class SecurityConfig(
                 it.requestMatchers("/topics/*").permitAll()
                 it.requestMatchers("/events/*").permitAll()
                 it.requestMatchers("/events/feed").permitAll()
+                it.requestMatchers("/notifications/push").permitAll()
                 it.anyRequest().authenticated()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
