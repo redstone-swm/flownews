@@ -4,7 +4,6 @@ import com.flownews.api.event.app.EventFeedResponse
 import com.flownews.api.event.app.EventFeedService
 import com.flownews.api.user.infra.CustomOAuth2User
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
