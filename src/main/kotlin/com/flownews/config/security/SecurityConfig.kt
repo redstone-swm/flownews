@@ -26,8 +26,13 @@ class SecurityConfig(
             .cors { }
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/events/**").authenticated()
-                it.anyRequest().permitAll()
+                it.requestMatchers("/login/**").permitAll()
+                it.requestMatchers("/topics").permitAll()
+                it.requestMatchers("/topics/topk").permitAll()
+                it.requestMatchers("/topics/*").permitAll()
+                it.requestMatchers("/events/*").permitAll()
+                it.requestMatchers("/events/feed").permitAll()
+                it.anyRequest().authenticated()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
                     val customUser = authentication.principal as CustomOAuth2User

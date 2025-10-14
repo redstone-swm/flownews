@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Event Feed", description = "사용자별 이벤트 피드 API")
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/events")
 class EventFeedApi(
@@ -26,10 +25,10 @@ class EventFeedApi(
     )
     @GetMapping("/feed")
     fun getUserEventFeed(
-        @AuthenticationPrincipal principal: CustomOAuth2User,
+        @AuthenticationPrincipal principal: CustomOAuth2User?,
         @RequestParam(required = false) category: String?,
     ): ResponseEntity<EventFeedResponse> {
-        val eventFeed = eventFeedService.getUserEventFeedIds(principal.getUser(), category)
+        val eventFeed = eventFeedService.getUserEventFeedIds(principal?.getUser(), category)
         return ResponseEntity.ok(eventFeed)
     }
 }
