@@ -40,8 +40,7 @@ class PushMessageSender(
                                 .setTitle(it.title)
                                 .setBody(it.content)
                                 .build(),
-                        )
-                        .putData("topicId", it.topicId.toString())
+                        ).putData("topicId", it.topicId.toString())
                         .putData("eventId", it.eventId.toString())
                         .build()
                 }
