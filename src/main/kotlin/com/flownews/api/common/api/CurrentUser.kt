@@ -5,8 +5,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
-@AuthenticationPrincipal(expression = "getUser()")
+@AuthenticationPrincipal(
+    expression = "#this instanceof T(com.flownews.api.user.infra.CustomOAuth2User) ? #this.getUser() : null",
+)
 annotation class CurrentUser(
     @get:AliasFor(annotation = AuthenticationPrincipal::class, attribute = "errorOnInvalidType")
-    val errorOnInvalidType: Boolean = true,
+    val errorOnInvalidType: Boolean = false,
 )
