@@ -56,8 +56,8 @@ class User(
     }
 
     fun updateProfile(
-        birthDate: LocalDate,
-        gender: Gender,
+        birthDate: LocalDate?,
+        gender: Gender?,
     ) {
         this.birthDate = birthDate
         this.gender = gender
