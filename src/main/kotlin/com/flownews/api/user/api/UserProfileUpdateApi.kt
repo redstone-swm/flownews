@@ -22,10 +22,9 @@ class UserProfileUpdateApi(
     @PostMapping("/profile")
     fun updateProfile(
         @CurrentUser user: User,
-        @RequestBody request: UserProfileUpdateRequest,
+        @RequestBody request: UserProfileUpdateRequest?,
     ) {
-        val withUserId = request.withUserId(user.requireId())
-        userUpdateService.updateProfile(withUserId)
+        userUpdateService.updateProfile(request, user.requireId())
     }
 
     @Operation(summary = "사용자 FCM 토큰 업데이트", description = "사용자의 FCM 토큰을 업데이트합니다.")
