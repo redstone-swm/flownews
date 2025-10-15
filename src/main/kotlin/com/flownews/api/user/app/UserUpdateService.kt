@@ -20,7 +20,10 @@ class UserUpdateService(
     }
 
     @Transactional
-    fun updateProfile(request: UserProfileUpdateRequest?, userId: Long): User {
+    fun updateProfile(
+        request: UserProfileUpdateRequest?,
+        userId: Long,
+    ): User {
         val birthDate = request?.birthDate
         val gender = request?.gender
         val user = getUser(userId)
