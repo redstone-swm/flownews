@@ -24,7 +24,7 @@ class EventFeedApi(
     )
     @GetMapping("/feed")
     fun getUserEventFeed(
-        @CurrentUser user: User,
+        @CurrentUser user: User?,
         @RequestParam(required = false) category: String?,
     ): ResponseEntity<EventFeedResponse> {
         val eventFeed = eventFeedService.getUserEventFeedIds(user, category)

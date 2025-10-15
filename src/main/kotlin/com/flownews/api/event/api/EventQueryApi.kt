@@ -28,7 +28,7 @@ class EventQueryApi(
     @GetMapping("/{id}")
     fun getEvent(
         @PathVariable id: Long,
-        @CurrentUser user: User,
+        @CurrentUser user: User?,
     ): ResponseEntity<EventSummaryResponse> =
         try {
             val eventDetails = eventQueryService.getEvent(id, user)

@@ -25,7 +25,7 @@ class TopicQueryApi(
     @GetMapping("/topics/{topicId}")
     fun getTopic(
         @PathVariable topicId: Long,
-        @CurrentUser user: User,
+        @CurrentUser user: User?,
     ): ResponseEntity<TopicQueryResponse> =
         try {
             ResponseEntity.ok(topicQueryService.getTopic(user, topicId))
