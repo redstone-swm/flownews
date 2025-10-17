@@ -14,9 +14,10 @@ interface TopicRepository : CrudRepository<Topic, Long> {
     @Query(
         """
         SELECT t FROM Topic t 
-        JOIN t.topicEvents te 
+        JOIN t.topicEvents te ON t.id = te.topic.id
         JOIN UserEventInteraction uei ON te.event.id = uei.event.id 
-        WHERE uei.createdAt >= :sinceTime 
+        WHERE uei.createdAt >= :sinceTime
+        AND (:category IS NULL OR te.event.category = :category)
         GROUP BY t.id 
         ORDER BY COUNT(uei.id) DESC 
         LIMIT :limit
@@ -24,6 +25,7 @@ interface TopicRepository : CrudRepository<Topic, Long> {
     )
     fun findTopKTopicsByInteractionsSince(
         @Param("sinceTime") sinceTime: LocalDateTime,
+        @Param("category") category: String?,
         @Param("limit") limit: Int,
     ): List<Topic>
 }

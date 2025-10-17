@@ -6,5 +6,4 @@ import java.time.LocalDate
 data class UserProfileUpdateRequest(
     val birthDate: LocalDate?,
     val gender: Gender?,
-) {
-}
+)

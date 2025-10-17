@@ -31,6 +31,8 @@ class Event(
     var imageUrl: String,
     @Column(name = "event_time")
     var eventTime: LocalDateTime,
+    @Column(name = "category")
+    var category: String,
     @Column(name = "view_count")
     var viewCount: Long = 0,
     @Column(name = "embedding", columnDefinition = "public.vector(1536)")
