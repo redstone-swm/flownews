@@ -34,7 +34,10 @@ class UserUpdateService(
     }
 
     @Transactional
-    fun withdraw(userId: Long, request: UserWithdrawRequest): User {
+    fun withdraw(
+        userId: Long,
+        request: UserWithdrawRequest
+    ): User {
         val user = getUser(userId)
 
         user.withdraw(request.reason)

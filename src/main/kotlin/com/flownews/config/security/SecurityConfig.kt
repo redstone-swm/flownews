@@ -32,7 +32,6 @@ class SecurityConfig(
                 it.requestMatchers("/topics", "/topics/topk", "/topics/*").permitAll()
                 it.requestMatchers("/events/*", "/events/feed").permitAll()
                 it.requestMatchers("/notifications/push").permitAll()
-                it.requestMatchers("/v3/*").permitAll()
                 it.anyRequest().authenticated()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
@@ -42,11 +41,11 @@ class SecurityConfig(
                     val authToken = authentication as OAuth2AuthenticationToken
 
                     if (user.deletedAt != null) {
-                        val target =
-                            if (authToken.authorizedClientRegistrationId == "google-mobile")
-                                "sijeom://auth/callback?error=DELETED"
-                            else
-                                "$redirectUrl/auth/callback?error=DELETED"
+                        val target = if (authToken.authorizedClientRegistrationId == "google-mobile") {
+                            "sijeom://auth/callback?error=DELETED"
+                        } else {
+                            "$redirectUrl/auth/callback?error=DELETED"
+                        }
                         response.sendRedirect(target)
                         return@successHandler
                     }
