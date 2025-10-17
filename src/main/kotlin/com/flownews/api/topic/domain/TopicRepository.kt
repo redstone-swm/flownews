@@ -11,6 +11,12 @@ import java.time.LocalDateTime
 interface TopicRepository : CrudRepository<Topic, Long> {
     fun findAll(pageable: Pageable): List<Topic>
 
+    fun findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+        titleKeyword: String,
+        descriptionKeyword: String,
+        pageable: Pageable,
+    ): List<Topic>
+
     @Query(
         """
         SELECT t FROM Topic t 
