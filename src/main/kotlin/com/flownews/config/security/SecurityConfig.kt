@@ -41,21 +41,23 @@ class SecurityConfig(
                     val authToken = authentication as OAuth2AuthenticationToken
 
                     if (user.deletedAt != null) {
-                        val target = if (authToken.authorizedClientRegistrationId == "google-mobile") {
-                            "sijeom://auth/callback?error=DELETED"
-                        } else {
-                            "$redirectUrl/auth/callback?error=DELETED"
-                        }
+                        val target =
+                            if (authToken.authorizedClientRegistrationId == "google-mobile") {
+                                "sijeom://auth/callback?error=DELETED"
+                            } else {
+                                "$redirectUrl/auth/callback?error=DELETED"
+                            }
                         response.sendRedirect(target)
                         return@successHandler
                     }
 
                     val token = jwtService.createToken(user.id.toString())
                     val target =
-                        if (authToken.authorizedClientRegistrationId == "google-mobile")
+                        if (authToken.authorizedClientRegistrationId == "google-mobile") {
                             "sijeom://auth/callback?token=$token"
-                        else
+                        } else {
                             "$redirectUrl/auth/callback?token=$token"
+                        }
                     response.sendRedirect(target)
                 }
             }.exceptionHandling {
