@@ -4,6 +4,7 @@ import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.user.app.UserDeviceTokenUpdateRequest
 import com.flownews.api.user.app.UserProfileUpdateRequest
 import com.flownews.api.user.app.UserUpdateService
+import com.flownews.api.user.app.UserWithdrawRequest
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -35,5 +36,14 @@ class UserProfileUpdateApi(
     ) {
         val withUserId = request.withUserId(user.requireId())
         userUpdateService.updateDeviceToken(withUserId)
+    }
+
+    @Operation(summary = "사용자 탈퇴", description = "탈퇴 사유를 입력하여 탈퇴합니다.")
+    @PostMapping("/withdraw")
+    fun withdraw(
+        @CurrentUser user: User,
+        @RequestBody request: UserWithdrawRequest,
+    ) {
+        userUpdateService.withdraw(user.requireId(), request)
     }
 }

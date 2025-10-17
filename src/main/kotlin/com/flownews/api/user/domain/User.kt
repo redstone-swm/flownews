@@ -14,6 +14,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
@@ -41,6 +42,10 @@ class User(
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     var gender: Gender? = null,
+    @Column(name = "deleted_at")
+    var deletedAt: LocalDateTime? = null,
+    @Column(name = "delete_reason")
+    var deleteReason: String? = null,
     @Column(name = "is_profile_complete")
     var isProfileComplete: Boolean = false,
 ) : BaseEntity() {
@@ -62,5 +67,10 @@ class User(
         this.birthDate = birthDate
         this.gender = gender
         this.isProfileComplete = true
+    }
+
+    fun withdraw(reason: String?) {
+        this.deletedAt = LocalDateTime.now()
+        this.deleteReason = reason
     }
 }

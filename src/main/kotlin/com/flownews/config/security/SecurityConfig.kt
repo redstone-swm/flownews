@@ -33,19 +33,32 @@ class SecurityConfig(
                 it.requestMatchers("/events/*").permitAll()
                 it.requestMatchers("/events/feed").permitAll()
                 it.requestMatchers("/notifications/push").permitAll()
+                it.requestMatchers("/v3/*").permitAll()
                 it.anyRequest().authenticated()
             }.oauth2Login {
                 it.successHandler { _, response, authentication ->
-                    val customUser = authentication.principal as CustomOAuth2User
+                    val customUser = (authentication.principal as CustomOAuth2User)
                     val user = customUser.getUser()
-                    val token = jwtService.createToken(user.id.toString())
 
                     val authToken = authentication as OAuth2AuthenticationToken
-                    if (authToken.authorizedClientRegistrationId == "google-mobile") {
-                        response.sendRedirect("sijeom://auth/callback?token=$token")
-                    } else {
-                        response.sendRedirect("$redirectUrl/auth/callback?token=$token")
+
+                    if (user.deletedAt != null) {
+                        val target =
+                            if (authToken.authorizedClientRegistrationId == "google-mobile")
+                                "sijeom://auth/callback?error=DELETED"
+                            else
+                                "$redirectUrl/auth/callback?error=DELETED"
+                        response.sendRedirect(target)
+                        return@successHandler
                     }
+
+                    val token = jwtService.createToken(user.id.toString())
+                    val target =
+                        if (authToken.authorizedClientRegistrationId == "google-mobile")
+                            "sijeom://auth/callback?token=$token"
+                        else
+                            "$redirectUrl/auth/callback?token=$token"
+                    response.sendRedirect(target)
                 }
             }.exceptionHandling {
                 it.authenticationEntryPoint { _, response, _ ->

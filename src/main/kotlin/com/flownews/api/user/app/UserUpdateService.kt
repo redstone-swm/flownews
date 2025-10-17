@@ -30,6 +30,15 @@ class UserUpdateService(
         return userRepository.save(user)
     }
 
+    @Transactional
+    fun withdraw(userId: Long, request: UserWithdrawRequest): User {
+        val user = getUser(userId)
+
+        user.withdraw(request.reason)
+
+        return userRepository.save(user)
+    }
+
     private fun getUser(userId: Long): User =
         userRepository.findById(userId).orElseThrow {
             NoDataException("user not found: $userId")
