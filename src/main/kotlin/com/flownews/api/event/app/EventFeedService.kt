@@ -54,7 +54,7 @@ class EventFeedService(
             userEventInteractionRepository.findEventIdsByUserIdAndInteractionTypeOrderByCreatedAtDesc(
                 userId,
                 InteractionType.VIEWED,
-                PageRequest.of(0, 100),
+                PageRequest.of(0, 20),
             )
         val eventIds =
             recommendationApiClient.getRecommendedEvents(
