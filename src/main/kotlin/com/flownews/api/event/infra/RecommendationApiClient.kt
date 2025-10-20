@@ -27,12 +27,13 @@ class RecommendationApiClient(
                     contentType = MediaType.APPLICATION_JSON
                 }
 
-            val requestBody = EventRecommendationRequest(
-                userId = userId,
-                category = category,
-                k = k,
-                excludeEventIds = excludeEventIds
-            )
+            val requestBody =
+                EventRecommendationRequest(
+                    userId = userId,
+                    category = category,
+                    k = k,
+                    excludeEventIds = excludeEventIds,
+                )
 
             val response =
                 restTemplate
@@ -64,7 +65,7 @@ data class EventRecommendationRequest(
     @JsonProperty("k")
     val k: Long,
     @JsonProperty("exclude_event_ids")
-    val excludeEventIds: List<Long>
+    val excludeEventIds: List<Long>,
 )
 
 data class EventRecommendationQueryItemResponse(

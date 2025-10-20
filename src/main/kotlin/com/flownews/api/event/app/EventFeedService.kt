@@ -50,18 +50,18 @@ class EventFeedService(
         userId: Long,
         category: String?,
     ): List<Event> {
-        val excludeEventIds = userEventInteractionRepository
-            .findEventIdsByUserIdAndInteractionTypeOrderByCreatedAtDesc(
+        val excludeEventIds =
+            userEventInteractionRepository.findEventIdsByUserIdAndInteractionTypeOrderByCreatedAtDesc(
                 userId,
                 InteractionType.VIEWED,
-                PageRequest.of(0, 100)
+                PageRequest.of(0, 100),
             )
-        
-        val eventIds = recommendationApiClient.getRecommendedEvents(
-            userId = userId,
-            category = category,
-            excludeEventIds = excludeEventIds
-        )
+        val eventIds =
+            recommendationApiClient.getRecommendedEvents(
+                userId = userId,
+                category = category,
+                excludeEventIds = excludeEventIds,
+            )
         return eventRepository.findAllById(eventIds).toList()
     }
 
