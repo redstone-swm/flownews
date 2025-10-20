@@ -48,10 +48,6 @@ class OAuth2UserService(
                     name = name,
                     profileUrl = profileUrl,
                     provider = provider,
-                    // OAuth에서는 제공되지 않으므로 null로 설정
-                    birthDate = null,
-                    // OAuth에서는 제공되지 않으므로 null로 설정
-                    gender = null,
                 ),
             )
     }

@@ -25,7 +25,5 @@ class UserCreateService(
             profileUrl = request.profileUrl,
             provider = request.provider.name,
             role = Role.USER,
-            birthDate = request.birthDate,
-            gender = request.gender,
         )
 }

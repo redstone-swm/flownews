@@ -3,7 +3,6 @@ package com.flownews.api.user.domain
 import BaseEntity
 import com.flownews.api.user.domain.enums.Gender
 import com.flownews.api.user.domain.enums.Role
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -11,7 +10,6 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -50,9 +48,6 @@ class User(
     var isProfileComplete: Boolean = false,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("User ID cannot be null")
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var bookmarks: MutableList<com.flownews.api.bookmark.domain.Bookmark> = mutableListOf()
 
     fun updateDeviceToken(newDeviceToken: String?) {
         if (newDeviceToken == null) return
