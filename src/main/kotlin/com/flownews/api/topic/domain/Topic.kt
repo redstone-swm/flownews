@@ -31,5 +31,5 @@ class Topic(
 
     fun getLastEvent(): Event? = topicEvents.maxByOrNull { it.event.eventTime }?.event
 
-    fun getEvents(): List<Event> = topicEvents.map { it.event }
+    fun getEvents(): List<Event> = topicEvents.map { it.event }.sortedBy { it.eventTime }
 }
