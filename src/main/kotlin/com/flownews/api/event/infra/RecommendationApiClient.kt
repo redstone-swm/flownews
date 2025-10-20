@@ -18,6 +18,7 @@ class RecommendationApiClient(
     fun getRecommendedEvents(
         userId: Long,
         category: String? = null,
+        k: Long = 5,
     ): List<Long> =
         try {
             val headers =
@@ -27,7 +28,7 @@ class RecommendationApiClient(
 
             val url =
                 buildString {
-                    append("$recommendationApiUrl/v1/recommendations?user_id=$userId")
+                    append("$recommendationApiUrl/v1/recommendations?user_id=$userId&k=$k")
                     category?.let { append("&category=$it") }
                 }
 
