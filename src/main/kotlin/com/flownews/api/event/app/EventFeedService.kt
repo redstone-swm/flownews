@@ -23,9 +23,9 @@ class EventFeedService(
         category: String?,
     ): EventFeedResponse {
         if (user == null) {
-            val twentyFourHoursAgo = LocalDateTime.now().minusHours(24)
+            val minusOneDay = LocalDateTime.now().minusDays(1).toLocalDate()
             // 비회원 전용 피드: 지난 24시간 동안 가장 인기 있는 토픽의 이벤트 (카테고리 필터링 포함)
-            topicRepository.findTopKTopicsByInteractionsSince(twentyFourHoursAgo, category, 5).let { topTopics ->
+            topicRepository.findTopKTopicsByInteractionsSince(minusOneDay, category, 5).let { topTopics ->
                 val eventIds =
                     topTopics
                         .mapNotNull { it.getLastEvent() }
