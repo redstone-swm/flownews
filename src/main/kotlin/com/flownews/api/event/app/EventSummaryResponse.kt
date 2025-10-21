@@ -63,7 +63,7 @@ data class EventSummaryResponse(
                             ReactionSummaryResponse(
                                 reactionTypeId = reaction.reactionTypeId,
                                 reactionTypeName = reaction.reactionTypeName,
-                                count = reaction.count,
+                                count = reaction.count + e.viewCount,
                                 isActive = reaction.active,
                             )
                         }
@@ -72,7 +72,7 @@ data class EventSummaryResponse(
                         ReactionSummaryResponse(
                             reactionTypeId = reaction.reactionTypeId,
                             reactionTypeName = reaction.reactionTypeName,
-                            count = reaction.count,
+                            count = reaction.count + e.viewCount,
                             isActive = false,
                         )
                     }
