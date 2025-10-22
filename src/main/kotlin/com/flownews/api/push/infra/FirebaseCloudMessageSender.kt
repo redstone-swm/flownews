@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FirebaseCloudMessageSender(
-    private val firebaseMessaging: FirebaseMessaging = FirebaseMessaging.getInstance(),
+    private val firebaseMessaging: FirebaseMessaging,
 ) : MessageSender {
     override fun sendMessages(messages: List<PushMessage>) {
         if (messages.isEmpty()) return

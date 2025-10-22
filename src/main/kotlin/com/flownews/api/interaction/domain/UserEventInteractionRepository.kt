@@ -31,4 +31,15 @@ interface UserEventInteractionRepository : JpaRepository<UserEventInteraction, L
         @Param("eventId") eventId: Long,
         @Param("interactionType") interactionType: InteractionType,
     ): Long
+
+    @Query(
+        "SELECT uei.event.id FROM UserEventInteraction uei " +
+            "WHERE uei.user.id = :userId AND uei.interactionType = :interactionType " +
+            "ORDER BY uei.createdAt DESC",
+    )
+    fun findEventIdsByUserIdAndInteractionTypeOrderByCreatedAtDesc(
+        @Param("userId") userId: Long,
+        @Param("interactionType") interactionType: InteractionType,
+        pageable: org.springframework.data.domain.Pageable,
+    ): List<Long>
 }

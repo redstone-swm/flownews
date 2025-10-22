@@ -18,6 +18,8 @@ class RecommendationApiClient(
     fun getRecommendedEvents(
         userId: Long,
         category: String? = null,
+        k: Long = 5,
+        excludeEventIds: List<Long> = emptyList(),
     ): List<Long> =
         try {
             val headers =
@@ -25,18 +27,20 @@ class RecommendationApiClient(
                     contentType = MediaType.APPLICATION_JSON
                 }
 
-            val url =
-                buildString {
-                    append("$recommendationApiUrl/v1/recommendations?user_id=$userId")
-                    category?.let { append("&category=$it") }
-                }
+            val requestBody =
+                EventRecommendationRequest(
+                    userId = userId,
+                    category = category,
+                    k = k,
+                    excludeEventIds = excludeEventIds,
+                )
 
             val response =
                 restTemplate
                     .exchange(
-                        url,
-                        HttpMethod.GET,
-                        HttpEntity<String>(null, headers),
+                        "$recommendationApiUrl/v1/recommendations",
+                        HttpMethod.POST,
+                        HttpEntity(requestBody, headers),
                         EventRecommendationQueryResponse::class.java,
                     ).body
             response?.events?.map { it.eventId } ?: emptyList()
@@ -51,6 +55,17 @@ data class EventRecommendationQueryResponse(
     val userId: Long,
     @JsonProperty("events")
     val events: List<EventRecommendationQueryItemResponse>,
+)
+
+data class EventRecommendationRequest(
+    @JsonProperty("user_id")
+    val userId: Long,
+    @JsonProperty("category")
+    val category: String?,
+    @JsonProperty("k")
+    val k: Long,
+    @JsonProperty("exclude_event_ids")
+    val excludeEventIds: List<Long>,
 )
 
 data class EventRecommendationQueryItemResponse(

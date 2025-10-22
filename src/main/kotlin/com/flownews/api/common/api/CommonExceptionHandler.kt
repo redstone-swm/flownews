@@ -1,10 +1,8 @@
 package com.flownews.api.common.api
 
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.NoHandlerFoundException
 
@@ -13,15 +11,13 @@ class CommonExceptionHandler {
     private val logger = LoggerFactory.getLogger(CommonExceptionHandler::class.java)
 
     @ExceptionHandler(NoHandlerFoundException::class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun noHandlerFoundException(ex: NoHandlerFoundException): ResponseEntity<String> {
-        logger.warn(ex.message, ex)
+        logger.warn(ex.message)
 
-        return ResponseEntity.badRequest().body(ex.message)
+        return ResponseEntity.notFound().build()
     }
 
     @ExceptionHandler(Exception::class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleException(ex: Exception): ResponseEntity<String> {
         logger.error(ex.message, ex)
 

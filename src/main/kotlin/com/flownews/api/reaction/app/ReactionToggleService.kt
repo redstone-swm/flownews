@@ -55,7 +55,7 @@ class ReactionToggleService(
                 ReactionToggleResponse(
                     isActive = true,
                     message = "${reactionType.name} 반응이 추가되었습니다.",
-                    count = count,
+                    count = event.viewCount + count,
                 )
             }
 
@@ -71,7 +71,7 @@ class ReactionToggleService(
                 ReactionToggleResponse(
                     isActive = false,
                     message = "${reactionType.name} 반응이 해제되었습니다.",
-                    count = count,
+                    count = event.viewCount + count,
                 )
             }
 
