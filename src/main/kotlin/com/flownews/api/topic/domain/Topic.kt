@@ -29,7 +29,7 @@ class Topic(
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Topic ID cannot be null")
 
-    fun getLastEvent(): Event? = topicEvents.maxByOrNull { it.event.eventTime }?.event
+    fun getLastEvent(): Event = topicEvents.maxBy { it.event.eventTime }.event
 
     fun getEvents(): List<Event> = topicEvents.map { it.event }.sortedBy { it.eventTime }
 }

@@ -5,7 +5,7 @@ import com.flownews.api.user.domain.User
 
 data class PushMessage(
     val topicId: Long,
-    val eventId: Long? = null,
+    val eventId: Long,
     val userId: Long,
     val deviceToken: String,
     val title: String,
@@ -16,7 +16,7 @@ data class PushMessage(
         title = "새로운 후속기사가 도착했어요",
         content = "${topic.title}의 후속기사를 보려면 클릭",
         topicId = topic.requireId(),
-        eventId = topic.getLastEvent()?.requireId(),
+        eventId = topic.getLastEvent().requireId(),
         userId = subscriber.requireId(),
     )
 }
