@@ -1,8 +1,8 @@
 package com.flownews.api.event.api
 
 import com.flownews.api.common.api.CurrentUser
-import com.flownews.api.event.app.EventFeedResponse
-import com.flownews.api.event.app.EventFeedService
+import com.flownews.api.event.app.EventFeedQueryResponse
+import com.flownews.api.event.app.EventFeedQueryService
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Event Feed", description = "사용자별 이벤트 피드 API")
 @RestController
 @RequestMapping("/events")
-class EventFeedApi(
-    private val eventFeedService: EventFeedService,
+class EventFeedQueryApi(
+    private val eventFeedQueryService: EventFeedQueryService,
 ) {
     @Operation(
         summary = "사용자별 이벤트 피드 조회",
@@ -26,8 +26,8 @@ class EventFeedApi(
     fun getUserEventFeed(
         @CurrentUser user: User?,
         @RequestParam(required = false) category: String?,
-    ): ResponseEntity<EventFeedResponse> {
-        val eventFeed = eventFeedService.getUserEventFeedIds(user, category)
-        return ResponseEntity.ok(eventFeed)
+    ): ResponseEntity<EventFeedQueryResponse> {
+        val eventIds = eventFeedQueryService.getEventFeeds(user, category).map { it.requireId() }
+        return ResponseEntity.ok(EventFeedQueryResponse(eventIds))
     }
 }

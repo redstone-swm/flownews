@@ -1,5 +1,6 @@
 package com.flownews.api.topic.app
 
+import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.domain.User
@@ -33,10 +34,11 @@ class TopicListQueryService(
 
     private fun getPageRequest(limit: Int) = PageRequest.of(0, limit, Sort.by("createdAt").descending())
 
-    fun getTopKTopicsInLast24Hours(limit: Int): List<TopicTopKQueryResponse> {
-        val twentyFourHoursAgo = LocalDateTime.now().minusHours(24).toLocalDate()
-        val topics = topicRepository.findTopKTopicsByInteractionsSince(twentyFourHoursAgo, null, limit)
+    fun getTopKTopics(limit: Int): List<TopicTopKQueryResponse> =
+        findTopTopicsSinceLast24Hours(limit).map { TopicTopKQueryResponse(it.requireId(), it.title) }
 
-        return topics.map { it -> TopicTopKQueryResponse(it.requireId(), it.title) }
+    fun findTopTopicsSinceLast24Hours(limit: Int): List<Topic> {
+        val twentyFourHoursAgo = LocalDateTime.now().minusHours(24).toLocalDate()
+        return topicRepository.findTopKTopicsByInteractionsSince(twentyFourHoursAgo, null, limit)
     }
 }

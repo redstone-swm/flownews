@@ -23,6 +23,5 @@ class TopicListQueryApi(
     @GetMapping("/topics/topk")
     fun getTopKTopics(
         @RequestParam(required = false) limit: Int = 5,
-    ): ResponseEntity<List<TopicTopKQueryResponse>> =
-        ResponseEntity.ok(topicListQueryService.getTopKTopicsInLast24Hours(limit))
+    ): ResponseEntity<List<TopicTopKQueryResponse>> = ResponseEntity.ok(topicListQueryService.getTopKTopics(limit))
 }
