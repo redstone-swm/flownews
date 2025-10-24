@@ -19,7 +19,7 @@ data class TopicSummaryResponse(
             topic: Topic,
             isFollowing: Boolean = false,
         ) = TopicSummaryResponse(
-            id = topic.id ?: throw IllegalStateException("Topic ID cannot be null"),
+            id = topic.requireId(),
             title = topic.title,
             description = topic.description,
             isFollowing = isFollowing,

@@ -17,7 +17,7 @@ data class ArticleResponse(
     companion object {
         fun fromEntity(article: Article) =
             ArticleResponse(
-                id = article.id ?: throw IllegalStateException("Article ID cannot be null"),
+                id = article.requireId(),
                 title = article.title,
                 source = article.source,
                 url = article.url,

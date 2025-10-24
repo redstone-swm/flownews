@@ -31,4 +31,6 @@ class Article(
     var source: String,
     @Column(name = "url")
     var url: String,
-)
+) {
+    fun requireId(): Long = id ?: throw IllegalStateException("Article ID cannot be null")
+}
