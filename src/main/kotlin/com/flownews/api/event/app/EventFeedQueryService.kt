@@ -5,48 +5,43 @@ import com.flownews.api.event.domain.EventRepository
 import com.flownews.api.event.infra.RecommendationApiClient
 import com.flownews.api.interaction.domain.InteractionType
 import com.flownews.api.interaction.domain.UserEventInteractionRepository
-import com.flownews.api.topic.domain.TopicRepository
+import com.flownews.api.topic.app.TopicListQueryService
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.domain.User
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
-class EventFeedService(
+class EventFeedQueryService(
     private val eventRepository: EventRepository,
-    private val topicRepository: TopicRepository,
+    private val topicListQueryService: TopicListQueryService,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
     private val userEventInteractionRepository: UserEventInteractionRepository,
     private val recommendationApiClient: RecommendationApiClient,
 ) {
-    fun getUserEventFeedIds(
+    fun getEventFeeds(
         user: User?,
         category: String?,
-    ): EventFeedResponse {
+    ): List<Event> =
         if (user == null) {
-            val minusOneDay = LocalDateTime.now().minusDays(1).toLocalDate()
-            // 비회원 전용 피드: 지난 24시간 동안 가장 인기 있는 토픽의 이벤트 (카테고리 필터링 포함)
-            topicRepository.findTopKTopicsByInteractionsSince(minusOneDay, category, 5).let { topTopics ->
-                val eventIds =
-                    topTopics
-                        .mapNotNull { it.getLastEvent() }
-                        .map { it.requireId() }
-                return EventFeedResponse(eventIds)
-            }
+            guestFeed()
+        } else {
+            personalizedFeed(user.requireId(), category)
         }
 
-        val userId = user.requireId()
+    private fun guestFeed(): List<Event> =
+        topicListQueryService
+            .findTopTopicsSinceLast24Hours(5)
+            .map { it.getLastEvent() }
 
-        val eventIds =
-            getSubscribedLastEvent(userId)
-                .union(getRecommendedEvent(userId, category))
-                .map { it.requireId() }
+    private fun personalizedFeed(
+        userId: Long,
+        category: String?,
+    ) = getSubscribedLastEvents(userId)
+        .union(getRecommendedEvents(userId, category))
+        .toList()
 
-        return EventFeedResponse(eventIds)
-    }
-
-    private fun getRecommendedEvent(
+    private fun getRecommendedEvents(
         userId: Long,
         category: String?,
     ): List<Event> {
@@ -65,10 +60,10 @@ class EventFeedService(
         return eventRepository.findAllById(eventIds).toList()
     }
 
-    private fun getSubscribedLastEvent(userId: Long): List<Event> =
+    private fun getSubscribedLastEvents(userId: Long): List<Event> =
         topicSubscriptionRepository
             .findByUserId(userId)
-            .mapNotNull { subscription -> subscription.topic.getLastEvent() }
+            .map { subscription -> subscription.topic.getLastEvent() }
             .filter { event ->
                 userEventInteractionRepository.findByUserIdAndEventId(userId, event.requireId()).isEmpty()
             }
