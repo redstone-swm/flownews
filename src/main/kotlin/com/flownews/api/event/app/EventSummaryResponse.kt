@@ -1,6 +1,6 @@
 package com.flownews.api.event.app
 
-import com.flownews.api.article.app.ArticleResponse
+import com.flownews.api.event.app.article.ArticleResponse
 import com.flownews.api.event.domain.Event
 import com.flownews.api.reaction.app.ReactionSummaryResponse
 import com.flownews.api.reaction.domain.ReactionRepository

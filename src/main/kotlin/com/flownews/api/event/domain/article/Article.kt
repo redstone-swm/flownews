@@ -1,4 +1,4 @@
-package com.flownews.api.article.domain
+package com.flownews.api.event.domain.article
 
 import com.flownews.api.event.domain.Event
 import jakarta.persistence.Column

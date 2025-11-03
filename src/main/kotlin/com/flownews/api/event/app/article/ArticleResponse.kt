@@ -1,6 +1,6 @@
-package com.flownews.api.article.app
+package com.flownews.api.event.app.article
 
-import com.flownews.api.article.domain.Article
+import com.flownews.api.event.domain.article.Article
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "기사 정보")

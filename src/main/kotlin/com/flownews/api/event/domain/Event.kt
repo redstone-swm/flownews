@@ -1,7 +1,7 @@
 package com.flownews.api.event.domain
 
 import BaseEntity
-import com.flownews.api.article.domain.Article
+import com.flownews.api.event.domain.article.Article
 import com.flownews.api.topic.domain.TopicEvent
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
