@@ -4,8 +4,6 @@ import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicRepository
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.domain.User
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -16,11 +14,32 @@ class TopicListQueryService(
 ) {
     fun getTopics(
         user: User?,
-        limit: Int,
+        req: TopicListQueryRequest,
     ): List<TopicSummaryResponse> {
-        val pageRequest = getPageRequest(limit)
+        val pageRequest = req.toPageable()
         val topics = topicRepository.findAll(pageRequest)
+        return mapToTopicSummaryResponses(topics, user)
+    }
 
+    fun getTopicsByKeyword(
+        user: User?,
+        req: TopicListQueryRequest,
+    ): List<TopicSummaryResponse> {
+        val pageable = req.toPageable()
+        val keyword = req.getKeyword()
+        val topics =
+            topicRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+                keyword,
+                keyword,
+                pageable,
+            )
+        return mapToTopicSummaryResponses(topics, user)
+    }
+
+    private fun mapToTopicSummaryResponses(
+        topics: List<Topic>,
+        user: User?,
+    ): List<TopicSummaryResponse> {
         if (user == null) {
             return topics.map(TopicSummaryResponse::fromEntity)
         }
@@ -31,8 +50,6 @@ class TopicListQueryService(
             TopicSummaryResponse.fromEntity(topic, isFollowing)
         }
     }
-
-    private fun getPageRequest(limit: Int) = PageRequest.of(0, limit, Sort.by("createdAt").descending())
 
     fun getTopKTopics(limit: Int): List<TopicTopKQueryResponse> =
         findTopTopicsSinceLast24Hours(limit).map { TopicTopKQueryResponse(it.requireId(), it.title) }
