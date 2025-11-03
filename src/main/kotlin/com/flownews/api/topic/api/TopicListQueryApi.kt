@@ -8,6 +8,7 @@ import com.flownews.api.topic.app.TopicTopKQueryResponse
 import com.flownews.api.user.domain.User
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -18,7 +19,7 @@ class TopicListQueryApi(
     @GetMapping("/topics")
     fun getAllTopics(
         @CurrentUser user: User?,
-        @RequestParam req: TopicListQueryRequest,
+        @ModelAttribute req: TopicListQueryRequest,
     ): ResponseEntity<List<TopicSummaryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(user, req))
 
     @GetMapping("/topics/topk")
@@ -28,7 +29,7 @@ class TopicListQueryApi(
 
     @GetMapping("/topics/search")
     fun searchTopics(
-        @RequestParam req: TopicListQueryRequest,
+        @ModelAttribute req: TopicListQueryRequest,
         @CurrentUser user: User?,
     ): ResponseEntity<List<TopicSummaryResponse>> {
         return try {
