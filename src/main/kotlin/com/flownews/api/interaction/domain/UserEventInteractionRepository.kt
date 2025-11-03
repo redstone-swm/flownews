@@ -12,26 +12,6 @@ interface UserEventInteractionRepository : JpaRepository<UserEventInteraction, L
         eventId: Long,
     ): List<UserEventInteraction>
 
-    fun findByUserIdAndInteractionType(
-        userId: Long,
-        interactionType: InteractionType,
-    ): List<UserEventInteraction>
-
-    @Query("SELECT uei FROM UserEventInteraction uei WHERE uei.user.id = :userId AND uei.event.id IN :eventIds")
-    fun findByUserIdAndEventIds(
-        @Param("userId") userId: Long,
-        @Param("eventIds") eventIds: List<Long>,
-    ): List<UserEventInteraction>
-
-    @Query(
-        "SELECT COUNT(uei) FROM UserEventInteraction uei " +
-            "WHERE uei.event.id = :eventId AND uei.interactionType = :interactionType",
-    )
-    fun countByEventIdAndInteractionType(
-        @Param("eventId") eventId: Long,
-        @Param("interactionType") interactionType: InteractionType,
-    ): Long
-
     @Query(
         "SELECT uei.event.id FROM UserEventInteraction uei " +
             "WHERE uei.user.id = :userId AND uei.interactionType = :interactionType " +

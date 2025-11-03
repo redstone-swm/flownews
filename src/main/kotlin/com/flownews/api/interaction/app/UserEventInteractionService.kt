@@ -52,29 +52,4 @@ class UserEventInteractionService(
 
         return userEventInteractionRepository.save(interaction)
     }
-
-    @Transactional(readOnly = true)
-    fun getUserInteractionsForEvent(
-        userId: Long,
-        eventId: Long,
-    ): List<UserEventInteraction> = userEventInteractionRepository.findByUserIdAndEventId(userId, eventId)
-
-    @Transactional(readOnly = true)
-    fun getUserInteractionsByType(
-        userId: Long,
-        interactionType: InteractionType,
-    ): List<UserEventInteraction> =
-        userEventInteractionRepository.findByUserIdAndInteractionType(userId, interactionType)
-
-    @Transactional(readOnly = true)
-    fun getUserInteractionsForEvents(
-        userId: Long,
-        eventIds: List<Long>,
-    ): List<UserEventInteraction> = userEventInteractionRepository.findByUserIdAndEventIds(userId, eventIds)
-
-    @Transactional(readOnly = true)
-    fun getInteractionCountForEvent(
-        eventId: Long,
-        interactionType: InteractionType,
-    ): Long = userEventInteractionRepository.countByEventIdAndInteractionType(eventId, interactionType)
 }

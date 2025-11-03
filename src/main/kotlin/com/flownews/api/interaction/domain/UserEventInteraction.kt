@@ -32,4 +32,6 @@ class UserEventInteraction(
     val interactionType: InteractionType,
     @Column(name = "additional_data")
     val additionalData: String? = null,
-) : BaseEntity()
+) : BaseEntity() {
+    fun requireId(): Long = id ?: throw IllegalStateException("UserEventInteraction ID cannot be null")
+}
