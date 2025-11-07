@@ -1,7 +1,5 @@
 package com.flownews.api.interaction.infra
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.flownews.api.interaction.domain.InteractionType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -46,42 +44,3 @@ class UserProfileApiClient(
             ).body
     }
 }
-
-data class TopicBasedProfileUpdateRequest(
-    @JsonProperty("user_id")
-    val userId: Long,
-    @JsonProperty("topic_ids")
-    val topicIds: List<Long>,
-    @JsonProperty("action")
-    val action: InteractionType,
-) {
-    constructor(
-        userId: Long,
-        topicId: Long,
-        interactionType: InteractionType,
-    ) : this(userId, listOf(topicId), interactionType)
-}
-
-data class EventBasedProfileUpdateRequest(
-    @JsonProperty("user_id")
-    val userId: Long,
-    @JsonProperty("event_ids")
-    val eventIds: List<Long>,
-    @JsonProperty("action")
-    val action: InteractionType,
-) {
-    constructor(
-        userId: Long,
-        eventId: Long,
-        interactionType: InteractionType,
-    ) : this(userId, listOf(eventId), interactionType)
-}
-
-data class UserProfileUpdateResponse(
-    @JsonProperty("status")
-    val status: String,
-    @JsonProperty("user_id")
-    val userId: Int,
-    @JsonProperty("processed_count")
-    val processedCount: Int,
-)
