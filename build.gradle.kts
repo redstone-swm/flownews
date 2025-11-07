@@ -24,6 +24,7 @@ repositories {
 
 extra["snippetsDir"] = file("build/generated-snippets")
 val springAiVersion by extra("1.0.1")
+val springCloudVersion by extra("2023.0.3")
 
 dependencies {
     implementation("org.hibernate.orm:hibernate-vector:6.6.15.Final")
@@ -38,6 +39,7 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:9.5.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.security:spring-security-test")
@@ -58,6 +60,7 @@ kotlin {
 dependencyManagement {
     imports {
         mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
     }
 }
 

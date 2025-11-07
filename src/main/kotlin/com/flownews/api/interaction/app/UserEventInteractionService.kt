@@ -43,11 +43,13 @@ class UserEventInteractionService(
             )
 
         userProfileApiClient.updateProfileByEvent(
-            EventBasedProfileUpdateRequest(
-                userId = userId,
-                eventId = eventId,
-                interactionType = interactionType,
-            ),
+            userId = userId,
+            request =
+                EventBasedProfileUpdateRequest(
+                    userId = userId,
+                    eventIds = listOf(eventId),
+                    action = interactionType,
+                ),
         )
 
         return userEventInteractionRepository.save(interaction)

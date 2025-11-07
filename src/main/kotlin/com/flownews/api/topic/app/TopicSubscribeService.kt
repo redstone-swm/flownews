@@ -38,18 +38,26 @@ class TopicSubscribeService(
     ) {
         saveSubscription(user, topic)
         userProfileApiClient.updateProfileByTopic(
-            TopicBasedProfileUpdateRequest(user.requireId(), topic.requireId(), InteractionType.TOPIC_FOLLOWED),
+            userId = user.requireId(),
+            request =
+                TopicBasedProfileUpdateRequest(
+                    userId = user.requireId(),
+                    topicIds = listOf(topic.requireId()),
+                    action = InteractionType.TOPIC_FOLLOWED,
+                ),
         )
     }
 
     private fun unsubscribe(subscription: TopicSubscription) {
         topicSubscriptionRepository.delete(subscription)
         userProfileApiClient.updateProfileByTopic(
-            TopicBasedProfileUpdateRequest(
-                subscription.user.requireId(),
-                subscription.topic.requireId(),
-                InteractionType.TOPIC_UNFOLLOWED,
-            ),
+            userId = subscription.user.requireId(),
+            request =
+                TopicBasedProfileUpdateRequest(
+                    userId = subscription.user.requireId(),
+                    topicIds = listOf(subscription.topic.requireId()),
+                    action = InteractionType.TOPIC_UNFOLLOWED,
+                ),
         )
     }
 

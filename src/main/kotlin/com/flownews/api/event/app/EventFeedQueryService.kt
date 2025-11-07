@@ -2,13 +2,11 @@ package com.flownews.api.event.app
 
 import com.flownews.api.event.domain.Event
 import com.flownews.api.event.domain.EventRepository
-import com.flownews.api.event.infra.RecommendationApiClient
-import com.flownews.api.interaction.domain.InteractionType
+import com.flownews.api.event.infra.EventRecommendationQueryService
 import com.flownews.api.interaction.domain.UserEventInteractionRepository
 import com.flownews.api.topic.app.TopicListQueryService
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.domain.User
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +15,7 @@ class EventFeedQueryService(
     private val topicListQueryService: TopicListQueryService,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
     private val userEventInteractionRepository: UserEventInteractionRepository,
-    private val recommendationApiClient: RecommendationApiClient,
+    private val eventRecommendationQueryService: EventRecommendationQueryService,
 ) {
     fun getEventFeeds(
         user: User?,
@@ -38,27 +36,8 @@ class EventFeedQueryService(
         userId: Long,
         category: String?,
     ) = getSubscribedLastEvents(userId)
-        .union(getRecommendedEvents(userId, category))
+        .union(eventRecommendationQueryService.getRecommendedEvents(userId, category))
         .toList()
-
-    private fun getRecommendedEvents(
-        userId: Long,
-        category: String?,
-    ): List<Event> {
-        val excludeEventIds =
-            userEventInteractionRepository.findEventIdsByUserIdAndInteractionTypeOrderByCreatedAtDesc(
-                userId,
-                InteractionType.VIEWED,
-                PageRequest.of(0, 20),
-            )
-        val eventIds =
-            recommendationApiClient.getRecommendedEvents(
-                userId = userId,
-                category = category,
-                excludeEventIds = excludeEventIds,
-            )
-        return eventRepository.findAllById(eventIds).toList()
-    }
 
     private fun getSubscribedLastEvents(userId: Long): List<Event> =
         topicSubscriptionRepository
