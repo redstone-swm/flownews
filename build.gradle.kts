@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.5.0"
+    id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
     kotlin("plugin.jpa") version "1.9.25"
@@ -24,7 +24,7 @@ repositories {
 
 extra["snippetsDir"] = file("build/generated-snippets")
 val springAiVersion by extra("1.0.1")
-val springCloudVersion by extra("2023.0.3")
+val springCloudVersion by extra("2023.0.6")
 
 dependencies {
     implementation("org.hibernate.orm:hibernate-vector:6.6.15.Final")
