@@ -2,8 +2,8 @@ package com.flownews.api.event.api
 
 import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
+import com.flownews.api.event.app.EventListQueryResponse
 import com.flownews.api.event.app.EventQueryService
-import com.flownews.api.event.app.EventSummaryResponse
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -29,7 +29,7 @@ class EventQueryApi(
     fun getEvent(
         @PathVariable id: Long,
         @CurrentUser user: User?,
-    ): ResponseEntity<EventSummaryResponse> =
+    ): ResponseEntity<EventListQueryResponse> =
         try {
             val eventDetails = eventQueryService.getEvent(id, user)
             ResponseEntity.ok(eventDetails)

@@ -72,6 +72,12 @@ interface ReactionRepository : JpaRepository<Reaction, Long> {
         eventId: Long,
         reactionTypeId: Long,
     ): Long
+
+    fun existsByUserIdAndEventIdAndReactionTypeId(
+        userId: Long,
+        eventId: Long,
+        reactionTypeId: Long = 1L,
+    ): Boolean
 }
 
 interface ReactionCount {

@@ -2,6 +2,7 @@ package com.flownews.api.event.domain
 
 import BaseEntity
 import com.flownews.api.event.domain.article.Article
+import com.flownews.api.topic.domain.Topic
 import com.flownews.api.topic.domain.TopicEvent
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -46,4 +47,8 @@ class Event(
     val totalReactionsCount: Long = 0,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Event ID cannot be null")
+
+    fun getReactionCount(): Long = totalReactionsCount + viewCount
+
+    fun getFirstTopic(): Topic = topicEvents.first().topic
 }
