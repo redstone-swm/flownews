@@ -3,7 +3,6 @@ package com.flownews.config.security
 import io.jsonwebtoken.JwtParser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.Base64
 import java.util.Date
@@ -54,9 +53,3 @@ class JwtService(
             null
         }
 }
-
-@ConfigurationProperties(prefix = "jwt")
-data class JwtProperties(
-    val secret: String?,
-    val expiration: Long,
-)

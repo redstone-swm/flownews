@@ -12,7 +12,7 @@ class WebConfig(
     override fun addCorsMappings(registry: CorsRegistry) {
         registry
             .addMapping("/**")
-            .allowedOrigins(*allowedOrigins.split(",").toTypedArray()) // 프론트엔드 주소
+            .allowedOrigins(*allowedOrigins.split(",").toTypedArray())
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true)
