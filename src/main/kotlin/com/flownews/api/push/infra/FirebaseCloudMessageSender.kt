@@ -13,23 +13,22 @@ class FirebaseCloudMessageSender(
     override fun sendMessages(messages: List<PushMessage>) {
         if (messages.isEmpty()) return
 
-        val firebaseMessages =
-            messages
-                .map { it ->
-                    Message
-                        .builder()
-                        .setToken(it.deviceToken)
-                        .setNotification(
-                            Notification
-                                .builder()
-                                .setTitle(it.title)
-                                .setBody(it.content)
-                                .build(),
-                        ).putData("topicId", it.topicId.toString())
-                        .putData("eventId", it.eventId.toString())
-                        .build()
-                }
+        val firebaseMessages = messages.map { it.toFirebaseMessage() }
 
         firebaseMessaging.sendEach(firebaseMessages)
+    }
+
+    fun PushMessage.toFirebaseMessage(): Message {
+        return Message.builder()
+            .setToken(deviceToken)
+            .setNotification(
+                Notification.builder()
+                    .setTitle(title)
+                    .setBody(content)
+                    .build(),
+            )
+            .putData("topicId", topicId.toString())
+            .putData("eventId", eventId.toString())
+            .build()
     }
 }

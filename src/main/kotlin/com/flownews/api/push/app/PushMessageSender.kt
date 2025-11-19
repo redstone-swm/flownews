@@ -24,7 +24,7 @@ class PushMessageSender(
     }
 
     private fun appendPushLog(messages: List<PushMessage>) {
-        val logs = messages.map { it -> PushLog(it) }
+        val logs = messages.map(::PushLog)
         pushLogRepository.saveAll(logs)
     }
 }
