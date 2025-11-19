@@ -1,11 +1,9 @@
 package com.flownews.api.topic.api
 
-import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.topic.app.TopicListQueryRequest
+import com.flownews.api.topic.app.TopicListQueryResponse
 import com.flownews.api.topic.app.TopicListQueryService
-import com.flownews.api.topic.app.TopicSummaryResponse
 import com.flownews.api.topic.app.TopicTopKQueryResponse
-import com.flownews.api.user.domain.User
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -18,9 +16,8 @@ class TopicListQueryApi(
 ) {
     @GetMapping("/topics")
     fun getAllTopics(
-        @CurrentUser user: User?,
         @ModelAttribute req: TopicListQueryRequest,
-    ): ResponseEntity<List<TopicSummaryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(user, req))
+    ): ResponseEntity<List<TopicListQueryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(req))
 
     @GetMapping("/topics/topk")
     fun getTopKTopics(
@@ -30,10 +27,9 @@ class TopicListQueryApi(
     @GetMapping("/topics/search")
     fun searchTopics(
         @ModelAttribute req: TopicListQueryRequest,
-        @CurrentUser user: User?,
-    ): ResponseEntity<List<TopicSummaryResponse>> {
+    ): ResponseEntity<List<TopicListQueryResponse>> {
         return try {
-            val topics = topicListQueryService.getTopicsByKeyword(user, req)
+            val topics = topicListQueryService.getTopicsByKeyword(req)
             ResponseEntity.ok(topics)
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().build()

@@ -2,7 +2,6 @@ package com.flownews.api.topic.app
 
 import com.flownews.api.event.app.article.ArticleResponse
 import com.flownews.api.event.domain.ReactedEvent
-import com.flownews.api.reaction.app.ReactionSummaryResponse
 import com.flownews.api.topic.domain.FollowedTopic
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
@@ -51,7 +50,9 @@ data class EventItemQueryResponse(
     @Schema(description = "관련 기사 목록")
     val articles: List<ArticleResponse>,
     @Schema(description = "반응 통계")
-    val reactions: List<ReactionSummaryResponse>,
+    val likeCount: Long,
+    @Schema(description = "사용자 반응 상태")
+    val isActive: Boolean,
 )
 
 fun ReactedEvent.toEventItemQueryResponse() =
@@ -62,5 +63,6 @@ fun ReactedEvent.toEventItemQueryResponse() =
         imageUrl = event.imageUrl,
         eventTime = event.eventTime,
         articles = event.articles.map { ArticleResponse.fromEntity(it) },
-        reactions = listOf(ReactionSummaryResponse.from(this)),
+        likeCount = event.getReactionCount(),
+        isActive = isReacted,
     )

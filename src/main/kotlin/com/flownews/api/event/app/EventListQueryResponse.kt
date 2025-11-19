@@ -1,7 +1,6 @@
 package com.flownews.api.event.app
 
 import com.flownews.api.event.domain.ReactedEvent
-import com.flownews.api.reaction.app.ReactionSummaryResponse
 import com.flownews.api.topic.domain.Topic
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
@@ -21,7 +20,7 @@ data class EventListQueryResponse(
     @Schema(description = "이벤트 발생 일시", example = "2025-09-09T10:30:00")
     val eventTime: LocalDateTime,
     @Schema(description = "반응 통계")
-    val reactions: List<ReactionSummaryResponse>,
+    val likeCount: Long,
 ) {
     companion object {
         fun from(reactedEvent: ReactedEvent) =
@@ -33,7 +32,7 @@ data class EventListQueryResponse(
                     imageUrl = imageUrl,
                     eventTime = eventTime,
                     topic = TopicSimpleInfo(getFirstTopic()),
-                    reactions = listOf(ReactionSummaryResponse.from(reactedEvent)),
+                    likeCount = reactedEvent.event.getReactionCount(),
                 )
             }
     }

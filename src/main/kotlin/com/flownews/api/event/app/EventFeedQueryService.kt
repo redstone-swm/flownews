@@ -1,7 +1,6 @@
 package com.flownews.api.event.app
 
 import com.flownews.api.event.domain.Event
-import com.flownews.api.event.domain.EventRepository
 import com.flownews.api.event.infra.EventRecommendationQueryService
 import com.flownews.api.interaction.domain.UserEventInteractionRepository
 import com.flownews.api.topic.app.TopicListQueryService
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class EventFeedQueryService(
-    private val eventRepository: EventRepository,
     private val topicListQueryService: TopicListQueryService,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
     private val userEventInteractionRepository: UserEventInteractionRepository,
@@ -22,14 +20,14 @@ class EventFeedQueryService(
         category: String?,
     ): List<Event> =
         if (user == null) {
-            guestFeed()
+            guestFeed(category)
         } else {
             personalizedFeed(user.requireId(), category)
         }
 
-    private fun guestFeed(): List<Event> =
+    private fun guestFeed(category: String?): List<Event> =
         topicListQueryService
-            .findTopTopicsSinceLast24Hours(5)
+            .findTopTopicsSinceLast24Hours(5, category)
             .map { it.getLastEvent() }
 
     private fun personalizedFeed(
