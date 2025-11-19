@@ -44,6 +44,8 @@ class Event(
     var topicEvents: MutableList<TopicEvent> = mutableListOf(),
     @Formula("(SELECT COUNT(*) FROM reactions r WHERE r.event_id = id)")
     val totalReactionsCount: Long = 0,
+    @Column(name = "is_noise")
+    var isNoise: Boolean = false,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Event ID cannot be null")
 }

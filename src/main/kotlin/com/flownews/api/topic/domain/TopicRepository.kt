@@ -11,7 +11,15 @@ import java.time.LocalDate
 interface TopicRepository : CrudRepository<Topic, Long> {
     fun findAll(pageable: Pageable): List<Topic>
 
+    fun findByIsNoiseFalse(pageable: Pageable): List<Topic>
+
     fun findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+        titleKeyword: String,
+        descriptionKeyword: String,
+        pageable: Pageable,
+    ): List<Topic>
+
+    fun findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndIsNoiseFalse(
         titleKeyword: String,
         descriptionKeyword: String,
         pageable: Pageable,
@@ -26,6 +34,8 @@ interface TopicRepository : CrudRepository<Topic, Long> {
             LEFT JOIN user_event_interactions uei ON te.event_id = uei.event_id 
                 AND uei.created_at >= :sinceTime
             WHERE (:category IS NULL OR e.category = :category)
+                AND t.is_noise = false
+                AND e.is_noise = false
             GROUP BY t.id
             ORDER BY COUNT(uei.id) DESC
             LIMIT :limit

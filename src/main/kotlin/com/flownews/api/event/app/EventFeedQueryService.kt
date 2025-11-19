@@ -57,14 +57,16 @@ class EventFeedQueryService(
                 category = category,
                 excludeEventIds = excludeEventIds,
             )
-        return eventRepository.findAllById(eventIds).toList()
+        return eventRepository.findAllById(eventIds).filter { !it.isNoise }.toList()
     }
 
     private fun getSubscribedLastEvents(userId: Long): List<Event> =
         topicSubscriptionRepository
             .findByUserId(userId)
+            .filter { !it.topic.isNoise }
             .map { subscription -> subscription.topic.getLastEvent() }
             .filter { event ->
-                userEventInteractionRepository.findByUserIdAndEventId(userId, event.requireId()).isEmpty()
+                !event.isNoise &&
+                    userEventInteractionRepository.findByUserIdAndEventId(userId, event.requireId()).isEmpty()
             }
 }

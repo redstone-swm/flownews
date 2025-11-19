@@ -17,7 +17,7 @@ class TopicListQueryService(
         req: TopicListQueryRequest,
     ): List<TopicSummaryResponse> {
         val pageRequest = req.toPageable()
-        val topics = topicRepository.findAll(pageRequest)
+        val topics = topicRepository.findByIsNoiseFalse(pageRequest)
         return mapToTopicSummaryResponses(topics, user)
     }
 
@@ -28,7 +28,7 @@ class TopicListQueryService(
         val pageable = req.toPageable()
         val keyword = req.getKeyword()
         val topics =
-            topicRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+            topicRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndIsNoiseFalse(
                 keyword,
                 keyword,
                 pageable,

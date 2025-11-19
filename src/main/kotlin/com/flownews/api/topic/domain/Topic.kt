@@ -26,10 +26,19 @@ class Topic(
     var description: String,
     @OneToMany(mappedBy = "topic", cascade = [CascadeType.ALL], orphanRemoval = true)
     var topicEvents: MutableList<TopicEvent> = mutableListOf(),
+    @Column(name = "is_noise")
+    var isNoise: Boolean = false,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Topic ID cannot be null")
 
-    fun getLastEvent(): Event = topicEvents.maxBy { it.event.eventTime }.event
+    fun getLastEvent(): Event =
+        topicEvents
+            .filter { !it.event.isNoise }
+            .maxBy { it.event.eventTime }.event
 
-    fun getEvents(): List<Event> = topicEvents.map { it.event }.sortedBy { it.eventTime }
+    fun getEvents(): List<Event> =
+        topicEvents
+            .filter { !it.event.isNoise }
+            .map { it.event }
+            .sortedBy { it.eventTime }
 }
