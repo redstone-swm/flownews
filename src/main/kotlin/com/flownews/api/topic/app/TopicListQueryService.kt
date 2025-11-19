@@ -54,8 +54,11 @@ class TopicListQueryService(
     fun getTopKTopics(limit: Int): List<TopicTopKQueryResponse> =
         findTopTopicsSinceLast24Hours(limit).map { TopicTopKQueryResponse(it.requireId(), it.title) }
 
-    fun findTopTopicsSinceLast24Hours(limit: Int): List<Topic> {
+    fun findTopTopicsSinceLast24Hours(
+        limit: Int,
+        category: String? = null,
+    ): List<Topic> {
         val twentyFourHoursAgo = LocalDateTime.now().minusHours(24).toLocalDate()
-        return topicRepository.findTopKTopicsByInteractionsSince(twentyFourHoursAgo, null, limit)
+        return topicRepository.findTopKTopicsByInteractionsSince(twentyFourHoursAgo, category, limit)
     }
 }

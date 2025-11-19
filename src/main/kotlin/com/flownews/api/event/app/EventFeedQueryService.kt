@@ -24,14 +24,14 @@ class EventFeedQueryService(
         category: String?,
     ): List<Event> =
         if (user == null) {
-            guestFeed()
+            guestFeed(category)
         } else {
             personalizedFeed(user.requireId(), category)
         }
 
-    private fun guestFeed(): List<Event> =
+    private fun guestFeed(category: String?): List<Event> =
         topicListQueryService
-            .findTopTopicsSinceLast24Hours(5)
+            .findTopTopicsSinceLast24Hours(5, category)
             .map { it.getLastEvent() }
 
     private fun personalizedFeed(
