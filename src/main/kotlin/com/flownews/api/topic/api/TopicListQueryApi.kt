@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController
 class TopicListQueryApi(
     private val topicListQueryService: TopicListQueryService,
 ) {
-    @GetMapping("/topics")
+    @GetMapping("/api/topics")
     fun getAllTopics(
         @ModelAttribute req: TopicListQueryRequest,
     ): ResponseEntity<List<TopicListQueryResponse>> = ResponseEntity.ok(topicListQueryService.getTopics(req))
 
-    @GetMapping("/topics/topk")
+    @GetMapping("/api/topics/topk")
     fun getTopKTopics(
         @RequestParam(required = false) limit: Int = 5,
     ): ResponseEntity<List<TopicTopKQueryResponse>> = ResponseEntity.ok(topicListQueryService.getTopKTopics(limit))
 
-    @GetMapping("/topics/search")
+    @GetMapping("/api/topics/search")
     fun searchTopics(
         @ModelAttribute req: TopicListQueryRequest,
     ): ResponseEntity<List<TopicListQueryResponse>> {

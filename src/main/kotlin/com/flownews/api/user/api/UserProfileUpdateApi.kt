@@ -10,17 +10,15 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "User Profile", description = "사용자 프로필 관리 API")
 @RestController
-@RequestMapping("/api/users")
 class UserProfileUpdateApi(
     private val userUpdateService: UserUpdateService,
 ) {
     @Operation(summary = "사용자 프로필 완성", description = "생일과 성별을 입력하여 프로필을 완성합니다.")
-    @PostMapping("/profile")
+    @PostMapping("/api/users/profile")
     fun updateProfile(
         @CurrentUser user: User,
         @RequestBody request: UserProfileUpdateRequest?,
@@ -29,7 +27,7 @@ class UserProfileUpdateApi(
     }
 
     @Operation(summary = "사용자 FCM 토큰 업데이트", description = "사용자의 FCM 토큰을 업데이트합니다.")
-    @PostMapping("/device-token")
+    @PostMapping("/api/users/device-token")
     fun updateDeviceToken(
         @CurrentUser user: User,
         @RequestBody request: UserDeviceTokenUpdateRequest,
@@ -39,7 +37,7 @@ class UserProfileUpdateApi(
     }
 
     @Operation(summary = "사용자 탈퇴", description = "탈퇴 사유를 입력하여 탈퇴합니다.")
-    @PostMapping("/withdraw")
+    @PostMapping("/api/users/withdraw")
     fun withdraw(
         @CurrentUser user: User,
         @RequestBody request: UserWithdrawRequest,

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 class UserQueryApi {
-    @GetMapping("/users/me")
+    @GetMapping("/api/users/me")
     fun getCurrentUser(
         @CurrentUser user: User,
     ): ResponseEntity<UserQueryResponse> {

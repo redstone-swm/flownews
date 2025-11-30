@@ -25,7 +25,7 @@ class TopicSubscribeApi(
         summary = "토픽 구독 토글",
         description = "토픽 구독 상태를 토글합니다. 구독 중이면 해제하고, 구독하지 않았으면 구독합니다.",
     )
-    @PostMapping("/topics/{topicId}/toggle-subscription")
+    @PostMapping("/api/topics/{topicId}/toggle-subscription")
     fun toggleSubscription(
         @Parameter(description = "토픽 ID", example = "1")
         @PathVariable topicId: Long,

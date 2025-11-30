@@ -11,13 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Event Query", description = "이벤트 조회 API")
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/events")
 class EventQueryApi(
     private val eventQueryService: EventQueryService,
 ) {
@@ -25,7 +23,7 @@ class EventQueryApi(
         summary = "이벤트 상세 조회",
         description = "이벤트 ID로 특정 이벤트의 상세 정보를 조회합니다. 사용자가 인증된 경우 토픽 팔로우 상태가 포함됩니다.",
     )
-    @GetMapping("/{id}")
+    @GetMapping("/events/{id}")
     fun getEvent(
         @PathVariable id: Long,
         @CurrentUser user: User?,
