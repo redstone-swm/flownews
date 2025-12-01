@@ -1,8 +1,6 @@
-package com.flownews.api.event.app
+package com.flownews.api.event.domain
 
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.event.domain.EventRepository
-import com.flownews.api.event.domain.ReactedEvent
 import com.flownews.api.reaction.domain.ReactionRepository
 import com.flownews.api.user.domain.User
 import org.springframework.stereotype.Service
@@ -12,14 +10,6 @@ class EventQueryService(
     private val eventRepository: EventRepository,
     private val reactionRepository: ReactionRepository,
 ) {
-    fun getEvent(
-        id: Long,
-        user: User?,
-    ): EventListQueryResponse {
-        val reactedEvent = getReactedEvent(id, user)
-        return EventListQueryResponse.from(reactedEvent)
-    }
-
     fun getReactedEvent(
         id: Long,
         user: User?,

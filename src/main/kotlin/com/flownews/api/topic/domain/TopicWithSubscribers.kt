@@ -1,6 +1,5 @@
-package com.flownews.api.topic.app
+package com.flownews.api.topic.domain
 
-import com.flownews.api.topic.domain.Topic
 import com.flownews.api.user.domain.User
 
 data class TopicWithSubscribers(

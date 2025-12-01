@@ -1,6 +1,7 @@
 package com.flownews.api.event.app
 
 import com.flownews.api.event.domain.Event
+import com.flownews.api.event.domain.EventQueryService
 import com.flownews.api.event.infra.EventRecommendationQueryService
 import com.flownews.api.interaction.domain.UserEventInteractionRepository
 import com.flownews.api.topic.app.TopicListQueryService
@@ -14,16 +15,24 @@ class EventFeedQueryService(
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
     private val userEventInteractionRepository: UserEventInteractionRepository,
     private val eventRecommendationQueryService: EventRecommendationQueryService,
+    private val eventQueryService: EventQueryService,
 ) {
     fun getEventFeeds(
         user: User?,
         category: String?,
-    ): List<Event> =
-        if (user == null) {
-            guestFeed(category)
-        } else {
-            personalizedFeed(user.requireId(), category)
+    ): List<EventFeedQueryResponse> {
+        val events =
+            if (user == null) {
+                guestFeed(category)
+            } else {
+                personalizedFeed(user.requireId(), category)
+            }
+
+        return events.map { event ->
+            val reactedEvent = eventQueryService.getReactedEvent(event.requireId(), user)
+            EventFeedQueryResponse.from(reactedEvent)
         }
+    }
 
     private fun guestFeed(category: String?): List<Event> =
         topicListQueryService

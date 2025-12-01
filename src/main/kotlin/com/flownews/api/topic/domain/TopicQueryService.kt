@@ -1,11 +1,6 @@
-package com.flownews.api.topic.app
+package com.flownews.api.topic.domain
 
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.event.app.EventQueryService
-import com.flownews.api.topic.domain.FollowedTopic
-import com.flownews.api.topic.domain.Topic
-import com.flownews.api.topic.domain.TopicRepository
-import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.domain.User
 import org.springframework.stereotype.Service
 
@@ -13,24 +8,7 @@ import org.springframework.stereotype.Service
 class TopicQueryService(
     private val topicRepository: TopicRepository,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
-    private val eventQueryService: EventQueryService,
 ) {
-    fun getTopic(
-        user: User?,
-        topicId: Long,
-    ): TopicQueryResponse {
-        val followedTopic = getFollowedTopic(user, topicId)
-        val reactedEvents =
-            followedTopic.topic.getEvents().map {
-                eventQueryService.getReactedEvent(it.requireId(), user)
-            }
-
-        return TopicQueryResponse.of(
-            followedTopic = followedTopic,
-            events = reactedEvents,
-        )
-    }
-
     fun getTopicWithSubscribers(topicId: Long): TopicWithSubscribers {
         val topic = findTopic(topicId)
         val subscriptions = topicSubscriptionRepository.findByTopicId(topicId)
@@ -39,7 +17,7 @@ class TopicQueryService(
         return TopicWithSubscribers(topic, subscribers)
     }
 
-    private fun getFollowedTopic(
+    fun getFollowedTopic(
         user: User?,
         topicId: Long,
     ): FollowedTopic {

@@ -4,7 +4,7 @@ import com.flownews.api.push.domain.PushLog
 import com.flownews.api.push.domain.PushLogRepository
 import com.flownews.api.push.domain.PushMessage
 import com.flownews.api.push.infra.MessageSender
-import com.flownews.api.topic.app.TopicQueryService
+import com.flownews.api.topic.domain.TopicQueryService
 import org.springframework.stereotype.Service
 
 @Service

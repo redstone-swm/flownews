@@ -1,13 +1,13 @@
 package com.flownews.api.topic.app
 
-import com.flownews.api.event.app.article.ArticleResponse
 import com.flownews.api.event.domain.ReactedEvent
+import com.flownews.api.event.domain.article.Article
 import com.flownews.api.topic.domain.FollowedTopic
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
 @Schema(description = "토픽 상세 조회 응답")
-data class TopicQueryResponse(
+data class TopicTimelineQueryResponse(
     @Schema(description = "토픽 고유 ID", example = "1")
     val id: Long,
     @Schema(description = "토픽 제목", example = "AI 기술 동향")
@@ -24,7 +24,7 @@ data class TopicQueryResponse(
             followedTopic: FollowedTopic,
             events: List<ReactedEvent>,
         ) = followedTopic.run {
-            TopicQueryResponse(
+            TopicTimelineQueryResponse(
                 id = topic.requireId(),
                 title = topic.title,
                 description = topic.description,
@@ -54,6 +54,28 @@ data class EventItemQueryResponse(
     @Schema(description = "사용자 반응 상태")
     val isActive: Boolean,
 )
+
+@Schema(description = "기사 정보")
+data class ArticleResponse(
+    @Schema(description = "기사 ID", example = "1")
+    val id: Long,
+    @Schema(description = "기사 제목", example = "손흥민 골")
+    val title: String,
+    @Schema(description = "기사 출처(언론사)", example = "연합뉴스")
+    val source: String,
+    @Schema(description = "기사 링크", example = "https://example.com/news/1")
+    val url: String,
+) {
+    companion object {
+        fun fromEntity(article: Article) =
+            ArticleResponse(
+                id = article.requireId(),
+                title = article.title,
+                source = article.source,
+                url = article.url,
+            )
+    }
+}
 
 fun ReactedEvent.toEventItemQueryResponse() =
     EventItemQueryResponse(

@@ -2,8 +2,8 @@ package com.flownews.api.topic.api
 
 import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.topic.app.TopicQueryResponse
-import com.flownews.api.topic.app.TopicQueryService
+import com.flownews.api.topic.app.TopicTimelineQueryResponse
+import com.flownews.api.topic.app.TopicTimelineQueryService
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Tag(name = "Topics", description = "토픽 조회 API")
-class TopicQueryApi(
-    private val topicQueryService: TopicQueryService,
+class TopicTimelineQueryApi(
+    private val topicTimelineQueryService: TopicTimelineQueryService,
 ) {
     @Operation(
         summary = "특정 토픽 상세 조회",
@@ -26,9 +26,9 @@ class TopicQueryApi(
     fun getTopic(
         @PathVariable topicId: Long,
         @CurrentUser user: User?,
-    ): ResponseEntity<TopicQueryResponse> =
+    ): ResponseEntity<TopicTimelineQueryResponse> =
         try {
-            ResponseEntity.ok(topicQueryService.getTopic(user, topicId))
+            ResponseEntity.ok(topicTimelineQueryService.getTopic(user, topicId))
         } catch (e: NoDataException) {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
