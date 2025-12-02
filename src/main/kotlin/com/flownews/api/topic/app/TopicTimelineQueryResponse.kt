@@ -1,6 +1,6 @@
 package com.flownews.api.topic.app
 
-import com.flownews.api.event.domain.ReactedEvent
+import com.flownews.api.event.domain.LikedEvent
 import com.flownews.api.event.domain.article.Article
 import com.flownews.api.topic.domain.FollowedTopic
 import io.swagger.v3.oas.annotations.media.Schema
@@ -22,7 +22,7 @@ data class TopicTimelineQueryResponse(
     companion object {
         fun of(
             followedTopic: FollowedTopic,
-            events: List<ReactedEvent>,
+            events: List<LikedEvent>,
         ) = followedTopic.run {
             TopicTimelineQueryResponse(
                 id = topic.requireId(),
@@ -77,7 +77,7 @@ data class ArticleResponse(
     }
 }
 
-fun ReactedEvent.toEventItemQueryResponse() =
+fun LikedEvent.toEventItemQueryResponse() =
     EventItemQueryResponse(
         id = event.requireId(),
         title = event.title,
@@ -85,6 +85,6 @@ fun ReactedEvent.toEventItemQueryResponse() =
         imageUrl = event.imageUrl,
         eventTime = event.eventTime,
         articles = event.articles.map { ArticleResponse.fromEntity(it) },
-        likeCount = event.getReactionCount(),
-        isActive = isReacted,
+        likeCount = event.getLikeCount(),
+        isActive = isLiked,
     )

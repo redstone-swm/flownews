@@ -1,4 +1,4 @@
-package com.flownews.api.reaction.domain
+package com.flownews.api.event.domain.reaction
 
 import BaseEntity
 import com.flownews.api.event.domain.Event
@@ -15,8 +15,8 @@ import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "reactions")
-class Reaction(
+@Table(name = "likes")
+class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -26,9 +26,23 @@ class Reaction(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     val event: Event,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reaction_type_id")
-    val reactionType: ReactionType,
     @Column(name = "is_deleted")
     var isDeleted: LocalDateTime? = null,
-) : BaseEntity()
+) : BaseEntity() {
+    fun delete() {
+        this.isDeleted = LocalDateTime.now()
+    }
+
+    companion object {
+        fun of(
+            user: User,
+            event: Event,
+        ): Like {
+            return Like(
+                user = user,
+                event = event,
+                isDeleted = null,
+            )
+        }
+    }
+}

@@ -1,29 +1,32 @@
 package com.flownews.api.event.domain
 
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.reaction.domain.ReactionRepository
+import com.flownews.api.event.domain.reaction.LikeRepository
 import com.flownews.api.user.domain.User
 import org.springframework.stereotype.Service
 
 @Service
 class EventQueryService(
     private val eventRepository: EventRepository,
-    private val reactionRepository: ReactionRepository,
+    private val likeRepository: LikeRepository,
 ) {
-    fun getReactedEvent(
+    fun getLikedEvent(
         id: Long,
         user: User?,
-    ): ReactedEvent {
-        val event =
-            eventRepository.findById(id).orElseThrow {
-                NoDataException("Event not found: $id")
-            }
+    ): LikedEvent {
+        val event = findEventById(id)
         if (user == null) {
-            return ReactedEvent(event, false)
+            return LikedEvent(event, false)
         }
 
-        val isReacted = reactionRepository.existsByUserIdAndEventIdAndReactionTypeId(id, user.requireId())
+        val isLiked = likeRepository.existsByUserIdAndEventId(user.requireId(), id)
 
-        return ReactedEvent(event, isReacted)
+        return LikedEvent(event, isLiked)
+    }
+
+    fun findEventById(id: Long): Event {
+        return eventRepository.findById(id).orElseThrow {
+            NoDataException("Event not found: $id")
+        }
     }
 }

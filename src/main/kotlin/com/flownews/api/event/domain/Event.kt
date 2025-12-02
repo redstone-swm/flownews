@@ -43,12 +43,12 @@ class Event(
     var articles: MutableList<Article> = mutableListOf(),
     @OneToMany(mappedBy = "event")
     var topicEvents: MutableList<TopicEvent> = mutableListOf(),
-    @Formula("(SELECT COUNT(*) FROM reactions r WHERE r.event_id = id)")
-    val totalReactionsCount: Long = 0,
+    @Formula("(SELECT COUNT(*) FROM likes l WHERE l.event_id = id AND l.is_deleted IS NULL)")
+    val totalLikesCount: Long = 0,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("Event ID cannot be null")
 
-    fun getReactionCount(): Long = totalReactionsCount + viewCount
+    fun getLikeCount(): Long = totalLikesCount
 
     fun getFirstTopic(): Topic = topicEvents.first().topic
 }

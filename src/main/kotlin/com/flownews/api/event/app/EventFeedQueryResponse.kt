@@ -1,6 +1,6 @@
 package com.flownews.api.event.app
 
-import com.flownews.api.event.domain.ReactedEvent
+import com.flownews.api.event.domain.LikedEvent
 import com.flownews.api.topic.domain.Topic
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
@@ -23,8 +23,8 @@ data class EventFeedQueryResponse(
     val likeCount: Long,
 ) {
     companion object {
-        fun from(reactedEvent: ReactedEvent) =
-            reactedEvent.event.run {
+        fun from(likedEvent: LikedEvent) =
+            likedEvent.event.run {
                 EventFeedQueryResponse(
                     id = requireId(),
                     title = title,
@@ -32,7 +32,7 @@ data class EventFeedQueryResponse(
                     imageUrl = imageUrl,
                     eventTime = eventTime,
                     topic = TopicSimpleInfo(getFirstTopic()),
-                    likeCount = reactedEvent.event.getReactionCount(),
+                    likeCount = likedEvent.event.getLikeCount(),
                 )
             }
     }

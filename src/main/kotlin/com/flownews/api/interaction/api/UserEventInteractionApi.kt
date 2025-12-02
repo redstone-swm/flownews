@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class UserEventInteractionApi(
     private val userEventInteractionService: UserEventInteractionService,
 ) {
-    @PostMapping("/api/interactions/record")
+    @PostMapping("/api/interactions")
     @Operation(summary = "사용자 이벤트 상호작용 기록", description = "유저가 피드에서 이벤트와 상호작용한 내역을 기록합니다")
     fun recordInteraction(
         @RequestBody request: InteractionRecordRequest,

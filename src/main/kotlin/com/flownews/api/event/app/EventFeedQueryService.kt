@@ -29,8 +29,8 @@ class EventFeedQueryService(
             }
 
         return events.map { event ->
-            val reactedEvent = eventQueryService.getReactedEvent(event.requireId(), user)
-            EventFeedQueryResponse.from(reactedEvent)
+            val likedEvent = eventQueryService.getLikedEvent(event.requireId(), user)
+            EventFeedQueryResponse.from(likedEvent)
         }
     }
 

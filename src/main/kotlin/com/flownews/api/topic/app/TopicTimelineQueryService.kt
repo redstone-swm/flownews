@@ -15,14 +15,14 @@ class TopicTimelineQueryService(
         topicId: Long,
     ): TopicTimelineQueryResponse {
         val followedTopic = topicQueryService.getFollowedTopic(user, topicId)
-        val reactedEvents =
+        val likedEvents =
             followedTopic.topic.getEvents().map {
-                eventQueryService.getReactedEvent(it.requireId(), user)
+                eventQueryService.getLikedEvent(it.requireId(), user)
             }
 
         return TopicTimelineQueryResponse.of(
             followedTopic = followedTopic,
-            events = reactedEvents,
+            events = likedEvents,
         )
     }
 }
