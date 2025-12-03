@@ -1,12 +1,12 @@
 package com.flownews.api.event.api
 
+import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.event.app.EventFeedQueryResponse
 import com.flownews.api.event.app.EventFeedQueryService
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -24,8 +24,8 @@ class EventFeedQueryApi(
     fun getUserEventFeed(
         @CurrentUser user: User?,
         @RequestParam(required = false) category: String?,
-    ): ResponseEntity<List<EventFeedQueryResponse>> {
+    ): ApiResponse<List<EventFeedQueryResponse>> {
         val eventFeed = eventFeedQueryService.getEventFeeds(user, category)
-        return ResponseEntity.ok(eventFeed)
+        return ApiResponse.ok(eventFeed)
     }
 }

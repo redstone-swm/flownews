@@ -1,16 +1,15 @@
 package com.flownews.api.topic.api
 
+import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
 import com.flownews.api.topic.app.TopicSubscribeRequest
 import com.flownews.api.topic.app.TopicSubscribeService
-import com.flownews.api.topic.app.TopicSubscriptionToggleResponse
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -30,17 +29,16 @@ class TopicSubscribeApi(
         @Parameter(description = "토픽 ID", example = "1")
         @PathVariable topicId: Long,
         @CurrentUser user: User,
-    ): ResponseEntity<TopicSubscriptionToggleResponse> =
+    ): ApiResponse<out Any?> =
         try {
-            val isSubscribe =
-                topicSubscribeService.toggleSubscription(
-                    TopicSubscribeRequest(
-                        user = user,
-                        topicId = topicId,
-                    ),
+            val req =
+                TopicSubscribeRequest(
+                    user = user,
+                    topicId = topicId,
                 )
-            ResponseEntity.ok(TopicSubscriptionToggleResponse(isSubscribed = isSubscribe))
+            topicSubscribeService.toggleSubscription(req)
+            ApiResponse.ok()
         } catch (e: NoDataException) {
-            ResponseEntity.notFound().build()
+            ApiResponse.nodata()
         }
 }

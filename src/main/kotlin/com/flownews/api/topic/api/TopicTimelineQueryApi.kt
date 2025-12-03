@@ -1,14 +1,12 @@
 package com.flownews.api.topic.api
 
+import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.topic.app.TopicTimelineQueryResponse
 import com.flownews.api.topic.app.TopicTimelineQueryService
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
@@ -26,10 +24,10 @@ class TopicTimelineQueryApi(
     fun getTopic(
         @PathVariable topicId: Long,
         @CurrentUser user: User?,
-    ): ResponseEntity<TopicTimelineQueryResponse> =
+    ): ApiResponse<out Any?> =
         try {
-            ResponseEntity.ok(topicTimelineQueryService.getTopic(user, topicId))
+            ApiResponse.ok(topicTimelineQueryService.getTopic(user, topicId))
         } catch (e: NoDataException) {
-            ResponseEntity(HttpStatus.NOT_FOUND)
+            ApiResponse.nodata()
         }
 }

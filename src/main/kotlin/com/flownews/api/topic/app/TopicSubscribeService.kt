@@ -19,7 +19,7 @@ class TopicSubscribeService(
     private val userProfileApiClient: UserProfileApiClient,
 ) {
     @Transactional
-    fun toggleSubscription(req: TopicSubscribeRequest): Boolean {
+    fun toggleSubscription(req: TopicSubscribeRequest) {
         val topic = getTopic(req.topicId)
         val user = req.user
 
@@ -28,8 +28,6 @@ class TopicSubscribeService(
         val subscription = topicSubscriptionRepository.findByTopicIdAndUserId(topicId, userId)
 
         subscription?.let { unsubscribe(it) } ?: subscribe(user, topic)
-
-        return subscription == null
     }
 
     private fun subscribe(

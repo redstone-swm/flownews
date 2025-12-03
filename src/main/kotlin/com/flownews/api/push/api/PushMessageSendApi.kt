@@ -1,9 +1,9 @@
 package com.flownews.api.push.api
 
+import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.common.app.NoDataException
 import com.flownews.api.push.app.PushMessageSendRequest
 import com.flownews.api.push.app.PushMessageSender
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -15,10 +15,10 @@ class PushMessageSendApi(
     @PostMapping("/api/notifications/push", params = ["by=topic"])
     fun sendPushMessageByTopic(
         @RequestBody req: PushMessageSendRequest,
-    ): ResponseEntity<out Any?> =
+    ): ApiResponse<out Any?> =
         try {
-            ResponseEntity.ok(pushMessageSender.sendPushMessages(req.requireTopicId()))
+            ApiResponse.ok(pushMessageSender.sendPushMessages(req.requireTopicId()))
         } catch (e: NoDataException) {
-            ResponseEntity.badRequest().body(e.message)
+            ApiResponse.nodata()
         }
 }

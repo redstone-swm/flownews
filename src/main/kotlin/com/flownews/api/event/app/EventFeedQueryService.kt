@@ -3,7 +3,7 @@ package com.flownews.api.event.app
 import com.flownews.api.event.domain.Event
 import com.flownews.api.event.domain.EventQueryService
 import com.flownews.api.event.infra.EventRecommendationQueryService
-import com.flownews.api.interaction.domain.UserEventInteractionRepository
+import com.flownews.api.interaction.domain.InteractionRepository
 import com.flownews.api.topic.app.TopicListQueryService
 import com.flownews.api.topic.domain.TopicSubscriptionRepository
 import com.flownews.api.user.domain.User
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class EventFeedQueryService(
     private val topicListQueryService: TopicListQueryService,
     private val topicSubscriptionRepository: TopicSubscriptionRepository,
-    private val userEventInteractionRepository: UserEventInteractionRepository,
+    private val interactionRepository: InteractionRepository,
     private val eventRecommendationQueryService: EventRecommendationQueryService,
     private val eventQueryService: EventQueryService,
 ) {
@@ -51,6 +51,6 @@ class EventFeedQueryService(
             .findByUserId(userId)
             .map { subscription -> subscription.topic.getLastEvent() }
             .filter { event ->
-                userEventInteractionRepository.findByUserIdAndEventId(userId, event.requireId()).isEmpty()
+                interactionRepository.findByUserIdAndEventId(userId, event.requireId()).isEmpty()
             }
 }

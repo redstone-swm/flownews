@@ -2,8 +2,8 @@ package com.flownews.api.event.infra
 
 import com.flownews.api.event.domain.Event
 import com.flownews.api.event.domain.EventRepository
+import com.flownews.api.interaction.domain.InteractionRepository
 import com.flownews.api.interaction.domain.InteractionType
-import com.flownews.api.interaction.domain.UserEventInteractionRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class EventRecommendationQueryService(
     private val eventRecommendationApiClient: EventRecommendationApiClient,
-    private val userEventInteractionRepository: UserEventInteractionRepository,
+    private val interactionRepository: InteractionRepository,
     private val eventRepository: EventRepository,
 ) {
     private val logger = LoggerFactory.getLogger(EventRecommendationQueryService::class.java)
@@ -40,7 +40,7 @@ class EventRecommendationQueryService(
         }
 
     private fun getExcludeEventIds(userId: Long): List<Long> {
-        return userEventInteractionRepository
+        return interactionRepository
             .findEventIdsByUserIdAndInteractionTypeOrderByCreatedAtDesc(
                 userId,
                 InteractionType.VIEWED,

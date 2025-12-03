@@ -17,7 +17,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "user_event_interactions")
-class UserEventInteraction(
+class Interaction(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -30,8 +30,6 @@ class UserEventInteraction(
     @Column(name = "interaction_type", nullable = false)
     @Enumerated(EnumType.STRING)
     val interactionType: InteractionType,
-    @Column(name = "additional_data")
-    val additionalData: String? = null,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("UserEventInteraction ID cannot be null")
 }

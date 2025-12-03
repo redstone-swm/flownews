@@ -6,14 +6,14 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserEventInteractionRepository : JpaRepository<UserEventInteraction, Long> {
+interface InteractionRepository : JpaRepository<Interaction, Long> {
     fun findByUserIdAndEventId(
         userId: Long,
         eventId: Long,
-    ): List<UserEventInteraction>
+    ): List<Interaction>
 
     @Query(
-        "SELECT uei.event.id FROM UserEventInteraction uei " +
+        "SELECT uei.event.id FROM Interaction uei " +
             "WHERE uei.user.id = :userId AND uei.interactionType = :interactionType " +
             "ORDER BY uei.createdAt DESC",
     )

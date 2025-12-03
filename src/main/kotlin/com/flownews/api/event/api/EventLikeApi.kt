@@ -1,15 +1,14 @@
 package com.flownews.api.event.api
 
+import com.flownews.api.common.api.ApiResponse
 import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.common.app.NoDataException
-import com.flownews.api.event.app.EventLikeResponse
 import com.flownews.api.event.app.EventLikeService
 import com.flownews.api.user.domain.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -29,11 +28,11 @@ class EventLikeApi(
         @Parameter(description = "이벤트 ID", example = "1")
         @PathVariable eventId: Long,
         @CurrentUser user: User,
-    ): ResponseEntity<Any> =
+    ): ApiResponse<Void?> =
         try {
             eventLikeService.toggleLike(eventId, user)
-            ResponseEntity.ok(EventLikeResponse.ok())
+            ApiResponse.ok()
         } catch (e: NoDataException) {
-            ResponseEntity.notFound().build()
+            ApiResponse.nodata()
         }
 }
