@@ -1,0 +1,156 @@
+= 시점 API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+[introduction]
+= Introduction
+
+뉴스 큐레이션 서비스, 시점 API 문서입니다.
+
+== Overview
+
+이 API는 다음과 같은 기능을 제공합니다:
+
+* 사용자별 개인화된 이벤트 피드 조회
+* 토픽 구독 관리
+* 이벤트 좋아요 기능
+* 토픽 타임라인 조회
+
+== Authentication
+
+대부분의 API 엔드포인트는 JWT 토큰을 사용한 Bearer 인증이 필요합니다.
+
+.Request headers
+[source,http]
+----
+Authorization: Bearer <JWT_TOKEN>
+----
+
+== Common Response Format
+
+모든 API 응답은 다음과 같은 공통 형태를 가집니다:
+
+[source,json]
+----
+{
+  "status": "SUCCESS",
+  "message": "요청이 성공적으로 처리되었습니다.",
+  "data": { /* 실제 데이터 */ }
+}
+----
+
+[[resources]]
+= Resources
+
+[[resources-event-feed]]
+== Event Feed
+
+이벤트 피드 관련 API입니다.
+
+[[resources-event-feed-query]]
+=== Get Event Feed
+
+사용자별 개인화된 이벤트 피드를 조회합니다.
+
+include::{snippets}/event-feed-query/curl-request.adoc[]
+
+include::{snippets}/event-feed-query/http-request.adoc[]
+
+include::{snippets}/event-feed-query/query-parameters.adoc[]
+
+include::{snippets}/event-feed-query/http-response.adoc[]
+
+include::{snippets}/event-feed-query/response-fields.adoc[]
+
+[[resources-event-like]]
+== Event Like
+
+이벤트 좋아요 관련 API입니다.
+
+[[resources-event-like-toggle]]
+=== Toggle Event Like
+
+특정 이벤트에 대한 좋아요를 토글합니다.
+
+include::{snippets}/event-like-toggle/curl-request.adoc[]
+
+include::{snippets}/event-like-toggle/http-request.adoc[]
+
+include::{snippets}/event-like-toggle/path-parameters.adoc[]
+
+include::{snippets}/event-like-toggle/http-response.adoc[]
+
+include::{snippets}/event-like-toggle/response-fields.adoc[]
+
+[[resources-topic-subscription]]
+== Topic Subscription
+
+토픽 구독 관련 API입니다.
+
+[[resources-topic-subscription-toggle]]
+=== Toggle Topic Subscription
+
+특정 토픽에 대한 구독을 토글합니다.
+
+include::{snippets}/topic-subscription-toggle/curl-request.adoc[]
+
+include::{snippets}/topic-subscription-toggle/http-request.adoc[]
+
+include::{snippets}/topic-subscription-toggle/path-parameters.adoc[]
+
+include::{snippets}/topic-subscription-toggle/http-response.adoc[]
+
+include::{snippets}/topic-subscription-toggle/response-fields.adoc[]
+
+[[resources-topic-timeline]]
+== Topic Timeline
+
+토픽 타임라인 관련 API입니다.
+
+[[resources-topic-timeline-query]]
+=== Get Topic Timeline
+
+특정 토픽의 타임라인을 조회합니다.
+
+include::{snippets}/topic-timeline-query/curl-request.adoc[]
+
+include::{snippets}/topic-timeline-query/http-request.adoc[]
+
+include::{snippets}/topic-timeline-query/path-parameters.adoc[]
+
+include::{snippets}/topic-timeline-query/http-response.adoc[]
+
+include::{snippets}/topic-timeline-query/response-fields.adoc[]
+
+[[appendix]]
+= Appendix
+
+[[http-status-codes]]
+== HTTP Status Codes
+
+시점 API는 다음과 같은 HTTP 상태 코드를 사용합니다:
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| 요청이 성공적으로 처리됨
+
+| `400 Bad Request`
+| 잘못된 요청 (요청 형식 오류, 필수 파라미터 누락 등)
+
+| `401 Unauthorized`
+| 인증이 필요하거나 인증 정보가 유효하지 않음
+
+| `404 Not Found`
+| 요청한 리소스를 찾을 수 없음
+
+| `500 Internal Server Error`
+| 서버 내부 오류
+|===

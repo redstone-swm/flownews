@@ -35,7 +35,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     implementation("com.google.firebase:firebase-admin:9.5.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -43,6 +43,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("org.postgresql:postgresql")
@@ -81,6 +84,38 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
+
+    attributes(mapOf("snippets" to project.extra["snippetsDir"]!!))
+
+    doFirst {
+        delete(file("src/main/resources/static/docs"))
+    }
+}
+
+tasks.register("copyRestdocsToStatic") {
+    group = "documentation"
+    description = "Copy generated REST Docs to static resources for OpenAPI JSON generation"
+    dependsOn(tasks.asciidoctor)
+
+    doLast {
+        copy {
+            from(file("build/docs/asciidoc"))
+            into(file("src/main/resources/static/docs"))
+        }
+    }
+}
+
+tasks.register("prepareDocsForGithubPages") {
+    group = "documentation"
+    description = "Prepare documentation for GitHub Pages deployment"
+    dependsOn(tasks.asciidoctor)
+
+    doLast {
+        copy {
+            from(file("build/docs/asciidoc"))
+            into(file("docs"))
+        }
+    }
 }
 
 tasks.bootJar {
