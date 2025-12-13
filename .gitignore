@@ -41,3 +41,8 @@ out/
 ### Kotlin ###
 .kotlin
 
+### FCM ###
+serviceAccountKey.json
+
+### Generated Documentation ###
+/docs

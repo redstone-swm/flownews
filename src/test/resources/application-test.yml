@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  h2:
+    console:
+      enabled: false
+
+# Mock environment variables for tests
+RECOMMENDATION_API_URL: localhost:8081
+POSTGRESQL_URI: jdbc:h2:mem:testdb
+DB_USERNAME: sa
+DB_PASSWORD: 
+GOOGLE_CLIENT_ID: mock-client-id
+GOOGLE_CLIENT_SECRET: mock-client-secret
+JWT_SECRET: mock-jwt-secret-for-testing-purposes
+FRONTEND_URL: http://localhost:3000
+ALLOWED_ORIGINS: http://localhost:3000
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.restdocs: DEBUG
