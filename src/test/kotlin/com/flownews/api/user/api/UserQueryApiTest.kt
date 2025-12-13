@@ -1,5 +1,6 @@
 package com.flownews.api.user.api
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
 import com.flownews.testutils.ApiResponseFieldSpecs
 import com.flownews.testutils.MockCurrentUserArgumentResolver
 import org.junit.jupiter.api.BeforeEach
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest

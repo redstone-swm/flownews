@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
     kotlin("plugin.serialization") version "1.9.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("com.epages.restdocs-api-spec") version "0.19.4"
 }
 
 group = "com"
@@ -36,6 +37,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.19.4")
     implementation("com.google.firebase:firebase-admin:9.5.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -105,15 +107,34 @@ tasks.register("copyRestdocsToStatic") {
     }
 }
 
+openapi3 {
+    setServer("http://localhost:8080")
+    title = "시점 API"
+    version = "1.0.0"
+    format = "yaml"
+}
+
+tasks.register("generateOpenApiSpec") {
+    group = "documentation"
+    description = "Generate OpenAPI specification from REST Docs tests"
+    dependsOn(tasks.test, tasks.named("openapi3"))
+}
+
 tasks.register("prepareDocsForGithubPages") {
     group = "documentation"
     description = "Prepare documentation for GitHub Pages deployment"
-    dependsOn(tasks.asciidoctor)
+    dependsOn(tasks.asciidoctor, tasks.named("generateOpenApiSpec"))
 
     doLast {
         copy {
             from(file("build/docs/asciidoc"))
             into(file("docs"))
+        }
+        if (file("build/api-spec").exists()) {
+            copy {
+                from(file("build/api-spec"))
+                into(file("docs/api-spec"))
+            }
         }
     }
 }

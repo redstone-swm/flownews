@@ -1,5 +1,6 @@
 package com.flownews.api.topic.api
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
 import com.flownews.api.topic.app.TopicListQueryResponse
 import com.flownews.api.topic.app.TopicListQueryService
 import com.flownews.api.topic.app.TopicTopKQueryResponse
@@ -13,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest

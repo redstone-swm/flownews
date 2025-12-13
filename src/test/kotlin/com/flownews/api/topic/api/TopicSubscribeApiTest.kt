@@ -1,5 +1,6 @@
 package com.flownews.api.topic.api
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
 import com.flownews.api.topic.app.TopicSubscribeService
 import com.flownews.testutils.ApiResponseFieldSpecs
 import com.flownews.testutils.MockCurrentUserArgumentResolver
@@ -8,9 +9,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
@@ -51,7 +52,8 @@ class TopicSubscribeApiTest {
     @Test
     fun `should document topic subscription toggle`() {
         mockMvc.perform(
-            post("/api/topics/{topicId}/toggle-subscription", 1L),
+            post("/api/topics/{topicId}/toggle-subscription", 1L)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType("application/json"))
