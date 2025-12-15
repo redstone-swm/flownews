@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: news-dev-ecr
+  ECR_REPOSITORY: ecr/sijeom/news-api
 
 permissions:
   contents: read
