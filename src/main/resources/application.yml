@@ -52,6 +52,15 @@ springdoc:
   swagger-ui:
     enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      enabled: true
+
 server:
   forward-headers-strategy: framework
   tomcat:
