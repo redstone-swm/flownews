@@ -1,0 +1,31 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [ "v2", "build/*" ]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create serviceAccountKey.json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "serviceAccountKey.json"
+          json: ${{ secrets.FCM_SERVICE_ACCOUNT_KEY }}
+          dir: "src/main/resources/"
+
+      - name: Build Unit Tests
+        run: ./gradlew clean build
+
+      - name: Deploy to Render via API
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}"

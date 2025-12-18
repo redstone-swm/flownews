@@ -5,7 +5,6 @@ import com.flownews.api.user.infra.CustomOAuth2User
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -27,10 +26,11 @@ class SecurityConfig(
             .cors { }
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                it.requestMatchers("/login/**").permitAll()
-                it.requestMatchers("/topics", "/topics/topk", "/topics/*").permitAll()
-                it.requestMatchers("/events/*", "/events/feed").permitAll()
+                // FIXME: 임시로 모두 허용
+                it.requestMatchers("/actuator/health").permitAll()
+                it.requestMatchers("/api/login/**").permitAll()
+                it.requestMatchers("/api/topics/**").permitAll()
+                it.requestMatchers("/api/evnets/**").permitAll()
                 it.requestMatchers("/notifications/push").permitAll()
                 it.anyRequest().authenticated()
             }.oauth2Login {
