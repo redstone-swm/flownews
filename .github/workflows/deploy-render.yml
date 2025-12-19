@@ -28,18 +28,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Log in to DockerHub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/flownews
           tags: |
             type=ref,event=branch
             type=sha
@@ -56,5 +55,5 @@ jobs:
 
       - name: Deploy to Render via API
         run: |
-          IMAGE_URL=$(echo "ghcr.io/${{ github.repository }}:${{ github.sha }}" | sed 's/\//%2F/g' | sed 's/:/%40/g')
+          IMAGE_URL=$(echo "${{ secrets.DOCKERHUB_USERNAME }}/flownews:${{ github.sha }}" | sed 's/\//%2F/g' | sed 's/:/%40/g')
           curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}&imgURL=${IMAGE_URL}"
