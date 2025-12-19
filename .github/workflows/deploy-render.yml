@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "v2", "build/*" ]
 
+env:
+  DOCKER_IMAGE: docker.io/redstoneswm/news-api:latest
+  DOCKER_IMAGE_DIGEST: docker.io/redstoneswm/news-api@latest
+
 permissions:
   contents: read
   packages: write
@@ -34,26 +38,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/flownews
-          tags: |
-            type=ref,event=branch
-            type=sha
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.DOCKER_IMAGE }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Deploy to Render via API
         run: |
-          IMAGE_URL=$(echo "${{ secrets.DOCKERHUB_USERNAME }}/flownews:${{ github.sha }}" | sed 's/\//%2F/g' | sed 's/:/%40/g')
+          IMAGE_URL=$(echo "${{ env.DOCKER_IMAGE_DIGEST }}" | sed 's/\//%2F/g' | sed 's/@/%40/g')
           curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}&imgURL=${IMAGE_URL}"
