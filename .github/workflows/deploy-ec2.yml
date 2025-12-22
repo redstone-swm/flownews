@@ -2,11 +2,12 @@ name: Deploy to Amazon EC2
 
 on:
   push:
-    branches: [ "main", "build/*" ]
+    branches: [ "v2", "build/*" ]
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: news-dev-ecr
+  ECR_REPOSITORY: sijeom/news-api
+  HEALTH_CHECK_URL: http://${{ secrets.AWS_EC2_HOST }}:8080/actuator/health
 
 permissions:
   contents: read
@@ -65,3 +66,10 @@ jobs:
             docker compose up -d
             docker image prune -f
 
+      - name: Health Check
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: ${{ env.HEALTH_CHECK_URL }}
+          follow-redirect: false
+          max-attempts: 3
+          retry-delay: 10s
