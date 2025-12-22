@@ -6,7 +6,6 @@ on:
 
 env:
   DOCKER_IMAGE: docker.io/redstoneswm/news-api:latest
-  DOCKER_IMAGE_DIGEST: docker.io/redstoneswm/news-api@latest
 
 permissions:
   contents: read
@@ -49,4 +48,4 @@ jobs:
 
       - name: Deploy to Render via API
         run: |
-          curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}&imgURL=${{ env.DOCKER_IMAGE_DIGEST }}"
+          curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}&imgURL=${{ env.DOCKER_IMAGE }}"
