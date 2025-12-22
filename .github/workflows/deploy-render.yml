@@ -49,5 +49,4 @@ jobs:
 
       - name: Deploy to Render via API
         run: |
-          IMAGE_URL=$(echo "${{ env.DOCKER_IMAGE_DIGEST }}" | sed 's/\//%2F/g' | sed 's/@/%40/g')
-          curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}&imgURL=${IMAGE_URL}"
+          curl -X POST "${{ secrets.RENDER_DEPLOY_URL }}&imgURL=${{ env.DOCKER_IMAGE_DIGEST }}"
