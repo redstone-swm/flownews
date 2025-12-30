@@ -1,0 +1,3 @@
+logging:
+  level:
+    p6spy: INFO
