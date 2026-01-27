@@ -1,13 +1,16 @@
 package com.flownews.api.interaction.api
 
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
+import com.flownews.api.interaction.app.InteractionRecordService
+import com.flownews.testutils.ApiResponseFieldSpecs
+import com.flownews.testutils.MockMvcTestUtils
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
@@ -18,27 +21,16 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
 
 @ExtendWith(RestDocumentationExtension::class)
 class InteractionRecordApiTest {
     private lateinit var mockMvc: MockMvc
+    private val interactionRecordService = mockk<InteractionRecordService>(relaxed = true)
 
     @BeforeEach
     fun setUp(restDocumentation: RestDocumentationContextProvider) {
-        this.mockMvc =
-            MockMvcBuilders.standaloneSetup(MockInteractionRecordController())
-                .apply<StandaloneMockMvcBuilder>(
-                    documentationConfiguration(restDocumentation)
-                        .operationPreprocessors()
-                        .withRequestDefaults(prettyPrint())
-                        .withResponseDefaults(prettyPrint()),
-                )
-                .build()
+        var controller = InteractionRecordApi(interactionRecordService)
+        this.mockMvc = MockMvcTestUtils.createMockMvc(controller, restDocumentation)
     }
 
     @Test
@@ -50,52 +42,31 @@ class InteractionRecordApiTest {
                 .content(
                     """
                     {
-                        "eventId": 1, 
-                        "interactionType": "VIEW", 
-                        "metadata": {
-                            "source": "mobile_app", 
-                            "duration": 30
-                        }
+                        "eventId": 1,
+                        "interactionType": "VIEWED"
                     }
                     """.trimIndent(),
                 ),
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(
                 document(
                     "interaction-record",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     requestFields(
-                        fieldWithPath("eventId").description("Event ID that user interacted with"),
-                        fieldWithPath("interactionType").description("Type of interaction (VIEW, CLICK, SHARE, etc.)"),
-                        fieldWithPath("metadata").description("Additional interaction metadata").optional(),
+                        fieldWithPath("eventId").description("사용자가 상호작용한 이벤트 ID"),
                         fieldWithPath(
-                            "metadata.source",
-                        ).description("Source of interaction (mobile_app, web, etc.)").optional(),
-                        fieldWithPath("metadata.duration").description("Duration of interaction in seconds").optional(),
+                            "interactionType",
+                        ).description(
+                            "상호작용 유형 (VIEWED, ARTICLE_CLICKED, TOPIC_VIEWED, TOPIC_FOLLOWED, TOPIC_UNFOLLOWED)",
+                        ),
                     ),
                     responseFields(
-                        fieldWithPath("status").description("Response status (SUCCESS, ERROR)"),
-                        fieldWithPath("message").description("Response message"),
-                        fieldWithPath("data").description("Response data (null for this endpoint)").optional(),
+                        *ApiResponseFieldSpecs.responseWithOptionalData(),
                     ),
                 ),
             )
-    }
-
-    @RestController
-    class MockInteractionRecordController {
-        @PostMapping("/api/interactions")
-        fun recordInteraction(
-            @RequestBody request: Map<String, Any>,
-        ): Map<String, Any?> {
-            return mapOf(
-                "status" to "SUCCESS",
-                "message" to "사용자 상호작용이 성공적으로 기록되었습니다.",
-                "data" to null,
-            )
-        }
     }
 }
