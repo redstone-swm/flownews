@@ -1,11 +1,10 @@
-name: Kotlin Lint
+name: ci
 
-on: [push]
+on: [pull_request]
 
 jobs:
-  lint:
+  ktlint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Run ktlint
