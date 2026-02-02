@@ -41,7 +41,7 @@ class PushMessageSendApiTest {
         mockMvc.perform(
             post("/api/notifications/push?by=topic")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"topicId": 1, "title": "새로운 이벤트", "body": "AI 기술 관련 새로운 이벤트가 등록되었습니다."}"""),
+                .content("""{"topicId": 1}"""),
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -55,8 +55,6 @@ class PushMessageSendApiTest {
                     ),
                     requestFields(
                         fieldWithPath("topicId").description("토픽 ID"),
-                        fieldWithPath("title").description("푸시 알림 제목"),
-                        fieldWithPath("body").description("푸시 알림 본문 내용"),
                     ),
                     responseFields(
                         *ApiResponseFieldSpecs.responseWithOptionalData(),
