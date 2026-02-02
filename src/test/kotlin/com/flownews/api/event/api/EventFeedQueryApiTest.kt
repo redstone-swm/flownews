@@ -5,17 +5,15 @@ import com.flownews.api.event.app.EventFeedQueryResponse
 import com.flownews.api.event.app.EventFeedQueryService
 import com.flownews.api.event.app.TopicSimpleInfo
 import com.flownews.testutils.ApiResponseFieldSpecs
-import com.flownews.testutils.MockCurrentUserArgumentResolver
+import com.flownews.testutils.MockMvcTestUtils
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
+import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
@@ -27,31 +25,18 @@ import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
 import java.time.LocalDateTime
 
-@ExtendWith(RestDocumentationExtension::class, MockitoExtension::class)
+@ExtendWith(RestDocumentationExtension::class)
 class EventFeedQueryApiTest {
     private lateinit var mockMvc: MockMvc
 
-    @Mock
-    private lateinit var eventFeedQueryService: EventFeedQueryService
+    private val eventFeedQueryService = mockk<EventFeedQueryService>()
 
     @BeforeEach
     fun setUp(restDocumentation: RestDocumentationContextProvider) {
         val controller = EventFeedQueryApi(eventFeedQueryService)
-
-        this.mockMvc =
-            MockMvcBuilders.standaloneSetup(controller)
-                .setCustomArgumentResolvers(MockCurrentUserArgumentResolver())
-                .apply<StandaloneMockMvcBuilder>(
-                    documentationConfiguration(restDocumentation)
-                        .operationPreprocessors()
-                        .withRequestDefaults(prettyPrint())
-                        .withResponseDefaults(prettyPrint()),
-                )
-                .build()
+        this.mockMvc = MockMvcTestUtils.createMockMvc(controller, restDocumentation)
     }
 
     @Test
@@ -64,19 +49,19 @@ class EventFeedQueryApiTest {
                     title = "AI 기술의 새로운 혁신",
                     description = "최신 AI 기술 동향과 발전 방향",
                     imageUrl = "https://example.com/image1.jpg",
-                    eventTime = LocalDateTime.of(2024, 12, 4, 10, 30, 0),
+                    eventTime = LocalDateTime.now(),
                     likeCount = 15L,
                 ),
             )
 
-        `when`(eventFeedQueryService.getEventFeeds(any(), any())).thenReturn(mockResponse)
+        every { eventFeedQueryService.getEventFeeds(any(), any()) } returns mockResponse
 
         mockMvc.perform(
             get("/api/events/feed")
-                .param("category", "technology"),
+                .param("category", "기술"),
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(
                 document(
                     "event-feed-query",
@@ -84,20 +69,19 @@ class EventFeedQueryApiTest {
                     preprocessResponse(prettyPrint()),
                     queryParameters(
                         parameterWithName("category")
-                            .description("이벤트 카테고리 필터 (선택사항)")
-                            .optional(),
+                            .description("피드 카테고리 필터").optional(),
                     ),
                     responseFields(
-                        *ApiResponseFieldSpecs.responseWithData("이벤트 피드 데이터 배열"),
-                        fieldWithPath("data[].id").description("이벤트 ID"),
+                        *ApiResponseFieldSpecs.responseWithData("피드 리스트"),
+                        fieldWithPath("data[].id").description("피드 ID"),
                         fieldWithPath("data[].topic").description("토픽 정보"),
                         fieldWithPath("data[].topic.id").description("토픽 ID"),
                         fieldWithPath("data[].topic.title").description("토픽 제목"),
-                        fieldWithPath("data[].title").description("이벤트 제목"),
-                        fieldWithPath("data[].description").description("이벤트 설명"),
-                        fieldWithPath("data[].imageUrl").description("이벤트 이미지 URL"),
-                        fieldWithPath("data[].eventTime").description("이벤트 발생 시간 (ISO 8601 형식)"),
-                        fieldWithPath("data[].likeCount").description("이벤트 좋아요 수"),
+                        fieldWithPath("data[].title").description("피드 제목"),
+                        fieldWithPath("data[].description").description("피드 설명"),
+                        fieldWithPath("data[].imageUrl").description("피드 이미지 URL"),
+                        fieldWithPath("data[].eventTime").description("피드 발생 시간(YYYY-MM-DDTHH:mm:ss)"),
+                        fieldWithPath("data[].likeCount").description("피드 좋아요 수"),
                     ),
                 ),
             )

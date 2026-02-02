@@ -5,16 +5,15 @@ import com.flownews.api.topic.app.TopicListQueryResponse
 import com.flownews.api.topic.app.TopicListQueryService
 import com.flownews.api.topic.app.TopicTopKQueryResponse
 import com.flownews.testutils.ApiResponseFieldSpecs
+import com.flownews.testutils.MockMvcTestUtils
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
+import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
@@ -26,29 +25,18 @@ import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
 
-@ExtendWith(RestDocumentationExtension::class, MockitoExtension::class)
+@ExtendWith(RestDocumentationExtension::class)
 class TopicListQueryApiTest {
     private lateinit var mockMvc: MockMvc
 
-    @Mock
-    private lateinit var topicListQueryService: TopicListQueryService
+    private val topicListQueryService = mockk<TopicListQueryService>()
 
     @BeforeEach
     fun setUp(restDocumentation: RestDocumentationContextProvider) {
         val controller = TopicListQueryApi(topicListQueryService)
 
-        this.mockMvc =
-            MockMvcBuilders.standaloneSetup(controller)
-                .apply<StandaloneMockMvcBuilder>(
-                    documentationConfiguration(restDocumentation)
-                        .operationPreprocessors()
-                        .withRequestDefaults(prettyPrint())
-                        .withResponseDefaults(prettyPrint()),
-                )
-                .build()
+        this.mockMvc = MockMvcTestUtils.createMockMvcWithoutAuth(controller, restDocumentation)
     }
 
     @Test
@@ -67,7 +55,7 @@ class TopicListQueryApiTest {
                 ),
             )
 
-        `when`(topicListQueryService.getTopics(any())).thenReturn(mockTopics)
+        every { topicListQueryService.getTopics(any()) } returns mockTopics
 
         mockMvc.perform(
             get("/api/topics")
@@ -75,21 +63,21 @@ class TopicListQueryApiTest {
                 .param("size", "10"),
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(
                 document(
                     "topic-list-query",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     queryParameters(
-                        parameterWithName("page").description("Page number (0-based, optional)").optional(),
-                        parameterWithName("size").description("Page size (optional)").optional(),
+                        parameterWithName("page").description("페이지 번호 (0부터 시작, 선택사항)").optional(),
+                        parameterWithName("size").description("페이지 크기 (선택사항)").optional(),
                     ),
                     responseFields(
-                        *ApiResponseFieldSpecs.responseWithData("Topic list data as array"),
-                        fieldWithPath("data[].id").description("Topic ID"),
-                        fieldWithPath("data[].title").description("Topic title"),
-                        fieldWithPath("data[].description").description("Topic description"),
+                        *ApiResponseFieldSpecs.responseWithData("토픽 목록 배열 데이터"),
+                        fieldWithPath("data[].id").description("토픽 ID"),
+                        fieldWithPath("data[].title").description("토픽 제목"),
+                        fieldWithPath("data[].description").description("토픽 설명"),
                     ),
                 ),
             )
@@ -105,28 +93,26 @@ class TopicListQueryApiTest {
                 ),
             )
 
-        `when`(topicListQueryService.getTopKTopics(any())).thenReturn(mockTopKTopics)
+        every { topicListQueryService.getTopKTopics(any()) } returns mockTopKTopics
 
         mockMvc.perform(
             get("/api/topics/topk")
                 .param("limit", "5"),
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(
                 document(
                     "topic-topk-query",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     queryParameters(
-                        parameterWithName(
-                            "limit",
-                        ).description("Number of top topics to retrieve (default: 5)").optional(),
+                        parameterWithName("limit").description("조회할 상위 토픽 수 (기본값: 5)").optional(),
                     ),
                     responseFields(
-                        *ApiResponseFieldSpecs.responseWithData("Top K topics data as array"),
-                        fieldWithPath("data[].id").description("Topic ID"),
-                        fieldWithPath("data[].title").description("Topic title"),
+                        *ApiResponseFieldSpecs.responseWithData("상위 K개 토픽 배열 데이터"),
+                        fieldWithPath("data[].id").description("토픽 ID"),
+                        fieldWithPath("data[].title").description("토픽 제목"),
                     ),
                 ),
             )
@@ -143,27 +129,27 @@ class TopicListQueryApiTest {
                 ),
             )
 
-        `when`(topicListQueryService.getTopicsByKeyword(any())).thenReturn(mockSearchResults)
+        every { topicListQueryService.getTopicsByKeyword(any()) } returns mockSearchResults
 
         mockMvc.perform(
             get("/api/topics/search")
                 .param("keyword", "AI"),
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(
                 document(
                     "topic-search-query",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     queryParameters(
-                        parameterWithName("keyword").description("Search keyword for topic title or description"),
+                        parameterWithName("keyword").description("토픽 제목 또는 설명 검색 키워드"),
                     ),
                     responseFields(
-                        *ApiResponseFieldSpecs.responseWithData("Search results data as array"),
-                        fieldWithPath("data[].id").description("Topic ID"),
-                        fieldWithPath("data[].title").description("Topic title"),
-                        fieldWithPath("data[].description").description("Topic description"),
+                        *ApiResponseFieldSpecs.responseWithData("검색 결과 배열 데이터"),
+                        fieldWithPath("data[].id").description("토픽 ID"),
+                        fieldWithPath("data[].title").description("토픽 제목"),
+                        fieldWithPath("data[].description").description("토픽 설명"),
                     ),
                 ),
             )

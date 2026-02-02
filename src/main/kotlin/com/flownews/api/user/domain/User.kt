@@ -1,7 +1,6 @@
 package com.flownews.api.user.domain
 
 import BaseEntity
-import com.flownews.api.user.domain.enums.Gender
 import com.flownews.api.user.domain.enums.Role
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -11,7 +10,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -35,17 +33,10 @@ class User(
     val role: Role,
     @Column(name = "device_token")
     var deviceToken: String? = null,
-    @Column(name = "birth_date")
-    var birthDate: LocalDate? = null,
-    @Column(name = "gender")
-    @Enumerated(EnumType.STRING)
-    var gender: Gender? = null,
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null,
     @Column(name = "delete_reason")
     var deleteReason: String? = null,
-    @Column(name = "is_profile_complete")
-    var isProfileComplete: Boolean = false,
 ) : BaseEntity() {
     fun requireId(): Long = id ?: throw IllegalStateException("User ID cannot be null")
 
@@ -53,15 +44,6 @@ class User(
         if (newDeviceToken == null) return
 
         this.deviceToken = newDeviceToken
-    }
-
-    fun updateProfile(
-        birthDate: LocalDate?,
-        gender: Gender?,
-    ) {
-        this.birthDate = birthDate
-        this.gender = gender
-        this.isProfileComplete = true
     }
 
     fun withdraw(reason: String?) {
