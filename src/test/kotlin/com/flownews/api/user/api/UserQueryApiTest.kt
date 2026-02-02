@@ -50,7 +50,6 @@ class UserQueryApiTest {
                         fieldWithPath("data.email").description("사용자 이메일"),
                         fieldWithPath("data.profileUrl").description("사용자 프로필 이미지 URL").optional(),
                         fieldWithPath("data.role").description("사용자 역할 (USER, ADMIN)"),
-                        fieldWithPath("data.isProfileComplete").description("사용자 프로필 완성 여부"),
                     ),
                 ),
             )

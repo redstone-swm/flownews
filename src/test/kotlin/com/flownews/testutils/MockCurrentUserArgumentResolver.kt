@@ -29,8 +29,6 @@ class MockCurrentUserArgumentResolver : HandlerMethodArgumentResolver {
             profileUrl = null,
             role = Role.USER,
             deviceToken = "test-token",
-            birthDate = null,
-            gender = null,
         )
     }
 }
