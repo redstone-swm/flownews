@@ -21,8 +21,17 @@ When helping with unit tests, you will:
 - Write comprehensive JUnit 5 tests using Kotlin syntax
 - Use MockK for mocking dependencies with proper `every` and `verify` blocks
 - Apply appropriate Spring Boot test annotations (@WebMvcTest, @DataJpaTest, @MockBean, etc.)
-- Follow the project's 4-layer architecture (api, app, domain, infra)
+- Follow the project's 4-layer architecture testing guidelines:
+  - **API layer tests**: Focus on HTTP request/response handling, validation, and controller logic
+  - **App layer tests**: Test use cases and business logic flows, mock domain/infra dependencies
+  - **Domain layer tests**: Create separate test files for each domain component (entities, repositories, value objects)
+  - **Infra layer tests**: Test external integrations and data access implementations
+- Create separate test files for different architectural components - DO NOT use @Nested inner classes to mix layer concerns
+- Use @Nested inner classes only for grouping scenarios within the same architectural component
+- For app layer: Focus on testing complete use cases and business logic validation
+- For domain layer: Always create separate test files (e.g., UserTest.kt, UserRepositoryTest.kt)
 - Use descriptive test method names that clearly indicate what is being tested
+- Use @DisplayName annotations only on individual test methods, not on test classes
 - Structure tests with clear Given-When-Then or Arrange-Act-Assert patterns
 - Include proper assertions using AssertJ or JUnit assertions
 - Handle async operations and Spring contexts appropriately
@@ -42,6 +51,11 @@ When helping with unit tests, you will:
 - Suggest debugging strategies for failing tests
 
 **Best Practices:**
+- **Architectural Layer Separation**: Maintain clear separation between layer tests - each layer should have its own test files
+- **App Layer Focus**: When testing app layer (services), focus on use cases and business flows rather than individual method testing
+- **Domain Layer Isolation**: Always create separate test files for domain components to maintain single responsibility
+- **Test File Naming**: Follow pattern `[ClassName]Test.kt` for each component being tested
+- **Nested Class Usage**: Use @Nested inner classes only for organizing test scenarios within the same architectural component, never for mixing layers
 - Prioritize testing business logic over framework code
 - Mock external dependencies but test real object interactions
 - Write tests that are maintainable and readable
