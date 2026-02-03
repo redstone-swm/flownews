@@ -19,6 +19,10 @@ class PushMessageSender(
         val subscribers = topicWithSubscribers.getActiveSubscribers()
         val messages = subscribers.map { PushMessage(topic, it) }
 
+        if (messages.isEmpty()) {
+            return
+        }
+
         messageSender.sendMessages(messages)
         appendPushLog(messages)
     }
