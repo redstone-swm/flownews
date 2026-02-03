@@ -149,20 +149,9 @@ tasks.bootJar {
 
 sonar {
     properties {
-        property("sonar.projectKey", "sukkyun2_sijeom-api")
-        property("sonar.organization", "sukkyun2")
+        property("sonar.projectKey", "redstone-swm_flownews")
+        property("sonar.organization", "redstone-swm")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.language", "kotlin")
-        property("sonar.sources", "src/main/kotlin")
-        property("sonar.tests", "src/test/kotlin")
-        property("sonar.java.binaries", "build/classes/kotlin/main")
-        property("sonar.java.test.binaries", "build/classes/kotlin/test")
-
-        property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
-
-        property("sonar.java.source", "17")
-        property("sonar.java.target", "17")
-
         property("sonar.qualitygate.wait", "true")
     }
 }
