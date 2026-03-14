@@ -20,20 +20,6 @@ class UserUpdateService(
     }
 
     @Transactional
-    fun updateProfile(
-        request: UserProfileUpdateRequest?,
-        userId: Long,
-    ): User {
-        val birthDate = request?.birthDate
-        val gender = request?.gender
-        val user = getUser(userId)
-
-        user.updateProfile(birthDate, gender)
-
-        return userRepository.save(user)
-    }
-
-    @Transactional
     fun withdraw(
         userId: Long,
         request: UserWithdrawRequest,

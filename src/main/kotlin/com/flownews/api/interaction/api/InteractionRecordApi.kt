@@ -18,8 +18,7 @@ class InteractionRecordApi(
         @RequestBody request: InteractionRecordRequest,
         @CurrentUser user: User,
     ): ApiResponse<Void?> {
-        val withUserId = request.with(user.requireId())
-        interactionRecordService.recordInteraction(withUserId)
+        interactionRecordService.recordInteraction(request, user)
 
         return ApiResponse.ok()
     }
