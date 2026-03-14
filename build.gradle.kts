@@ -58,8 +58,11 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
-
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("com.pgvector:pgvector:0.1.4")
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

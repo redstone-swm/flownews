@@ -19,8 +19,12 @@ class InteractionRecordService(
     private val eventQueryService: EventQueryService,
     private val userProfileApiClient: UserProfileApiClient,
 ) {
-    fun recordInteraction(request: InteractionRecordRequest): Interaction {
-        val (eventId, interactionType, userId) = request
+    fun recordInteraction(
+        request: InteractionRecordRequest,
+        user: User,
+    ): Interaction {
+        val (eventId, interactionType) = request
+        val userId = user.requireId()
 
         val user = findUserById(userId)
         val event = eventQueryService.findEventById(eventId)

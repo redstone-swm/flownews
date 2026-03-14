@@ -6,17 +6,15 @@ import com.flownews.api.topic.app.EventItemQueryResponse
 import com.flownews.api.topic.app.TopicTimelineQueryResponse
 import com.flownews.api.topic.app.TopicTimelineQueryService
 import com.flownews.testutils.ApiResponseFieldSpecs
-import com.flownews.testutils.MockCurrentUserArgumentResolver
+import com.flownews.testutils.MockMvcTestUtils
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
+import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
@@ -28,31 +26,19 @@ import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
 import java.time.LocalDateTime
 
-@ExtendWith(RestDocumentationExtension::class, MockitoExtension::class)
+@ExtendWith(RestDocumentationExtension::class)
 class TopicTimelineQueryApiTest {
     private lateinit var mockMvc: MockMvc
 
-    @Mock
-    private lateinit var topicTimelineQueryService: TopicTimelineQueryService
+    private val topicTimelineQueryService = mockk<TopicTimelineQueryService>()
 
     @BeforeEach
     fun setUp(restDocumentation: RestDocumentationContextProvider) {
         val controller = TopicTimelineQueryApi(topicTimelineQueryService)
 
-        this.mockMvc =
-            MockMvcBuilders.standaloneSetup(controller)
-                .setCustomArgumentResolvers(MockCurrentUserArgumentResolver())
-                .apply<StandaloneMockMvcBuilder>(
-                    documentationConfiguration(restDocumentation)
-                        .operationPreprocessors()
-                        .withRequestDefaults(prettyPrint())
-                        .withResponseDefaults(prettyPrint()),
-                )
-                .build()
+        this.mockMvc = MockMvcTestUtils.createMockMvc(controller, restDocumentation)
     }
 
     @Test
@@ -86,13 +72,13 @@ class TopicTimelineQueryApiTest {
                 isFollowing = true,
             )
 
-        `when`(topicTimelineQueryService.getTopic(any(), any())).thenReturn(mockResponse)
+        every { topicTimelineQueryService.getTopic(any(), any()) } returns mockResponse
 
         mockMvc.perform(
             get("/api/topics/{topicId}", 1L),
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(
                 document(
                     "topic-timeline-query",

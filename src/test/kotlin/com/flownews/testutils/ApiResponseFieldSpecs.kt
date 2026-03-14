@@ -11,10 +11,10 @@ object ApiResponseFieldSpecs {
             fieldWithPath("data").description(dataDescription),
         )
 
-    fun responseWithOptionalData(dataDescription: String): Array<FieldDescriptor> =
+    fun responseWithOptionalData(): Array<FieldDescriptor> =
         arrayOf(
             fieldWithPath("code").description("응답 코드 (200, 400, 500 등)"),
             fieldWithPath("message").description("응답 메시지"),
-            fieldWithPath("data").description(dataDescription).optional(),
+            fieldWithPath("data").description("응답 데이터").optional(),
         )
 }

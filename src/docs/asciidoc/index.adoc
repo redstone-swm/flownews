@@ -18,9 +18,10 @@
 이 API는 다음과 같은 기능을 제공합니다:
 
 * 사용자별 개인화된 이벤트 피드 조회
-* 토픽 구독 관리
-* 이벤트 좋아요 기능
-* 토픽 타임라인 조회
+* 토픽 관리 및 구독 기능
+* 이벤트 상호작용 (좋아요, 기록)
+* 사용자 프로필 관리
+* 푸시 알림 서비스
 
 == Authentication
 
@@ -39,7 +40,7 @@ Authorization: Bearer <JWT_TOKEN>
 [source,json]
 ----
 {
-  "status": "SUCCESS",
+  "code": 200,
   "message": "요청이 성공적으로 처리되었습니다.",
   "data": { /* 실제 데이터 */ }
 }
@@ -48,12 +49,12 @@ Authorization: Bearer <JWT_TOKEN>
 [[resources]]
 = Resources
 
+[[resources-event]]
+== Event
+
+이벤트 관련 API입니다.
+
 [[resources-event-feed]]
-== Event Feed
-
-이벤트 피드 관련 API입니다.
-
-[[resources-event-feed-query]]
 === Get Event Feed
 
 사용자별 개인화된 이벤트 피드를 조회합니다.
@@ -69,31 +70,86 @@ include::{snippets}/event-feed-query/http-response.adoc[]
 include::{snippets}/event-feed-query/response-fields.adoc[]
 
 [[resources-event-like]]
-== Event Like
-
-이벤트 좋아요 관련 API입니다.
-
-[[resources-event-like-toggle]]
 === Toggle Event Like
 
 특정 이벤트에 대한 좋아요를 토글합니다.
 
-include::{snippets}/event-like-toggle/curl-request.adoc[]
+include::{snippets}/event-like/curl-request.adoc[]
 
-include::{snippets}/event-like-toggle/http-request.adoc[]
+include::{snippets}/event-like/http-request.adoc[]
 
-include::{snippets}/event-like-toggle/path-parameters.adoc[]
+include::{snippets}/event-like/path-parameters.adoc[]
 
-include::{snippets}/event-like-toggle/http-response.adoc[]
+include::{snippets}/event-like/http-response.adoc[]
 
-include::{snippets}/event-like-toggle/response-fields.adoc[]
+include::{snippets}/event-like/response-fields.adoc[]
+
+[[resources-topic]]
+== Topic
+
+토픽 관련 API입니다.
+
+[[resources-topic-list]]
+=== Get All Topics
+
+모든 토픽 목록을 조회합니다.
+
+include::{snippets}/topic-list-query/curl-request.adoc[]
+
+include::{snippets}/topic-list-query/http-request.adoc[]
+
+include::{snippets}/topic-list-query/query-parameters.adoc[]
+
+include::{snippets}/topic-list-query/http-response.adoc[]
+
+include::{snippets}/topic-list-query/response-fields.adoc[]
+
+[[resources-topic-topk]]
+=== Get Top K Topics
+
+상위 K개 토픽을 조회합니다.
+
+include::{snippets}/topic-topk-query/curl-request.adoc[]
+
+include::{snippets}/topic-topk-query/http-request.adoc[]
+
+include::{snippets}/topic-topk-query/query-parameters.adoc[]
+
+include::{snippets}/topic-topk-query/http-response.adoc[]
+
+include::{snippets}/topic-topk-query/response-fields.adoc[]
+
+[[resources-topic-search]]
+=== Search Topics
+
+키워드로 토픽을 검색합니다.
+
+include::{snippets}/topic-search-query/curl-request.adoc[]
+
+include::{snippets}/topic-search-query/http-request.adoc[]
+
+include::{snippets}/topic-search-query/query-parameters.adoc[]
+
+include::{snippets}/topic-search-query/http-response.adoc[]
+
+include::{snippets}/topic-search-query/response-fields.adoc[]
+
+[[resources-topic-timeline]]
+=== Get Topic Timeline
+
+특정 토픽의 타임라인을 조회합니다.
+
+include::{snippets}/topic-timeline-query/curl-request.adoc[]
+
+include::{snippets}/topic-timeline-query/http-request.adoc[]
+
+include::{snippets}/topic-timeline-query/path-parameters.adoc[]
+
+include::{snippets}/topic-timeline-query/http-response.adoc[]
+
+include::{snippets}/topic-timeline-query/response-fields.adoc[]
 
 [[resources-topic-subscription]]
-== Topic Subscription
-
-토픽 구독 관련 API입니다.
-
-[[resources-topic-subscription-toggle]]
 === Toggle Topic Subscription
 
 특정 토픽에 대한 구독을 토글합니다.
@@ -108,25 +164,95 @@ include::{snippets}/topic-subscription-toggle/http-response.adoc[]
 
 include::{snippets}/topic-subscription-toggle/response-fields.adoc[]
 
-[[resources-topic-timeline]]
-== Topic Timeline
+[[resources-interaction]]
+== Interaction
 
-토픽 타임라인 관련 API입니다.
+사용자 상호작용 관련 API입니다.
 
-[[resources-topic-timeline-query]]
-=== Get Topic Timeline
+[[resources-interaction-record]]
+=== Record Interaction
 
-특정 토픽의 타임라인을 조회합니다.
+사용자의 이벤트 상호작용을 기록합니다.
 
-include::{snippets}/topic-timeline-query/curl-request.adoc[]
+include::{snippets}/interaction-record/curl-request.adoc[]
 
-include::{snippets}/topic-timeline-query/http-request.adoc[]
+include::{snippets}/interaction-record/http-request.adoc[]
 
-include::{snippets}/topic-timeline-query/path-parameters.adoc[]
+include::{snippets}/interaction-record/request-fields.adoc[]
 
-include::{snippets}/topic-timeline-query/http-response.adoc[]
+include::{snippets}/interaction-record/http-response.adoc[]
 
-include::{snippets}/topic-timeline-query/response-fields.adoc[]
+include::{snippets}/interaction-record/response-fields.adoc[]
+
+[[resources-user]]
+== User
+
+사용자 관련 API입니다.
+
+[[resources-user-current]]
+=== Get Current User
+
+현재 사용자 정보를 조회합니다.
+
+include::{snippets}/user-current-query/curl-request.adoc[]
+
+include::{snippets}/user-current-query/http-request.adoc[]
+
+include::{snippets}/user-current-query/http-response.adoc[]
+
+include::{snippets}/user-current-query/response-fields.adoc[]
+
+[[resources-user-device-token]]
+=== Update Device Token
+
+사용자의 디바이스 토큰을 업데이트합니다.
+
+include::{snippets}/user-device-token-update/curl-request.adoc[]
+
+include::{snippets}/user-device-token-update/http-request.adoc[]
+
+include::{snippets}/user-device-token-update/request-fields.adoc[]
+
+include::{snippets}/user-device-token-update/http-response.adoc[]
+
+include::{snippets}/user-device-token-update/response-fields.adoc[]
+
+[[resources-user-withdrawal]]
+=== Withdraw User
+
+사용자 탈퇴를 처리합니다.
+
+include::{snippets}/user-withdrawal/curl-request.adoc[]
+
+include::{snippets}/user-withdrawal/http-request.adoc[]
+
+include::{snippets}/user-withdrawal/request-fields.adoc[]
+
+include::{snippets}/user-withdrawal/http-response.adoc[]
+
+include::{snippets}/user-withdrawal/response-fields.adoc[]
+
+[[resources-push]]
+== Push Notification
+
+푸시 알림 관련 API입니다.
+
+[[resources-push-send-by-topic]]
+=== Send Push Message by Topic
+
+토픽 기반으로 푸시 메시지를 전송합니다.
+
+include::{snippets}/push-message-send-by-topic/curl-request.adoc[]
+
+include::{snippets}/push-message-send-by-topic/http-request.adoc[]
+
+include::{snippets}/push-message-send-by-topic/query-parameters.adoc[]
+
+include::{snippets}/push-message-send-by-topic/request-fields.adoc[]
+
+include::{snippets}/push-message-send-by-topic/http-response.adoc[]
+
+include::{snippets}/push-message-send-by-topic/response-fields.adoc[]
 
 [[openapi-spec]]
 == OpenAPI 3.0 Specification

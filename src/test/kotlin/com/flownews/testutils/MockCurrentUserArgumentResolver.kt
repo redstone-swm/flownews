@@ -1,5 +1,6 @@
 package com.flownews.testutils
 
+import com.flownews.api.common.api.CurrentUser
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.enums.Role
 import org.springframework.core.MethodParameter
@@ -10,7 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 class MockCurrentUserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.hasParameterAnnotation(com.flownews.api.common.api.CurrentUser::class.java)
+        return parameter.hasParameterAnnotation(CurrentUser::class.java)
     }
 
     override fun resolveArgument(
@@ -18,7 +19,7 @@ class MockCurrentUserArgumentResolver : HandlerMethodArgumentResolver {
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): Any? {
+    ): User {
         return User(
             id = 1L,
             oauthId = "test-user-123",
@@ -28,8 +29,6 @@ class MockCurrentUserArgumentResolver : HandlerMethodArgumentResolver {
             profileUrl = null,
             role = Role.USER,
             deviceToken = "test-token",
-            birthDate = null,
-            gender = null,
         )
     }
 }
