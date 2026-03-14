@@ -13,25 +13,25 @@ import com.flownews.api.topic.domain.TopicQueryService
 import com.flownews.api.topic.domain.TopicWithSubscribers
 import com.flownews.api.user.domain.User
 import com.flownews.api.user.domain.enums.Role
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-class PushMessageSenderTest {
-    private lateinit var pushMessageSender: PushMessageSender
-    private val topicQueryService = mockk<TopicQueryService>()
-    private val pushLogRepository = mockk<PushLogRepository>()
-    private val messageSender = mockk<MessageSender>()
+class PushMessageSenderTest : FunSpec({
+    val topicQueryService = mockk<TopicQueryService>()
+    val pushLogRepository = mockk<PushLogRepository>()
+    val messageSender = mockk<MessageSender>()
+    lateinit var pushMessageSender: PushMessageSender
 
-    @BeforeEach
-    fun setUp() {
+    beforeTest {
+        clearMocks(topicQueryService, pushLogRepository, messageSender)
         pushMessageSender =
             PushMessageSender(
                 topicQueryService = topicQueryService,
@@ -40,8 +40,7 @@ class PushMessageSenderTest {
             )
     }
 
-    @Test
-    fun `sendPushMessages should handle empty list when topic has no active subscribers`() {
+    test("sendPushMessages should handle empty list when topic has no active subscribers") {
         val topicId = 1L
         val topicWithSubscribers = createTopicWithNoSubscribers(topicId)
 
@@ -53,9 +52,7 @@ class PushMessageSenderTest {
         verify(exactly = 0) { pushLogRepository.saveAll(any<List<PushLog>>()) }
     }
 
-    @Test
-    fun `sendPushMessages should filter inactive users when subscribers have no device token`() {
-        // Given
+    test("sendPushMessages should filter inactive users when subscribers have no device token") {
         val topicId = 1L
         val topicWithSubscribers = createTopicWithMixedSubscribers(topicId)
         val messagesSlot = slot<List<PushMessage>>()
@@ -70,80 +67,82 @@ class PushMessageSenderTest {
         verify(exactly = 1) { pushLogRepository.saveAll(any<List<PushLog>>()) }
 
         val sentMessages = messagesSlot.captured
-        assertThat(sentMessages).hasSize(1)
+        sentMessages.size shouldBe 1
     }
 
-    @Test
-    fun `sendPushMessages should propagate exception when topic query service fails`() {
+    test("sendPushMessages should propagate exception when topic query service fails") {
         val topicId = 1L
         every { topicQueryService.getTopicWithSubscribers(topicId) } throws NoDataException()
 
-        assertThatThrownBy { pushMessageSender.sendPushMessages(topicId) }
-            .isInstanceOf(NoDataException::class.java)
+        shouldThrow<NoDataException> {
+            pushMessageSender.sendPushMessages(topicId)
+        }
 
         verify(exactly = 0) { messageSender.sendMessages(any<List<PushMessage>>()) }
         verify(exactly = 0) { pushLogRepository.saveAll(any<List<PushLog>>()) }
     }
-
-    private fun createTopicWithNoSubscribers(topicId: Long): TopicWithSubscribers {
-        val topic = createTopic(topicId)
-        return TopicWithSubscribers(
-            topic = topic,
-            subscribers = emptyList(),
-        )
-    }
-
-    private fun createTopicWithMixedSubscribers(topicId: Long): TopicWithSubscribers {
-        val topic = createTopic(topicId)
-        val activeUser = createUser(id = 1L, deviceToken = "token1")
-        val inactiveUser = createUser(id = 2L, deviceToken = null)
-        return TopicWithSubscribers(
-            topic = topic,
-            subscribers = listOf(activeUser, inactiveUser),
-        )
-    }
-
-    private fun createTopic(id: Long): Topic {
-        val event =
-            Event(
-                id = 100L,
-                eventTime = LocalDateTime.now(),
-                title = "title",
-                description = "description",
-                imageUrl = "url",
-                category = "category",
+}) {
+    companion object {
+        private fun createTopicWithNoSubscribers(topicId: Long): TopicWithSubscribers {
+            val topic = createTopic(topicId)
+            return TopicWithSubscribers(
+                topic = topic,
+                subscribers = emptyList(),
             )
-        val topic =
-            Topic(
+        }
+
+        private fun createTopicWithMixedSubscribers(topicId: Long): TopicWithSubscribers {
+            val topic = createTopic(topicId)
+            val activeUser = createUser(id = 1L, deviceToken = "token1")
+            val inactiveUser = createUser(id = 2L, deviceToken = null)
+            return TopicWithSubscribers(
+                topic = topic,
+                subscribers = listOf(activeUser, inactiveUser),
+            )
+        }
+
+        private fun createTopic(id: Long): Topic {
+            val event =
+                Event(
+                    id = 100L,
+                    eventTime = LocalDateTime.now(),
+                    title = "title",
+                    description = "description",
+                    imageUrl = "url",
+                    category = "category",
+                )
+            val topic =
+                Topic(
+                    id = id,
+                    title = "title",
+                    description = "test",
+                )
+            topic.topicEvents =
+                mutableListOf(
+                    TopicEvent(
+                        TopicEventId(topic.requireId(), event.requireId()),
+                        topic,
+                        event,
+                        LocalDateTime.now(),
+                    ),
+                )
+            return topic
+        }
+
+        private fun createUser(
+            id: Long,
+            deviceToken: String?,
+        ): User {
+            return User(
                 id = id,
-                title = "title",
-                description = "test",
+                oauthId = "oauth_$id",
+                provider = "google",
+                name = "Test User $id",
+                email = "user$id@test.com",
+                profileUrl = null,
+                role = Role.USER,
+                deviceToken = deviceToken,
             )
-        topic.topicEvents =
-            mutableListOf(
-                TopicEvent(
-                    TopicEventId(topic.requireId(), event.requireId()),
-                    topic,
-                    event,
-                    LocalDateTime.now(),
-                ),
-            )
-        return topic
-    }
-
-    private fun createUser(
-        id: Long,
-        deviceToken: String?,
-    ): User {
-        return User(
-            id = id,
-            oauthId = "oauth_$id",
-            provider = "google",
-            name = "Test User $id",
-            email = "user$id@test.com",
-            profileUrl = null,
-            role = Role.USER,
-            deviceToken = deviceToken,
-        )
+        }
     }
 }
