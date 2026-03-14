@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.serialization") version "1.9.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
     id("com.epages.restdocs-api-spec") version "0.19.4"
+    id("org.sonarqube") version "5.1.0.4882"
 }
 
 group = "com"
@@ -30,19 +31,28 @@ val springCloudVersion by extra("2023.0.6")
 dependencies {
     implementation("org.hibernate.orm:hibernate-vector:6.6.15.Final")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.19.4")
     implementation("com.google.firebase:firebase-admin:9.5.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("com.pgvector:pgvector:0.1.4")
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.postgresql:postgresql")
+
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.19.4")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.security:spring-security-test")
@@ -54,8 +64,6 @@ dependencies {
     implementation("com.pgvector:pgvector:0.1.4")
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 kotlin {
@@ -143,4 +151,13 @@ tasks.register("prepareDocsForGithubPages") {
 tasks.bootJar {
     archiveBaseName.set(rootProject.name)
     archiveVersion.set("")
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "redstone-swm_flownews")
+        property("sonar.organization", "redstone-swm")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.qualitygate.wait", "true")
+    }
 }
