@@ -1,8 +1,8 @@
-# 뉴스 큐레이션 서비스, 시점 <a href="https://apps.apple.com/kr/app/%EC%8A%A4%ED%8A%B8%EB%A6%BF%EB%93%9C%EB%9E%8D-street-drop/id6450315928"><img src="https://github.com/user-attachments/assets/cc82f673-4a7b-4150-b290-f6c471a3f85e" align="left" width="100"></a>
+# 뉴스 큐레이션 서비스, 시점 <a href="https://play.google.com/store/apps/details?id=kr.sijeom&hl=ko"><img src="/docs/logo.png" align="left" width="40" style="border-radius: 20%; margin-right: 10px"></a>
 **뉴스 소비 과정에서 불편을 해결하기 위한 뉴스 큐레이션 서비스, 시점**
 
 
-<img width="600" height="400" alt="image" src="https://github.com/user-attachments/assets/40e696a4-2a11-4cff-9ba2-a36e089fa37a" />
+<img width="600" height="400" alt="image" src="/docs/intro.png" />
 
 ## 주요 기능
 뉴스 볼 시간이 없는 2030을 위해 관심있는 사건의 전체 맥락을 빠르게 파악할 수 있도록 **2가지 핵심 기능** 제공
@@ -10,7 +10,7 @@
    - **후속기사 알림** : 관심 토픽에 새로운 전개가 있을 때마다 알림을 발송
 
 ## 아키텍처
-<img width="700" height="600" alt="image" src="https://github.com/user-attachments/assets/ad6a604c-7e9b-401f-ad0c-1ff669ca31cb" />
+<img width="700" height="600" alt="image" src="/docs/architecture.png" />
 
 
 ## 기술 스택
@@ -28,8 +28,6 @@
 
 ```
 src/main/kotlin/com/flownews/
-├── FlowNewsApplication.kt
-│
 ├── api/                           
 │   ├── common/                    
 │   ├── event/                     

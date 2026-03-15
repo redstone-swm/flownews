@@ -44,9 +44,6 @@ out/
 ### FCM ###
 serviceAccountKey.json
 
-### Generated Documentation ###
-/docs
-
 ### Claude Code ###
 .claude/settings.local.json
 
